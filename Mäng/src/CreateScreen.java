@@ -4,18 +4,25 @@
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class CreateScreen extends JFrame{
-    public CreateScreen(){
+    public CreateScreen()  {
         addKeyListener(new DrawUus());
         setContentPane(new DrawPane());
+
         setTitle("Card Game");
-        setSize(500,500);
+        setSize(900,900);
         setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
     }
 
     int x;
@@ -27,9 +34,20 @@ public class CreateScreen extends JFrame{
         }
     }
     class DrawPane extends JPanel {
+        BufferedImage img;
+        DrawPane()  {
+
+            try {
+                img = ImageIO.read(new File("Mäng\\playerdisplay.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         public void paintComponent(Graphics g){
             //draw on g here e.g.
-            g.fillRect(20, 20, 100, 200);
+
+            g.drawImage(img,0,280,900,600,null);
+
         }
     }
 
