@@ -8,20 +8,20 @@ import java.io.IOException;
  */
 public class Kaart {
     BufferedImage display;
-    double life;
-    double attack;
-    double cardcost;
-    boolean activated;
-    boolean selected;
+    double life,cardcost,attack;
+    boolean activated,selected,bigScreen;
     int kaartX=0;
     int kaartY=0;
-    Kaart(double life,double attack,double cardcost,int X,int Y,String filename) throws IOException {
+    String filename,minionname;
+    Kaart(double life,double attack,double cardcost,int X,int Y,String filename,String minionname) throws IOException {
         this.life=life;
         kaartY=X;
         kaartY=Y;
         this.attack=attack;
         this.cardcost=cardcost;
+        this.filename=filename;
         display = ImageIO.read(new File(filename));
+        this.minionname=minionname;
     }
 
 
