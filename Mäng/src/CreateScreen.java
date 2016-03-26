@@ -56,16 +56,17 @@ public class CreateScreen extends JFrame implements MouseListener{
             mouseY= e.getY();
             mouseX=e.getX();
             for (Kaart kaart : kaardipakk) {
-                if(mouseX>kaart.kaartX &&kaart.kaartX+kaardilaius>mouseX) {
-                    if(mouseY>kaart.kaartY &&kaart.kaartY+kaardipikkus>mouseY) {
-                    kaart.selected = true;
+                if (mouseX > kaart.getKaartX() && kaart.getKaartX() + kaardilaius > mouseX) {
+                    if (mouseY > kaart.getKaartY() && kaart.getKaartY() + kaardipikkus > mouseY) {
+                        kaart.setSelected(true);
 
-                }}
+                    }
+                }
             }
             for (Kaart kaart : kaardipakk) {
-                if(kaart.selected&&kaart.activated==false){
-                    kaart.kaartX=mouseX-kaardilaius/2;
-                    kaart.kaartY=mouseY-kaardipikkus/2;
+                if (kaart.isSelected() && !kaart.isActivated()) {
+                    kaart.setKaartX(mouseX - kaardilaius / 2);
+                    kaart.setKaartY(mouseY - kaardipikkus / 2);
                     System.out.println(mouseX);
 
                 }
@@ -86,12 +87,12 @@ public class CreateScreen extends JFrame implements MouseListener{
 
             }
             for (Kaart kaart : kaardipakk) {
-                if(mouseX>kaart.kaartX &&kaart.kaartX+kaardilaius>mouseX&&mouseY>kaart.kaartY &&kaart.kaartY+kaardipikkus>mouseY) {
+                if (mouseX > kaart.getKaartX() && kaart.getKaartX() + kaardilaius > mouseX && mouseY > kaart.getKaartY() && kaart.getKaartY() + kaardipikkus > mouseY) {
 
-                    kaart.bigScreen=true;
-                    }
+                    kaart.setBigScreen(true);
+                }
                 else{
-                    kaart.bigScreen=false;
+                    kaart.setBigScreen(false);
                 }
             }
 
@@ -123,19 +124,20 @@ public class CreateScreen extends JFrame implements MouseListener{
     public void mouseReleased(MouseEvent e) {
         for (Kaart kaart : kaardipakk) {
             System.out.println("off");
-            kaart.selected=false;
+            kaart.setSelected(false);
         }
         if(menudisplayout==true){
             for (Kaart kaart : kaardipakk) {
                 for (KaartSlots kaartslot : kaardislotid) {
-                    if(kaart.kaartX>kaartslot.kaartX&&kaartslot.kaartX+kaardilaius>kaart.kaartX){
-                        if(kaart.kaartY>kaartslot.kaartY&&kaartslot.kaartY+kaardipikkus>kaart.kaartY){
-                        try {
-                            kaartslot.addKaart(kaart.attack,kaart.cardcost,kaart.life,kaart.filename,kaart.minionname,kaardilaius,kaardipikkus);
-                            kaardipakk.remove(kaart);
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }}
+                    if (kaart.getKaartX() > kaartslot.kaartX && kaartslot.kaartX + kaardilaius > kaart.getKaartX()) {
+                        if (kaart.getKaartX() > kaartslot.kaartY && kaartslot.kaartY + kaardipikkus > kaart.getKaartY()) {
+                            try {
+                                kaartslot.addKaart(kaart.getAttack(), kaart.getCost(), kaart.getLife(), kaart.getFilename(), kaart.getMinionname(), kaardilaius, kaardipikkus);
+                                kaardipakk.remove(kaart);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
 
                     }
                 }
@@ -176,7 +178,7 @@ public class CreateScreen extends JFrame implements MouseListener{
                     else{
                         kaardislotid.add(new KaartSlots(30 + 180 * (i-5), 500));
                     }
-                    }
+                }
 
                 displayout = ImageIO.read(new File("Mäng\\playerdisplay.png"));
                 displayin = ImageIO.read(new File("Mäng\\playerdisplaysmall.png"));
@@ -196,16 +198,16 @@ public class CreateScreen extends JFrame implements MouseListener{
                 g.drawImage(displayin, 0, 280, getWidth()-500, 600, null);
             }
             for (Kaart kaart : kaardipakk) {
-                g.drawImage(kaart.display, kaart.kaartX, kaart.kaartY,kaardilaius,kaardipikkus, null);
-                if(kaart.bigScreen){
-                    g.drawImage(kaart.display, getWidth()-500, getHeight()-600,500,600, null);
+                g.drawImage(kaart.getDisplay(), kaart.getKaartX(), kaart.getKaartY(), kaardilaius, kaardipikkus, null);
+                if (kaart.isBigScreen()) {
+                    g.drawImage(kaart.getDisplay(), getWidth() - 500, getHeight() - 600, 500, 600, null);
                 }
 
 
-        }
+            }
             for (KaartSlots kaartslot : kaardislotid) {
                 if(menudisplayout)
-                kaartslot.DrawSelf(g);
+                    kaartslot.DrawSelf(g);
 
             }
 

@@ -43,7 +43,7 @@ public class KaartSlots {
         display = ImageIO.read(new File(filename));
     }
     List<Minions> DrawAllies(Graphics g, double width, double height, List<Minions>  minionid) throws IOException {
-        minionid.add(new Minions(attack,cardcost,kaartX,kaartY,minionname));
+        minionid.add(new Minions(life, attack, cardcost, kaartX, kaartY, minionname, filename));
         return minionid;
     }
 
