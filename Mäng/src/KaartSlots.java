@@ -8,12 +8,11 @@ import java.util.List;
 
 public class KaartSlots {
     BufferedImage display;
-    double life,attack,cardcost;
+    int life, attack, cardcost;
     int kaartX,kaartY,kaardipikkus,kaardilaius;
     String filename;
     Double cooldown;
-    String minionname;
-
+    String minionname, effect, flavor;
 
     KaartSlots(int X, int Y) throws IOException {
 
@@ -29,18 +28,18 @@ public class KaartSlots {
 
         g.drawImage(display, kaartX, kaartY,kaardilaius,kaardipikkus, null);
     }
-    void addKaart(double attack,double cardcost,double life,String filename,String minionname,int kaardilaius,int kaardipikkus) throws IOException {
+
+    void addKaart(String minionname, int attack, int life, int cardcost, int kaardilaius, int kaardipikkus) throws IOException {
         this.attack = attack;
         this.cardcost = cardcost;
         this.life=life;
-        this.filename=filename;
         this.minionname=minionname;
         this.kaardilaius=kaardilaius;
         this.kaardipikkus=kaardipikkus;
-        display = ImageIO.read(new File(filename));
+        display = ImageIO.read(new File("Mäng\\" + minionname + ".png"));
     }
     List<Minions> DrawAllies(Graphics g, double width, double height, List<Minions>  minionid) throws IOException {
-        minionid.add(new Minions(life, attack, cardcost, kaartX, kaartY, minionname, filename));
+        minionid.add(new Minions(minionname, attack, life, cardcost, effect, flavor));
         return minionid;
     }
 

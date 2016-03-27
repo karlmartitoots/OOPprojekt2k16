@@ -38,10 +38,13 @@ public class Pakk {
     public List<Kaart> loadPaki(String filename) {
         filename += ".txt";
         List<Kaart> pakk = new ArrayList<>();
+        Andmebass andmebass = new Andmebass();
         try {
-            Scanner sc = new Scanner(new File(filename));
-            for (int i = 0; i < pakisuurus; i++) {
-                String kaardiNimi = sc.nextLine(); // TODO add databsae
+            int counter = 0;
+            Scanner sc = new Scanner(new File(filename), "UTF-8");
+            while (sc.hasNext() && counter < pakisuurus) {
+                pakk.add(andmebass.readKaart(sc.nextLine()));
+                counter++;
             }
         } catch (IOException e) {
             throw new RuntimeException();

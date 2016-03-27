@@ -5,36 +5,40 @@ import java.io.IOException;
 
 public class Kaart {
     private BufferedImage display;
-    private double life, cost, attack;
+    private int life, cost, attack;
     private boolean activated, selected, bigScreen;
     private int kaartX = 0;
     private int kaartY = 0;
-    private String filename, minionname;
+    private String minionname, effect, flavor;
 
-    Kaart(double life, double attack, double cost, int X, int Y, String filename, String minionname) throws IOException {
+    Kaart(String minionname, int attack, int life, int cost, String effect, String flavor) {
         this.life=life;
-        kaartY=X;
-        kaartY=Y;
         this.attack=attack;
         this.cost = cost;
-        this.filename=filename;
-        display = ImageIO.read(new File(filename));
         this.minionname=minionname;
+        this.effect = effect;
+        this.flavor = flavor;
+        try {
+            display = ImageIO.read(new File("Mäng\\" + minionname + ".png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public BufferedImage getDisplay() {
         return display;
     }
 
-    public double getLife() {
+    public int getLife() {
         return life;
     }
 
-    public double getCost() {
+    public int getCost() {
         return cost;
     }
 
-    public double getAttack() {
+    public int getAttack() {
         return attack;
     }
 
@@ -58,8 +62,12 @@ public class Kaart {
         return kaartY;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getEffect() {
+        return effect;
+    }
+
+    public String getFlavor() {
+        return flavor;
     }
 
     public String getMinionname() {

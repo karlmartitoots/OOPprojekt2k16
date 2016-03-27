@@ -4,8 +4,8 @@ import java.io.IOException;
 public class Minions extends Kaart {
 
 
-    Minions(double life, double attack, double cost, int X, int Y, String filename, String minionname) throws IOException {
-        super(life, attack, cost, X, Y, filename, minionname);
+    Minions(String minionname, int life, int attack, int cost, String effect, String flavor) throws IOException {
+        super(minionname, attack, life, cost, effect, flavor);
     }
 
     void DrawAllies(Graphics g, double width, double height){

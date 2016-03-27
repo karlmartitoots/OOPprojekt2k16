@@ -5,21 +5,9 @@ import java.io.IOException;
 
 
 public class Kaart1 extends Kaart {
-    BufferedImage display;
 
-    double life;
-    double attack;
-    double cardcost;
-    boolean activated;
-    boolean selected,bigScreen;
-    int kaartX=500;
-    int kaartY=100;
-    String minionname;
-    Kaart1(double life, double attack, double cardcost,int X,int Y, String filename,String minionname) throws IOException {
-        super(life, attack, cardcost,X,Y, filename,minionname);
-        display = ImageIO.read(new File(filename));
-        kaartX=500;
-
+    Kaart1(String minionname, int life, int attack, int cost, String effect, String flavor) throws IOException {
+        super(minionname, attack, life, cost, effect, flavor);
     }
 
 

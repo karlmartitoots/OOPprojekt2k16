@@ -129,7 +129,7 @@ public class CreateScreen extends JFrame implements MouseListener {
                     if (kaart.getKaartX() > kaartslot.kaartX && kaartslot.kaartX + kaardilaius > kaart.getKaartX()) {
                         if (kaart.getKaartX() > kaartslot.kaartY && kaartslot.kaartY + kaardipikkus > kaart.getKaartY()) {
                             try {
-                                kaartslot.addKaart(kaart.getAttack(), kaart.getCost(), kaart.getLife(), kaart.getFilename(), kaart.getMinionname(), kaardilaius, kaardipikkus);
+                                kaartslot.addKaart(kaart.getMinionname(), kaart.getAttack(), kaart.getLife(), kaart.getCost(), kaardilaius, kaardipikkus);
                             } catch (IOException e1) {
                                 e1.printStackTrace();
                             }
@@ -172,8 +172,14 @@ public class CreateScreen extends JFrame implements MouseListener {
                 displayOut = ImageIO.read(new File("Mäng\\playerdisplay.png"));
                 displayIn = ImageIO.read(new File("Mäng\\playerdisplaysmall.png"));
                 List<Kaart> pakk = new ArrayList<>();
-                pakk.add(new Kaart(10, 10, 10, 200, 500, "Mäng\\kaart1.png", "Mäng\\testminion.png"));
-                pakk.add(new Kaart(10, 10, 10, 400, 300, "Mäng\\kaart2.png", "Mäng\\testminionpng"));
+                Kaart esimiene = new Kaart("esimene", 10, 10, 10, "none", "");
+                esimiene.setKaartX(200);
+                esimiene.setKaartY(500);
+                pakk.add(esimiene);
+                Kaart teine = new Kaart("teine", 10, 10, 10, "none", "");
+                teine.setKaartX(400);
+                teine.setKaartY(500);
+                pakk.add(teine);
                 kaardiPakk = new Pakk(pakk);
             } catch (IOException e) {
                 e.printStackTrace();
