@@ -3,9 +3,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by PusH on 3/25/2016.
- */
 public class Kaart {
     private BufferedImage display;
     private double life, cost, attack;

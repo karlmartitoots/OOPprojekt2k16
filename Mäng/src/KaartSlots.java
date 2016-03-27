@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by PusH on 3/25/2016.
- */
 public class KaartSlots {
     BufferedImage display;
     double life,attack,cardcost;

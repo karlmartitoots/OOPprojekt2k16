@@ -1,10 +1,6 @@
 
 import java.awt.*;
 import java.io.IOException;
-
-/**
- * Created by PusH on 3/25/2016.
- */
 public class Minions extends Kaart {
 
 
