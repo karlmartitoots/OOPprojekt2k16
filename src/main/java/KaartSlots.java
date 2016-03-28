@@ -36,7 +36,7 @@ public class KaartSlots {
         this.minionname=minionname;
         this.kaardilaius=kaardilaius;
         this.kaardipikkus=kaardipikkus;
-        display = ImageIO.read(new File("Mäng\\" + minionname + ".png"));
+        display = ImageIO.read(new File("src\\main\\resources\\" + minionname + ".png"));
     }
     List<Minions> DrawAllies(Graphics g, double width, double height, List<Minions>  minionid) throws IOException {
         minionid.add(new Minions(minionname, attack, life, cardcost, effect, flavor));

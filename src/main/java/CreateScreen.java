@@ -169,8 +169,8 @@ public class CreateScreen extends JFrame implements MouseListener {
                     }
                 }
 
-                displayOut = ImageIO.read(new File("Mäng\\playerdisplay.png"));
-                displayIn = ImageIO.read(new File("Mäng\\playerdisplaysmall.png"));
+                displayOut = ImageIO.read(new File("src\\main\\resources\\playerdisplay.png"));
+                displayIn = ImageIO.read(new File("src\\main\\resources\\playerdisplaysmall.png"));
                 List<Kaart> pakk = new ArrayList<>();
                 Kaart esimiene = new Kaart("esimene", 10, 10, 10, "none", "");
                 esimiene.setKaartX(200);

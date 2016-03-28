@@ -19,7 +19,7 @@ public class Kaart {
         this.effect = effect;
         this.flavor = flavor;
         try {
-            display = ImageIO.read(new File("Mäng\\" + minionname + ".png"));
+            display = ImageIO.read(new File("src\\main\\resources\\" + minionname + ".png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
