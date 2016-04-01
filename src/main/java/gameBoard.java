@@ -1,13 +1,18 @@
+import com.sun.xml.internal.bind.v2.TODO;
+
 import java.util.*;
 
-/**
- * Created by Alex on 31/03/2016.
- */
+
 public class gameBoard {
     private final int xDimension = 10;
     private final int yDimension = 10;
     private int[][] gameBoard = new int[xDimension][yDimension];
     //Every minion can be stored as an integer on the board - negative value for player a, positive for b. Possible to put unique id for every card.
+
+    public void placeGenerals(General white, General black) {
+        gameBoard[white.getStartingWhite().getxCord()][white.getStartingWhite().getyCord()] = white.getID();
+        gameBoard[black.getStartingBlack().getxCord()][black.getStartingBlack().getyCord()] = black.getID() * (-1);
+    }
 
     public void moveUnit(Minion minion, Square target) {
         Square parent = minion.getCurrentPosition();
@@ -18,12 +23,35 @@ public class gameBoard {
 
     }
 
+    public List<Square> getAllPossibleSquares(Minion minion) {
+        //TODO make on function for BFS
+        Queue<Square> queue = new LinkedList<>();
+        Square start = minion.getCurrentPosition();
+        List<Square> possibleToMove = new ArrayList<>();
+        queue.add(start);
+        boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
+        hasBeenVisited[start.integerValue(xDimension)] = true;
+        while (!queue.isEmpty()) {
+            Square parent = queue.poll();
+            List<Square> toExplore = expand(parent);
+            for (Square square : toExplore) {
+                if (!hasBeenVisited[square.integerValue(xDimension)] && squareIsEmpty(square) && start.getDistance(square) <= minion.getSpeed()) {
+                    hasBeenVisited[square.integerValue(xDimension)] = true;
+                    possibleToMove.add(square);
+                    queue.add(square);
+                }
+            }
+        }
+        return possibleToMove;
+    }
+
     public Stack<Square> getPath(Square start, Square end) {
         //Does a BFS for the path;
         Queue<Square> queue = new LinkedList<>();
         Map<Square, Square> paths = new HashMap<>();
         queue.add(start);
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
+        hasBeenVisited[start.integerValue(xDimension)] = true;
         while (!queue.isEmpty()) {
 
             Square parent = queue.poll();
@@ -75,5 +103,6 @@ public class gameBoard {
         }
         return pathToGo;
     }
+
 
 }

@@ -14,6 +14,10 @@ public class Square {
         return xDim * xCord + yCord;
     }
 
+    public int getDistance(Square square) {
+        return Math.abs(xCord - square.getxCord()) + Math.abs(yCord - square.getyCord());
+    }
+
     public int getxCord() {
         return xCord;
     }
