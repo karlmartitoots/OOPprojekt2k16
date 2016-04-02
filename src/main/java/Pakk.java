@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +37,12 @@ public class Pakk {
     public List<Kaart> loadPaki(String filename) {
         filename += ".txt";
         List<Kaart> pakk = new ArrayList<>();
-        Andmebass andmebass = new Andmebass();
+        Andmebaas andmebaas = new Andmebaas();
         try {
             int counter = 0;
             Scanner sc = new Scanner(new File(filename), "UTF-8");
             while (sc.hasNext() && counter < pakisuurus) {
-                pakk.add(andmebass.readKaart(sc.nextLine()));
+                pakk.add(andmebaas.readKaart(sc.nextLine()));
                 counter++;
             }
         } catch (IOException e) {

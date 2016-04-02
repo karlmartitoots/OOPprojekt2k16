@@ -1,13 +1,28 @@
+import javafx.scene.Parent;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+
 /**
  * Created by Alex on 31/03/2016.
  */
-public class Square {
+public class Square extends Parent {
     private int xCord;
     private int yCord;
+    private final int width = 50;
+    private final int heigth = 50;
+    private Rectangle rectangle;
 
     public Square(int xCord, int yCord) {
         this.xCord = xCord;
         this.yCord = yCord;
+        rectangle = new Rectangle(xCord * width, yCord * heigth, width, heigth);
+        getChildren().add(rectangle);
+        setOnMouseClicked(event -> {
+            if (rectangle.getFill() == Color.RED) {
+                rectangle.setFill(Color.BLUE);
+            } else rectangle.setFill(Color.RED);
+        });
     }
 
     public int integerValue(int xDim) {
@@ -33,6 +48,11 @@ public class Square {
     public void setyCord(int yCord) {
         this.yCord = yCord;
     }
+
+    public void setFill(Paint paint) {
+        rectangle.setFill(paint);
+    }
+
 
     @Override
     public String toString() {

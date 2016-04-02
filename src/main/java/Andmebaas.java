@@ -6,7 +6,7 @@ import java.sql.Statement;
 /**
  * Created by Alex on 27/03/2016.
  */
-public class Andmebass {
+public class Andmebaas {
     public void createBase() {
         Connection connection;
         Statement statement;
