@@ -53,6 +53,17 @@ public class Square extends Parent {
         rectangle.setFill(paint);
     }
 
+    public void setStroke(Paint paint) {
+        rectangle.setStroke(paint);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeigth() {
+        return heigth;
+    }
 
     @Override
     public String toString() {
