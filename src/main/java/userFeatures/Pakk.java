@@ -1,18 +1,18 @@
+package userFeatures;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import card.*;
+
 public class Pakk {
-    private List<Kaart> kaardiPakk = new ArrayList<>();
+    private List<Card> kaardiPakk = new ArrayList<>();
     private final int pakisuurus = 30;
 
-    public Pakk(String pakinimi) {
-        this.kaardiPakk = loadPaki(pakinimi);
-    }
 
-    public Pakk(List<Kaart> kaardiPakk) {
+    public Pakk(List<Card> kaardiPakk) {
         this.kaardiPakk = kaardiPakk;
     }
 
@@ -23,20 +23,20 @@ public class Pakk {
     }
 
     private void swap(int i, int j) {
-        Kaart holder = kaardiPakk.get(i);
+        Card holder = kaardiPakk.get(i);
         kaardiPakk.set(i, kaardiPakk.get(j));
         kaardiPakk.set(j, holder);
     }
 
-    public Kaart draw() {
+    public Card draw() {
         if (kaardiPakk.size() > 0) {
             return kaardiPakk.remove(0);
         } else return null;
     }
-
-    public List<Kaart> loadPaki(String filename) {
+    /*
+    public List<Card> loadPaki(String filename) {
         filename += ".txt";
-        List<Kaart> pakk = new ArrayList<>();
+        List<Card> pakk = new ArrayList<>();
         Andmebaas andmebaas = new Andmebaas();
         try {
             int counter = 0;
@@ -50,8 +50,9 @@ public class Pakk {
         }
         return pakk;
     }
+    */
 
-    public List<Kaart> getKaardiPakk() {
+    public List<Card> getKaardiPakk() {
         return kaardiPakk;
     }
 }

@@ -1,3 +1,8 @@
+
+package card;
+
+import userFeatures.Square;
+
 public class Minion extends Card {
     private Square currentPosition;
     private final int ID;

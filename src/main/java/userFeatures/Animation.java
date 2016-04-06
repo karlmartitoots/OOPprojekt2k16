@@ -1,7 +1,4 @@
-/**
- * Created by Alex on 02/04/2016.
- */
-
+package userFeatures;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -38,6 +35,7 @@ public class Animation extends Application {
             }
         }
         primaryStage.setScene(new Scene(root));
+        primaryStage.setTitle("Card game");
         primaryStage.show();
 
 

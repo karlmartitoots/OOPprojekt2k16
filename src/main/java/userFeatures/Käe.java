@@ -1,12 +1,16 @@
+package userFeatures;
+
+import card.Card;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Käe {
     private final int käeSuurus = 7;
-    private List<Kaart> käe = new ArrayList<>();
+    private List<Card> käe = new ArrayList<>();
 
-    public void lisaKaart(Kaart kaart) {
-        käe.add(kaart);
+    public void lisaKaart(Card card) {
+        käe.add(card);
     }
 
     public void visataKäe() {

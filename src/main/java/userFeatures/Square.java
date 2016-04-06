@@ -1,11 +1,10 @@
+package userFeatures;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
-/**
- * Created by Alex on 31/03/2016.
- */
+
 public class Square extends Parent {
     private int xCord;
     private int yCord;
