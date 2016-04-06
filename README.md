@@ -45,3 +45,9 @@ Members:<br>
 <td>Mäng saab mängida client/server abil</td>
 </tr>
 </table>
+Games for reference:
+<ul>
+<li>http://duelyst.gamepedia.com/Game_Rules</li>
+<li>http://hearthstone.gamepedia.com/Hearthstone_Wiki</li>
+<li>http://mtg.wikia.com/wiki/Magic:_The_Gathering_Wiki</li>
+</ul>
