@@ -12,3 +12,5 @@ public class Minions extends Kaart {
         g.drawImage(super.getDisplay(), (int) width - 500, (int) height - 600, 500, 600, null);
     }
 }
+
+//miks on meil kaks minionide ja kaks kaart klassi? kummaga tuleks arvestada? 
