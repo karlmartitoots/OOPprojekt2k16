@@ -41,19 +41,39 @@ public class Animation extends Application {
 
     }
 
-    public double getPixelsX(int x) {
+    /**
+     * Gets the X coordinates of the given square in pixels.
+     *
+     * @param x The X coordinate of the square on the board
+     * @return The X Pixel coordinates of the given square.
+     */
+    public double getPixelsForSquareX(int x) {
         return x * exampleSquare.getWidth();
     }
 
-    public double getPixelsY(int y) {
+    /**
+     * Gets the Y coordinates of the given square in pixels.
+     *
+     * @param y The Y coordinate of the square on the board
+     * @return The Y Pixel coordinates of the given square.
+     */
+    public double getPixelsForSquareY(int y) {
         return y * exampleSquare.getHeigth();
     }
 
+    /**
+     * Finds the coordinates of the square on the board by their pixel values
+     *
+     * @param pixelX X pixel coordinates of the square
+     * @param pixelY Y pixel coordinates of the square
+     * @return Coordinates of the square.
+     */
+    //I have no idea what is the best data structure to use to store the coordinates of points so it is subject to change still.
     public Point2D getSquare(double pixelX, double pixelY) {
         for (int x = 0; x < gameBoard.getxDimension(); x++) {
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
-                double left = getPixelsX(x);
-                double top = getPixelsY(y);
+                double left = getPixelsForSquareX(x);
+                double top = getPixelsForSquareY(y);
                 Rectangle rectangle = new Rectangle(left, top, exampleSquare.getWidth(), exampleSquare.getHeigth());
                 if (rectangle.contains(pixelX, pixelY)) {
                     return new Point2D(x, y);
