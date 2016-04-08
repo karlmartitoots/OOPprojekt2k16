@@ -9,7 +9,7 @@ Members:<br>
 </ul>
 Soureces for images:
 <ul>
-<li><a "href=http://www.jaestudio.com/">Jason Engle</a>
+<li><a href="http://www.jaestudio.com/">Jason Engle</a>
 </ul>
 <table style="width:100%">
 <tr>
