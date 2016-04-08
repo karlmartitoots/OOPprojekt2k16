@@ -1,5 +1,7 @@
 package card;
+
 public class Equipment extends Card {
+
     private int bonusAttack;
     private int bonusHealth;
 

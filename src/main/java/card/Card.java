@@ -1,6 +1,7 @@
 package card;
 
 public abstract class Card {
+
     private final String name;
     private final int cost;
     private final String effect;
