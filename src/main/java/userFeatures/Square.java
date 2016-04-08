@@ -12,6 +12,12 @@ public class Square extends Parent {
     private final int heigth = 50;
     private Rectangle rectangle;
 
+    /**
+     * Constructor
+     *
+     * @param xCord x Coordinates of the square on the game board
+     * @param yCord Y Coordinates of the square on the game board
+     */
     public Square(int xCord, int yCord) {
         this.xCord = xCord;
         this.yCord = yCord;
@@ -24,14 +30,24 @@ public class Square extends Parent {
         });
     }
 
+    /**
+     * Calculates the value of the square as if all the squares on the board would be in straight line. This is done using the formula xDim*xCord+yCord
+     * @param xDim The X dimension of the board
+     * @return The place the square would be on the line
+     */
     public int integerValue(int xDim) {
         return xDim * xCord + yCord;
     }
 
-    public int getDistance(Square square) {
-        return Math.abs(xCord - square.getxCord()) + Math.abs(yCord - square.getyCord());
+    /**
+     * Calculates the moves that are needed to move from toMoveTo A to toMoveTo B. Movement is horizontal and vertical.
+     *
+     * @param toMoveTo toMove to
+     * @return the Moves needed to make
+     */
+    public int getDistance(Square toMoveTo) {
+        return Math.abs(xCord - toMoveTo.getxCord()) + Math.abs(yCord - toMoveTo.getyCord());
     }
-
     public int getxCord() {
         return xCord;
     }
