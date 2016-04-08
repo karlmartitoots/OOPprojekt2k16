@@ -1,5 +1,10 @@
 package userFeatures;
+
+import card.Card;
+import card.General;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -11,23 +16,32 @@ public class Square extends Parent {
     private final int width = 50;
     private final int heigth = 50;
     private Rectangle rectangle;
-
+    private ImageView imageView;
+    private General card;
     /**
      * Constructor
      *
      * @param xCord x Coordinates of the square on the game board
      * @param yCord Y Coordinates of the square on the game board
      */
-    public Square(int xCord, int yCord) {
+    public Square(int xCord, int yCord, General card) {
         this.xCord = xCord;
         this.yCord = yCord;
-        rectangle = new Rectangle(xCord * width, yCord * heigth, width, heigth);
-        getChildren().add(rectangle);
-        setOnMouseClicked(event -> {
-            if (rectangle.getFill() == Color.RED) {
-                rectangle.setFill(Color.BLUE);
-            } else rectangle.setFill(Color.RED);
-        });
+        this.card = card;
+
+        if (hasCardOnSquare()) {
+            imageView = new ImageView(card.getSmallImage());
+            Rectangle2D rectangle2D = new Rectangle2D(xCord * width, yCord * heigth, width, heigth);
+            imageView.setViewport(rectangle2D);
+        } else {
+            rectangle = new Rectangle(xCord * width, yCord * heigth, width, heigth);
+            getChildren().add(rectangle);
+            setOnMouseClicked(event -> {
+                if (rectangle.getFill() == Color.RED) {
+                    rectangle.setFill(Color.BLUE);
+                } else rectangle.setFill(Color.RED);
+            });
+        }
     }
 
     /**
@@ -80,11 +94,43 @@ public class Square extends Parent {
         return heigth;
     }
 
+    /**
+     * Places the card on the board;
+     *
+     * @param card card to place on square
+     */
+    public void placeCard(General card) {
+        this.card = card;
+    }
+
+    /**
+     * Removes a card from the current square
+     */
+    public void removeCard() {
+        card = null;
+    }
+
+    /**
+     * Checks if the square conatains a card
+     *
+     * @return true if has a card on the square, false if otherwise
+     */
+    public boolean hasCardOnSquare() {
+        if (card != null) return true;
+        else return false;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
     @Override
     public String toString() {
-        return "Node{" +
+        return "Square{" +
                 "xCord=" + xCord +
                 ", yCord=" + yCord +
+                ", rectangle=" + rectangle +
+                ", imageView=" + imageView +
                 '}';
     }
-}
+    }

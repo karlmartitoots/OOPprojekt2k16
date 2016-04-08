@@ -121,7 +121,7 @@ public class GameBoard {
         List<Square> toGoto = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                Square pot = new Square(square.getxCord() + i, square.getyCord() + j);
+                Square pot = new Square(square.getxCord() + i, square.getyCord() + j, null);
                 if (Math.abs(i - j) == 1 && belongsToBoard(pot)) {
                     toGoto.add(pot);
                 }
