@@ -7,7 +7,7 @@ Members:<br>
 <li>Karl Marti</li>
 <li>Aleksis Zalitis</li>
 </ul>
-Soureces for images:
+Sources for images:
 <ul>
 <li><a href="http://www.jaestudio.com/">Jason Engle</a>
 </ul>
