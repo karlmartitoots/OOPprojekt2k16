@@ -3,6 +3,8 @@ package card;
 import javafx.scene.image.Image;
 import userFeatures.Square;
 
+import java.io.IOException;
+
 /**
  * General is subclass of the Minion class. It is a minion that represents the main leader of the army in the game.
  */
@@ -39,7 +41,7 @@ public class General extends Minion {
      * @param health Health value of the card
      * @param speed  Speed value of the card
      */
-    public General(String name, int cost, String effect, int ID, int attack, int health, int speed) {
+    public General(String name, int cost, String effect, int ID, int attack, int health, int speed) throws IOException {
         super(name, cost, effect, ID, attack, health, speed);
         image = new Image(name + ".jpg");
         smallImage = new Image(name + "Small.jpg");

@@ -3,6 +3,8 @@ package card;
 
 import userFeatures.Square;
 
+import java.io.IOException;
+
 /**
  * Subclass of the card class. The class represents a minon type of card which are the main type of creatures in the game.
  */
@@ -25,7 +27,7 @@ public class Minion extends Card {
      * @param maxHp  HP value of the minion
      * @param speed  Speed of the minion
      */
-    public Minion(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) {
+    public Minion(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) throws IOException {
         super(name, cost, effect);
         this.ID = ID;
         this.attack = attack;
