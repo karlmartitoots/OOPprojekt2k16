@@ -25,7 +25,6 @@ public class Minion extends Card {
      * @param maxHp  HP value of the minion
      * @param speed  Speed of the minion
      */
-
     public Minion(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) {
         super(name, cost, effect);
         this.ID = ID;
@@ -39,7 +38,6 @@ public class Minion extends Card {
      * Getter for card ID
      * @return ID of the card
      */
-
     public int getID() {
         return ID;
     }

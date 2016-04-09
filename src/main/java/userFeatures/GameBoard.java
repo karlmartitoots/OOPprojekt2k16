@@ -92,26 +92,30 @@ public class GameBoard {
         return squaresPossibleToMoveTo;
     }
 
-
+    /**
+     * Finds the fastest path to the pointed square in parameter end using BFS
+     * @param start Starting square
+     * @param end End square
+     * @return Returns a stack. The next square on the path is on top of the stack.
+     */
     public Stack<Square> getPath(Square start, Square end) {
-        //TODO: Should merge with the other BFS method
-        //Does a BFS for the path;
-        Queue<Square> queue = new LinkedList<>();
+        //TODO: Should merge with the other BFS method if possible
+        Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
         Map<Square, Square> paths = new HashMap<>();
 
-        queue.add(start);
+        queueOfSquaresToCheck.add(start);
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
         hasBeenVisited[start.intValue(xDimension)] = true;
-        while (!queue.isEmpty()) {
+        while (!queueOfSquaresToCheck.isEmpty()) {
 
-            Square nextSquareToGoTo = queue.poll();
-            if (nextSquareToGoTo == end) break;
-            List<Square> toExplore = expand(nextSquareToGoTo);
+            Square nextSquare = queueOfSquaresToCheck.poll();
+            if (nextSquare == end) break;
+            List<Square> toExplore = expand(nextSquare);
             for (Square currentSquare : toExplore) {
                 if (!hasBeenVisited[currentSquare.intValue(xDimension)] && IsEmpty(currentSquare)) {
                     hasBeenVisited[currentSquare.intValue(xDimension)] = true;
-                    paths.put(currentSquare, nextSquareToGoTo);
-                    queue.add(currentSquare);
+                    paths.put(currentSquare, nextSquare);
+                    queueOfSquaresToCheck.add(currentSquare);
                 }
             }
         }
@@ -176,6 +180,5 @@ public class GameBoard {
         }
         return pathToGo;
     }
-
 
 }

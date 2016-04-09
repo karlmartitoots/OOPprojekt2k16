@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Class to store all generals that are in the game
  */
-//I figure this is a better solution than using a class for each of the seperatly although we can play around with that.
+//I figure this is a better solution than using a class for each of them separatly although we can play around with that.
 public class Generals {
 
     private General taavi = new General("taavi", 0, "", 1, 30, 30, 5);

@@ -22,7 +22,6 @@ public class General extends Minion {
 
     /**
      * Gets the small image of the card
-     *
      * @return small image of the card
      */
     public Image getSmallImage() {
@@ -35,10 +34,10 @@ public class General extends Minion {
      * @param name   Name of the card
      * @param cost   Manacost of the card
      * @param effect Effect of the card
-     * @param ID     Identifyer of the card
+     * @param ID     ID value of the card
      * @param attack Attack value of the card
-     * @param health Health of the card
-     * @param speed  Speed of the card
+     * @param health Health value of the card
+     * @param speed  Speed value of the card
      */
     public General(String name, int cost, String effect, int ID, int attack, int health, int speed) {
         super(name, cost, effect, ID, attack, health, speed);

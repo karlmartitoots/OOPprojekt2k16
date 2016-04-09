@@ -1,6 +1,9 @@
 package userFeatures;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import card.*;
 
@@ -28,7 +31,7 @@ public class Deck {
     }
 
     /**
-     * Swaps the cards with indexes i and j places
+     * Swaps the places of cards with indexes i and j
      * @param i index of the first card
      * @param j index of the second card
      */
@@ -47,24 +50,44 @@ public class Deck {
             return deckOfCards.remove(0);
         } else return null;
     }
-    /*
-    public List<Card> loadPaki(String filename) {
-        filename += ".txt";
-        List<Card> pakk = new ArrayList<>();
-        Andmebaas andmebaas = new Andmebaas();
-        try {
+
+    /**
+     * Loads a deck of 30 cards
+     * @param fileName Name of the file that contains all cards
+     * @return Returns a deck of cards
+     * @throws FileNotFoundException Throws a FileNotFoundException if fileName.txt doesnt exist.
+     */
+    public List<Card> loadDeck(String fileName) throws FileNotFoundException {
+        fileName += ".txt";
+        List<Card> deck = new ArrayList<>();
+        try (
+                Scanner sc = new Scanner(new File(fileName), "UTF-8")){
             int counter = 0;
-            Scanner sc = new Scanner(new File(filename), "UTF-8");
-            while (sc.hasNext() && counter < deckSize) {
-                pakk.add(andmebaas.readKaart(sc.nextLine()));
+            String[] parts;
+            while (sc.hasNextLine() && counter < deckSize) {
+                parts = sc.nextLine().split(";");
+                switch(parts[0]){
+                    case "Equipment":
+                        deck.add(new Equipment(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                        break;
+                    case "Minion":
+                        deck.add(new Equipment(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                        break;
+                    case "Spell":
+                        deck.add(new Equipment(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                        break;
+                    default:
+                        System.out.println("File with cards is broken on line: " + (counter + 1));
+                        System.exit(-1);
+                }
                 counter++;
             }
-        } catch (IOException e) {
-            throw new RuntimeException();
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Can't load deck. File of cards not found.");
         }
-        return pakk;
+        return deck;
     }
-    */
+
 
     /**
      * Gets the current cards in the deck
