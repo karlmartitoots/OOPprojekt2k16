@@ -49,7 +49,7 @@ public class Square extends Parent {
      * @param xDim The X dimension of the board
      * @return The place the square would be on the line
      */
-    public int integerValue(int xDim) {
+    public int intValue(int xDim) {
         return xDim * xCord + yCord;
     }
 
@@ -116,8 +116,7 @@ public class Square extends Parent {
      * @return true if has a card on the square, false if otherwise
      */
     public boolean hasCardOnSquare() {
-        if (card != null) return true;
-        else return false;
+        return card != null;
     }
 
     public ImageView getImageView() {

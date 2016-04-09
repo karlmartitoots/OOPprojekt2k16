@@ -5,9 +5,11 @@ import java.util.*;
 import card.*;
 
 public class GameBoard {
+
     private final int xDimension = 10;
     private final int yDimension = 10;
     private int[][] gameBoard = new int[xDimension][yDimension];
+
     /*Every minion can be stored as an integer on the board - negative value for player a, positive for b. Possible to put unique id for every card.
     Although keeping the data of the board can be subject to change if there is a better data structure
     */
@@ -67,64 +69,71 @@ public class GameBoard {
      * @return All squares the minion can move
      */
     public List<Square> getAllPossibleSquares(Minion minion) {
-        Queue<Square> queue = new LinkedList<>();
-        Square start = minion.getCurrentPosition();
-        List<Square> possibleToMove = new ArrayList<>();
-        queue.add(start);
+
+        Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
+        List<Square> squaresPossibleToMoveTo = new ArrayList<>();
+
+        Square startSquare = minion.getCurrentPosition();
+        queueOfSquaresToCheck.add(startSquare);
+
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[start.integerValue(xDimension)] = true;
-        while (!queue.isEmpty()) {
-            Square parent = queue.poll();
-            List<Square> toExplore = expand(parent);
-            for (Square square : toExplore) {
-                if (!hasBeenVisited[square.integerValue(xDimension)] && squareIsEmpty(square) && start.getDistance(square) <= minion.getSpeed()) {
-                    hasBeenVisited[square.integerValue(xDimension)] = true;
-                    possibleToMove.add(square);
-                    queue.add(square);
+        hasBeenVisited[startSquare.intValue(xDimension)] = true;
+        while (!queueOfSquaresToCheck.isEmpty()) {
+            Square nextSquareToCheck = queueOfSquaresToCheck.poll();
+            List<Square> toExplore = expand(nextSquareToCheck);
+            for (Square currentSquare : toExplore) {
+                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && IsEmpty(currentSquare) && (startSquare.getDistance(currentSquare) <= minion.getSpeed())) {
+                    hasBeenVisited[currentSquare.intValue(xDimension)] = true;
+                    squaresPossibleToMoveTo.add(currentSquare);
+                    queueOfSquaresToCheck.add(currentSquare);
                 }
             }
         }
-        return possibleToMove;
+        return squaresPossibleToMoveTo;
     }
 
-    //Should merge wtih the other BFS method TODO
+
     public Stack<Square> getPath(Square start, Square end) {
+        //TODO: Should merge with the other BFS method
         //Does a BFS for the path;
         Queue<Square> queue = new LinkedList<>();
         Map<Square, Square> paths = new HashMap<>();
+
         queue.add(start);
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[start.integerValue(xDimension)] = true;
+        hasBeenVisited[start.intValue(xDimension)] = true;
         while (!queue.isEmpty()) {
 
-            Square parent = queue.poll();
-            if (parent == end) break;
-            List<Square> toExplore = expand(parent);
-            for (Square square : toExplore) {
-                if (!hasBeenVisited[square.integerValue(xDimension)] && squareIsEmpty(square)) {
-                    hasBeenVisited[square.integerValue(xDimension)] = true;
-                    paths.put(square, parent);
-                    queue.add(square);
+            Square nextSquareToGoTo = queue.poll();
+            if (nextSquareToGoTo == end) break;
+            List<Square> toExplore = expand(nextSquareToGoTo);
+            for (Square currentSquare : toExplore) {
+                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && IsEmpty(currentSquare)) {
+                    hasBeenVisited[currentSquare.intValue(xDimension)] = true;
+                    paths.put(currentSquare, nextSquareToGoTo);
+                    queue.add(currentSquare);
                 }
             }
         }
-        Stack<Square> path = generatePath(paths, start, end);
-        return path;
+        return generatePath(paths, start, end);
     }
 
     /**
      * Expands the current search space for searching
-     * @param square toExpand
+     * @param square square to expand from
      * @return Expanded squares
      */
     private List<Square> expand(Square square) {
         List<Square> toGoto = new ArrayList<>();
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                Square pot = new Square(square.getxCord() + i, square.getyCord() + j, null);
-                if (Math.abs(i - j) == 1 && belongsToBoard(pot)) {
-                    toGoto.add(pot);
-                }
+        Square nextSquare;
+        for(int i = -1; i < 1; i++){
+            nextSquare = new Square(square.getxCord() + i, square.getyCord() + (i +1), null);
+            if (belongsToBoard(nextSquare)) {
+                toGoto.add(nextSquare);
+            }
+            nextSquare = new Square(square.getxCord() - i, square.getyCord() - (i +1), null);
+            if (belongsToBoard(nextSquare)) {
+                toGoto.add(nextSquare);
             }
         }
         return toGoto;
@@ -132,35 +141,34 @@ public class GameBoard {
 
     /**
      * Checks if the square with the given coordinates belongs to the board
-     * @param square toCheck
+     * @param square square to check if it belongs to the board
      * @return True if belongs, false otherwise
      */
     boolean belongsToBoard(Square square) {
-        if (square.getxCord() >= 0 && square.getxCord() < xDimension && square.getyCord() >= 0 && square.getyCord() < 0)
-            return true;
-        else return false;
+        return square.getxCord() >= 0 && square.getxCord() < xDimension && square.getyCord() >= 0 && square.getyCord() < 0;
     }
 
     /**
      * Checks if the given square is currently occupied by any unit
-     * @param square to Check
-     * @return True if empty, False otherwise
+     * @param square square to check if it is occupied
+     * @return True if empty, false otherwise
      */
-    boolean squareIsEmpty(Square square) {
-        if (gameBoard[square.getxCord()][square.getyCord()] == 0) return true;
-        else return false;
+    boolean IsEmpty(Square square) {
+        return gameBoard[square.getxCord()][square.getyCord()] == 0;
     }
 
     /**
-     * Generets the path to move from the given map into the stack for easier processing
+     * Generates the path to move from the given map into the stack for easier processing
      * @param paths Map containing paths
      * @param start Starting Square
-     * @param end Ending  Square
+     * @param end Ending Square
      * @return Stack of the path to move.
      */
     private Stack<Square> generatePath(Map<Square, Square> paths, Square start, Square end) {
+
         Stack<Square> pathToGo = new Stack<>();
         Square toGo;
+
         Square previous = end;
         while ((toGo = paths.get(previous)) != start) {
             pathToGo.add(toGo);

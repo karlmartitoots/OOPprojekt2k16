@@ -5,6 +5,7 @@ import java.util.List;
 import card.*;
 
 public class Deck {
+
     private List<Card> deckOfCards = new ArrayList<>();
     private final int deckSize = 30;
 
