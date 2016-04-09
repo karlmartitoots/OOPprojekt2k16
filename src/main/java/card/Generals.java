@@ -1,5 +1,6 @@
 package card;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,14 @@ public class Generals {
     private List<General> allGenerals = new ArrayList<>();
 
     public Generals() {
-        allGenerals.add(taavi.getID() - 1, taavi);
-        allGenerals.add(märt.getID() - 1, märt);
+        allGenerals.add(null);
+        allGenerals.add(taavi.getID(), taavi);
+        allGenerals.add(märt.getID(), märt);
     }
 
     public List<General> getAllGenerals() {
         return allGenerals;
     }
+
 
 }

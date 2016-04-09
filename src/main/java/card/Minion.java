@@ -27,7 +27,7 @@ public class Minion extends Card {
      * @param maxHp  HP value of the minion
      * @param speed  Speed of the minion
      */
-    public Minion(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) throws IOException {
+    public Minion(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) {
         super(name, cost, effect);
         this.ID = ID;
         this.attack = attack;

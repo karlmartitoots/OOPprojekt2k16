@@ -1,7 +1,7 @@
 package card;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import javafx.scene.image.Image;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ public abstract class Card {
     private final int cost;
     private final String effect;
     private final Image image;
+    private final Image smallImage;
 
     /**
      * Constructor
@@ -22,11 +23,12 @@ public abstract class Card {
      * @param cost   Manacost of the card
      * @param effect Text effect of the card
      */
-    public Card(String name, int cost, String effect) throws IOException {
+    public Card(String name, int cost, String effect) {
         this.name = name;
         this.cost = cost;
         this.effect = effect;
-        this.image = ImageIO.read(new File("src\\main\\resources\\" + name + ".png"));
+        this.image = new Image(name + ".jpg");
+        this.smallImage = new Image(name + "Small.jpg");
     }
 
 }

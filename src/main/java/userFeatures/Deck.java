@@ -1,6 +1,7 @@
 package userFeatures;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -57,7 +58,7 @@ public class Deck {
      * @return Returns a deck of cards
      * @throws FileNotFoundException Throws a FileNotFoundException if fileName.txt doesnt exist.
      */
-    public List<Card> loadDeck(String fileName) throws FileNotFoundException {
+    public List<Card> loadDeck(String fileName) {
         fileName += ".txt";
         List<Card> deck = new ArrayList<>();
         try (
@@ -83,7 +84,7 @@ public class Deck {
                 counter++;
             }
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Can't load deck. File of cards not found.");
+            throw new RuntimeException("Can't load deck. File of cards not found.");
         }
         return deck;
     }

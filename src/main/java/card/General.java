@@ -41,7 +41,7 @@ public class General extends Minion {
      * @param health Health value of the card
      * @param speed  Speed value of the card
      */
-    public General(String name, int cost, String effect, int ID, int attack, int health, int speed) throws IOException {
+    public General(String name, int cost, String effect, int ID, int attack, int health, int speed) {
         super(name, cost, effect, ID, attack, health, speed);
         image = new Image(name + ".jpg");
         smallImage = new Image(name + "Small.jpg");

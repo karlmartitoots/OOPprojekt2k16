@@ -11,19 +11,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Animation extends Application {
 
     private Square exampleSquare = new Square(0, 0, null);
     private GameBoard gameBoard = new GameBoard();
     private Generals generals = new Generals();
+
+    public Animation() throws IOException {
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        General taavi = generals.getAllGenerals().get(0);
-        General märt = generals.getAllGenerals().get(1);
+        General taavi = generals.getAllGenerals().get(1);
+        General märt = generals.getAllGenerals().get(2);
         gameBoard.placeGenerals(taavi, märt);
         Pane root = new Pane();
         root.setOnMouseClicked((event) -> {
@@ -41,7 +47,7 @@ public class Animation extends Application {
                     root.getChildren().add(square);
 
                 } else {
-                    Square square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j]) - 1));
+                    Square square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
                     root.getChildren().add(square);
                 }
 
