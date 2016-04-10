@@ -2,8 +2,7 @@ package card;
 
 import javafx.scene.image.Image;
 
-import java.io.File;
-import java.io.IOException;
+
 
 /**
  * The card class represents the skeleton of card. It has consists of the three main features a card has: Name,
@@ -16,6 +15,25 @@ public abstract class Card {
     private final String effect;
     private final Image image;
     private final Image smallImage;
+
+    /**
+     * Gets the image of the card
+     *
+     * @return image of the card
+     */
+    public Image getImage() {
+        return image;
+    }
+
+    /**
+     * Gets the small image of the card
+     *
+     * @return small image of the card
+     */
+    public Image getSmallImage() {
+        return smallImage;
+    }
+
 
     /**
      * Constructor

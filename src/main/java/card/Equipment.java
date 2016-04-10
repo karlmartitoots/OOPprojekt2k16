@@ -1,6 +1,5 @@
 package card;
 
-import java.io.IOException;
 
 public class Equipment extends Card {
 

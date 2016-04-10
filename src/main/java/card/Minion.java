@@ -3,8 +3,6 @@ package card;
 
 import userFeatures.Square;
 
-import java.io.IOException;
-
 /**
  * Subclass of the card class. The class represents a minon type of card which are the main type of creatures in the game.
  */

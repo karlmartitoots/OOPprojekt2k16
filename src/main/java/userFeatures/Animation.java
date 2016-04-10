@@ -48,13 +48,10 @@ public class Animation extends Application {
 
                 } else {
                     Square square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
-                    root.getChildren().add(square);
+                    root.getChildren().add(square.getImageView());
                 }
 
             }
-        }
-        for (Node node : root.getChildren()) {
-            System.out.println(node);
         }
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Card game");
