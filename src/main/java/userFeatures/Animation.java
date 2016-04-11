@@ -3,6 +3,8 @@ package userFeatures;
 import card.General;
 import card.Generals;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -53,7 +55,20 @@ public class Animation extends Application {
 
             }
         }
-        primaryStage.setScene(new Scene(root));
+
+        Scene scene = new Scene(root);
+        scene.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                System.out.println("Width: " + newSceneWidth);
+            }
+        });
+        scene.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                System.out.println("Height: " + newSceneHeight);
+            }
+        });
+
+        primaryStage.setScene(scene);
         primaryStage.setTitle("Card game");
         primaryStage.show();
 
