@@ -33,7 +33,9 @@ public class GUI extends Application {
         Pane root = new Pane();
         root.setOnMouseClicked((event) -> {
             System.out.println(event.getSceneX() + " , " + event.getSceneY());
-            System.out.println(getSquare(event.getSceneX(), event.getSceneY()));
+            Point2D point = getSquare(event.getSceneX(), event.getSceneY());
+            gameBoard.setSelectedSquare(point);
+            System.out.println(gameBoard.getSelectedSquare());
         });
 
         double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
@@ -55,7 +57,6 @@ public class GUI extends Application {
 
             }
         }
-
         Scene scene = new Scene(root);
         /*
         Width and Height listeners for resizable support

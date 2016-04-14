@@ -3,13 +3,14 @@ package userFeatures;
 import java.util.*;
 
 import card.*;
+import javafx.geometry.Point2D;
 
 public class GameBoard {
 
     private final int xDimension = 10;
     private final int yDimension = 10;
     private int[][] gameBoard = new int[xDimension][yDimension];
-
+    private int selectedSquare = -1;
     /*Every minion can be stored as an integer on the board - negative value for player a, positive for b. Possible to put unique id for every card.
     Although keeping the data of the board can be subject to change if there is a better data structure
     */
@@ -75,7 +76,6 @@ public class GameBoard {
 
         Square startSquare = minion.getCurrentPosition();
         queueOfSquaresToCheck.add(startSquare);
-
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
         hasBeenVisited[startSquare.intValue(xDimension)] = true;
         while (!queueOfSquaresToCheck.isEmpty()) {
@@ -91,6 +91,7 @@ public class GameBoard {
         }
         return squaresPossibleToMoveTo;
     }
+
 
     /**
      * Finds the fastest path to the pointed square in parameter end using BFS
@@ -181,4 +182,13 @@ public class GameBoard {
         return pathToGo;
     }
 
+    public void setSelectedSquare(Point2D point) {
+        if (point.getX() >= 0) {
+            selectedSquare = (int) (point.getX() * xDimension + point.getY());
+        } else selectedSquare = -1;
+    }
+
+    public int getSelectedSquare() {
+        return selectedSquare;
+    }
 }
