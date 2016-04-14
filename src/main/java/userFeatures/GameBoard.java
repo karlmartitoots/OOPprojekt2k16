@@ -204,4 +204,8 @@ public class GameBoard {
     public void setToRevert(List<Square> toRevert) {
         this.toRevert = toRevert;
     }
+
+    public void clearRevertable() {
+        toRevert.clear();
+    }
 }

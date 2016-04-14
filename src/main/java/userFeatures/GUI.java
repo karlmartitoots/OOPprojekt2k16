@@ -45,6 +45,7 @@ public class GUI extends Application {
                         root.getChildren().add(square);
                     }
                 }
+                gameBoard.clearRevertable();
             }
             if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasCardOnSquare()) {
                 List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
