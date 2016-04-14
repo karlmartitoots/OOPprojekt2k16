@@ -42,8 +42,10 @@ public class Hand {
         hand.remove(i);
     }
 
-    public List<Card> getHand() {
-        return hand;
-    }
-    
+    /**
+     * Get cards in ur hand as list
+     * @return Cards in hand
+     */
+    public List<Card> getHand(){return hand;}
+
 }
