@@ -19,14 +19,14 @@ public class MinionCard extends Card {
      *
      * @param name   Name of the minion
      * @param cost   Manacost of the minion
-     * @param effect Text effect of the minion
+     * @param description Text description of the minion
      * @param ID     ID of the minion
      * @param attack Attack value of the minion
      * @param maxHp  HP value of the minion
      * @param speed  Speed of the minion
      */
-    public MinionCard(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) {
-        super(name, cost, effect);
+    public MinionCard(String name, int cost, String description, int ID, int attack, int maxHp, int speed) {
+        super(name, cost, description);
         this.ID = ID;
         this.attack = attack;
         this.maxHp = maxHp;

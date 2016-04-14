@@ -17,14 +17,14 @@ public class GeneralCard extends MinionCard {
      *
      * @param name   Name of the card
      * @param cost   Manacost of the card
-     * @param effect Effect of the card
+     * @param description Description of the card
      * @param ID     ID value of the card
      * @param attack Attack value of the card
      * @param health Health value of the card
      * @param speed  Speed value of the card
      */
-    public GeneralCard(String name, int cost, String effect, int ID, int attack, int health, int speed) {
-        super(name, cost, effect, ID, attack, health, speed);
+    public GeneralCard(String name, int cost, String description, int ID, int attack, int health, int speed) {
+        super(name, cost, description, ID, attack, health, speed);
     }
 
     /**
