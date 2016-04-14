@@ -30,8 +30,8 @@ public class Square extends Parent {
 
         if (hasCardOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
-            Rectangle2D rectangle2D = new Rectangle2D(xCord * width, yCord * heigth, width, heigth);
-            imageView.setViewport(rectangle2D);
+            imageView.setX(xCord*50);
+            imageView.setY(yCord*50);
             getChildren().add(imageView);
         } else {
             rectangle = new Rectangle(xCord * width, yCord * heigth, width, heigth);
