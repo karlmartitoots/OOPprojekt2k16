@@ -39,7 +39,10 @@ public class Animation extends Application {
             System.out.println(getSquare(event.getSceneX(), event.getSceneY()));
         });
 
-        root.setPrefSize(2 * gameBoard.getxDimension() * exampleSquare.getWidth(), gameBoard.getyDimension() * exampleSquare.getHeigth());
+        double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
+        double prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth();
+
+        root.setPrefSize(prefWidth, prefHeight);
         for (int i = 0; i < gameBoard.getxDimension(); i++) {
             for (int j = 0; j < gameBoard.getyDimension(); j++) {
                 if (gameBoard.getGameBoard()[i][j] == 0) {
@@ -57,6 +60,8 @@ public class Animation extends Application {
         }
 
         Scene scene = new Scene(root);
+        /*
+        Width and Height listeners for resizable support
         scene.widthProperty().addListener(new ChangeListener<Number>() {
             @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
                 System.out.println("Width: " + newSceneWidth);
@@ -67,7 +72,13 @@ public class Animation extends Application {
                 System.out.println("Height: " + newSceneHeight);
             }
         });
+        TODO: make resizable
+        */
 
+        primaryStage.setMaxWidth(prefWidth);
+        primaryStage.setMaxHeight(prefHeight);
+        primaryStage.setMinWidth(prefWidth);
+        primaryStage.setMinHeight(prefHeight);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Card game");
         primaryStage.show();

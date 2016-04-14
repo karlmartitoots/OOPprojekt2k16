@@ -82,7 +82,7 @@ public class GameBoard {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
             List<Square> toExplore = expand(nextSquareToCheck);
             for (Square currentSquare : toExplore) {
-                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && IsEmpty(currentSquare) && (startSquare.getDistance(currentSquare) <= minion.getSpeed())) {
+                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare) && (startSquare.getDistance(currentSquare) <= minion.getSpeed())) {
                     hasBeenVisited[currentSquare.intValue(xDimension)] = true;
                     squaresPossibleToMoveTo.add(currentSquare);
                     queueOfSquaresToCheck.add(currentSquare);
@@ -112,7 +112,7 @@ public class GameBoard {
             if (nextSquare == end) break;
             List<Square> toExplore = expand(nextSquare);
             for (Square currentSquare : toExplore) {
-                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && IsEmpty(currentSquare)) {
+                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare)) {
                     hasBeenVisited[currentSquare.intValue(xDimension)] = true;
                     paths.put(currentSquare, nextSquare);
                     queueOfSquaresToCheck.add(currentSquare);
@@ -157,7 +157,7 @@ public class GameBoard {
      * @param square square to check if it is occupied
      * @return True if empty, false otherwise
      */
-    boolean IsEmpty(Square square) {
+    boolean squareIsEmpty(Square square) {
         return gameBoard[square.getxCord()][square.getyCord()] == 0;
     }
 
