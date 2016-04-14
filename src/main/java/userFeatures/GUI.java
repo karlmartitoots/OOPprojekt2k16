@@ -37,7 +37,7 @@ public class GUI extends Application {
         });
 
         double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
-        double prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth();
+        double prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth() + 50;
 
         root.setPrefSize(prefWidth, prefHeight);
         for (int i = 0; i < gameBoard.getxDimension(); i++) {
