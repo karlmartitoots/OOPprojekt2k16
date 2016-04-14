@@ -4,6 +4,7 @@ import card.Card;
 import card.GeneralCard;
 import card.Generals;
 import card.MinionCard;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -15,16 +16,20 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GUI extends Application {
-    private int handCardsHeight = 450;
-    private int handCardsWidth = 150;
+    private int handsize= 360;
     private Square exampleSquare = new Square(0, 0, null);
     private GameBoard gameBoard = new GameBoard();
     private Generals generals = new Generals();
+    private int x=-150;
+    Timer timer = new Timer();
+    private boolean turnStarted=true;
     //ugly
     Hand hand=new Hand();
-
+    Hand hand2=new Hand();
 
     public GUI() throws IOException {
     }
@@ -44,20 +49,20 @@ public class GUI extends Application {
             System.out.println(getSquare(event.getSceneX(), event.getSceneY()));
         });
 
-        int prefWidth = handCardsWidth*7 + 20;
-        int prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth()+ handCardsHeight;
+        double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth()+handsize/3;
+        double prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth()+handsize;
 
         root.setPrefSize(prefWidth, prefHeight);
         for (int i = 0; i < gameBoard.getxDimension(); i++) {
             for (int j = 0; j < gameBoard.getyDimension(); j++) {
                 if (gameBoard.getGameBoard()[i][j] == 0) {
-                    Square square = new Square(i + Math.round(prefWidth/187), j, null);
+                    Square square = new Square(i, j, null);
                     square.setFill(Color.LIGHTBLUE);
                     square.setStroke(Color.BLACK);
                     root.getChildren().add(square);
 
                 } else {
-                    Square square = new Square(i + Math.round(prefWidth/200), j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
+                    Square square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
                     root.getChildren().add(square.getImageView());
                 }
 
@@ -80,28 +85,81 @@ public class GUI extends Application {
         });
         TODO: make resizable
         */
-        hand.addCard(new MinionCard("märt",1,"märt",1,1,1,1));//märt.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("taavi",2,"taavi",2,2,2,2));//märt.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("märt",2,"märt",2,2,2,2));//märt.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("taavi",2,"taavi",2,2,2,2));//märt.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("märt",2,"märt",2,2,2,2));//märt.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("taavi",2,"taavi",2,2,2,2));//märt.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("märt",2,"märt",2,2,2,2));//märt.jpg taaviSmall.jpg
-        int x = 0;
-        for(Card card:hand.getHand()){
-            ImageView imageView = new ImageView();
-            imageView.setY(500);
-            Image image = card.getImage();
-            imageView.setFitHeight(450);
-            imageView.setFitWidth(150);
-            imageView.setX(x);
-            imageView.setImage(image);
-            root.getChildren().add(imageView);
-            x+=150;
-        }
+        hand.addCard(new MinionCard("teine",1,"taavi",1,1,1,1));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand2.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand2.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
 
 
 
+
+        ImageView imageView = new ImageView();
+        Image image = null;
+        imageView.setImage(image);
+        imageView.setX(200);
+
+
+
+
+        final long startNanoTime = System.nanoTime();
+
+        new AnimationTimer()
+        {boolean once=false;
+            double playerTurn=1;
+            public void handle(long currentNanoTime)
+            {
+                double time = (currentNanoTime - startNanoTime) / 1000000000.0;
+                double turnTime=time;
+
+                if(turnTime>1) {
+                    if(turnStarted==true) {
+                        Image image = new Image("rope.gif");
+                        imageView.setImage(image);
+                        turnStarted=false;
+                        if(playerTurn==1){
+                        for(Card card:hand.getHand()){
+                            x+=150;
+                            ImageView imageView = new ImageView();
+                            imageView.setY(500);
+                            image = card.getImage();
+                            imageView.setX(x);
+                            imageView.setImage(image);
+                            root.getChildren().add(imageView);
+                        }}
+                        if(playerTurn==2)
+                        {
+                            x=0;
+                            System.out.println("test");
+                            for(Card card:hand2.getHand()){
+                                x+=150;
+                                ImageView imageView = new ImageView();
+                                imageView.setY(500);
+                                image = card.getImage();
+                                imageView.setX(x);
+                                imageView.setImage(image);
+                                root.getChildren().add(imageView);
+
+                            }}
+
+                    }
+                }
+
+                if(turnTime>5){
+                    playerTurn=2;
+                    if(once==false){
+                    turnStarted=true;
+                    once=true;}
+                }
+                
+
+
+            }
+        }.start();
+        root.getChildren().add(imageView);
         primaryStage.setMaxWidth(prefWidth);
         primaryStage.setMaxHeight(prefHeight);
         primaryStage.setMinWidth(prefWidth);
