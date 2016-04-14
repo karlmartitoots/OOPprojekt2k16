@@ -1,10 +1,14 @@
 package userFeatures;
 
+import card.Card;
 import card.GeneralCard;
 import card.Generals;
+import card.MinionCard;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -13,10 +17,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class GUI extends Application {
-
+    private int handsize= 360;
     private Square exampleSquare = new Square(0, 0, null);
     private GameBoard gameBoard = new GameBoard();
     private Generals generals = new Generals();
+    //ugly
+    Hand hand=new Hand();
+
 
     public GUI() throws IOException {
     }
@@ -37,7 +44,7 @@ public class GUI extends Application {
         });
 
         double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
-        double prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth() + 50;
+        double prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth()+handsize;
 
         root.setPrefSize(prefWidth, prefHeight);
         for (int i = 0; i < gameBoard.getxDimension(); i++) {
@@ -56,6 +63,7 @@ public class GUI extends Application {
             }
         }
 
+
         Scene scene = new Scene(root);
         /*
         Width and Height listeners for resizable support
@@ -71,6 +79,26 @@ public class GUI extends Application {
         });
         TODO: make resizable
         */
+        hand.addCard(new MinionCard("teine",1,"taavi",1,1,1,1));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        
+        int x=-150;
+        for(Card card:hand.getHand()){
+            x+=150;
+            ImageView imageView = new ImageView();
+            imageView.setY(500);
+            Image image = card.getImage();
+            imageView.setX(x);
+            imageView.setImage(image);
+            root.getChildren().add(imageView);
+        }
+
+
 
         primaryStage.setMaxWidth(prefWidth);
         primaryStage.setMaxHeight(prefHeight);
