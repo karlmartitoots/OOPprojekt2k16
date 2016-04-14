@@ -1,13 +1,12 @@
 package card;
 
-import javafx.scene.image.Image;
 import userFeatures.Square;
 
 
 /**
- * General is subclass of the Minion class. It is a minion that represents the main leader of the army in the game.
+ * GeneralCard is subclass of the MinionCard class. It is a minion that represents the main leader of the army in the game.
  */
-public class General extends Minion {
+public class GeneralCard extends MinionCard {
     private final Square startingWhite = new Square(1, 5, null);
     private final Square startingBlack = new Square(8, 4, null);
 
@@ -24,9 +23,8 @@ public class General extends Minion {
      * @param health Health value of the card
      * @param speed  Speed value of the card
      */
-    public General(String name, int cost, String effect, int ID, int attack, int health, int speed) {
+    public GeneralCard(String name, int cost, String effect, int ID, int attack, int health, int speed) {
         super(name, cost, effect, ID, attack, health, speed);
-        ;
     }
 
     /**

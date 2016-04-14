@@ -1,12 +1,9 @@
 package userFeatures;
 
-import card.General;
+import card.GeneralCard;
 import card.Generals;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -15,13 +12,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Animation extends Application {
+public class GUI extends Application {
 
     private Square exampleSquare = new Square(0, 0, null);
     private GameBoard gameBoard = new GameBoard();
     private Generals generals = new Generals();
 
-    public Animation() throws IOException {
+    public GUI() throws IOException {
     }
 
     public static void main(String[] args) {
@@ -30,8 +27,8 @@ public class Animation extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        General taavi = generals.getAllGenerals().get(1);
-        General märt = generals.getAllGenerals().get(2);
+        GeneralCard taavi = generals.getAllGenerals().get(1);
+        GeneralCard märt = generals.getAllGenerals().get(2);
         gameBoard.placeGenerals(taavi, märt);
         Pane root = new Pane();
         root.setOnMouseClicked((event) -> {

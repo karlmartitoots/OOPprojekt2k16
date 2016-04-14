@@ -44,17 +44,17 @@ public class GameBoard {
      * @param white The general used by the white player
      * @param black The general used by the black player
      */
-    public void placeGenerals(General white, General black) {
+    public void placeGenerals(GeneralCard white, GeneralCard black) {
         gameBoard[white.getStartingWhite().getxCord()][white.getStartingWhite().getyCord()] = white.getID();
         gameBoard[black.getStartingBlack().getxCord()][black.getStartingBlack().getyCord()] = black.getID() * (-1);
     }
 
     /**
      * Moves the selected unit to the target square
-     * @param minion Minion to move
+     * @param minion MinionCard to move
      * @param target Target square
      */
-    public void moveUnit(Minion minion, Square target) {
+    public void moveUnit(MinionCard minion, Square target) {
         Square parent = minion.getCurrentPosition();
         Stack<Square> path = getPath(parent, target);
         while (!path.isEmpty()) {
@@ -68,7 +68,7 @@ public class GameBoard {
      * @param minion Selected minion
      * @return All squares the minion can move
      */
-    public List<Square> getAllPossibleSquares(Minion minion) {
+    public List<Square> getAllPossibleSquares(MinionCard minion) {
 
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
         List<Square> squaresPossibleToMoveTo = new ArrayList<>();

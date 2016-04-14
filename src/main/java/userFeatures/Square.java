@@ -1,7 +1,6 @@
 package userFeatures;
 
-import card.Card;
-import card.General;
+import card.GeneralCard;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
@@ -17,14 +16,14 @@ public class Square extends Parent {
     private final int heigth = 50;
     private Rectangle rectangle;
     private ImageView imageView;
-    private General card;
+    private GeneralCard card;
     /**
      * Constructor
      *
      * @param xCord x Coordinates of the square on the game board
      * @param yCord Y Coordinates of the square on the game board
      */
-    public Square(int xCord, int yCord, General card) {
+    public Square(int xCord, int yCord, GeneralCard card) {
         this.xCord = xCord;
         this.yCord = yCord;
         this.card = card;
@@ -99,7 +98,7 @@ public class Square extends Parent {
      *
      * @param card card to place on square
      */
-    public void placeCard(General card) {
+    public void placeCard(GeneralCard card) {
         this.card = card;
     }
 

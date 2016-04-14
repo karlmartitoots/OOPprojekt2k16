@@ -6,7 +6,7 @@ import userFeatures.Square;
 /**
  * Subclass of the card class. The class represents a minon type of card which are the main type of creatures in the game.
  */
-public class Minion extends Card {
+public class MinionCard extends Card {
     private Square currentPosition;
     private final int ID;
     private final int attack;
@@ -25,7 +25,7 @@ public class Minion extends Card {
      * @param maxHp  HP value of the minion
      * @param speed  Speed of the minion
      */
-    public Minion(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) {
+    public MinionCard(String name, int cost, String effect, int ID, int attack, int maxHp, int speed) {
         super(name, cost, effect);
         this.ID = ID;
         this.attack = attack;

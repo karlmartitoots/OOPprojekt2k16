@@ -1,7 +1,6 @@
 package userFeatures;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -52,12 +51,11 @@ public class Deck {
         } else return null;
     }
 
-    /**
+    /*
      * Loads a deck of 30 cards
      * @param fileName Name of the file that contains all cards
      * @return Returns a deck of cards
      * @throws FileNotFoundException Throws a FileNotFoundException if fileName.txt doesnt exist.
-     */
     public List<Card> loadDeck(String fileName) {
         fileName += ".txt";
         List<Card> deck = new ArrayList<>();
@@ -68,14 +66,14 @@ public class Deck {
             while (sc.hasNextLine() && counter < deckSize) {
                 parts = sc.nextLine().split(";");
                 switch(parts[0]){
-                    case "Equipment":
-                        deck.add(new Equipment(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                    case "EquipmentCard":
+                        deck.add(new EquipmentCard(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
                         break;
-                    case "Minion":
-                        deck.add(new Equipment(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                    case "MinionCard":
+                        deck.add(new EquipmentCard(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
                         break;
-                    case "Spell":
-                        deck.add(new Equipment(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                    case "SpellCard":
+                        deck.add(new EquipmentCard(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
                         break;
                     default:
                         System.out.println("File with cards is broken on line: " + (counter + 1));
@@ -88,7 +86,8 @@ public class Deck {
         }
         return deck;
     }
-
+    TODO: match with game structure
+    */
 
     /**
      * Gets the current cards in the deck
