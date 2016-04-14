@@ -1,8 +1,7 @@
 package userFeatures;
 
-import card.Card;
 import card.GeneralCard;
-import javafx.geometry.Rectangle2D;
+import card.MinionCard;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -17,14 +16,14 @@ public class Square extends Parent {
     private final int heigth = 50;
     private Rectangle rectangle;
     private ImageView imageView;
-    private Card card;
+    private MinionCard card;
     /**
      * Constructor
      *
      * @param xCord x Coordinates of the square on the game board
      * @param yCord Y Coordinates of the square on the game board
      */
-    public Square(int xCord, int yCord, Card card) {
+    public Square(int xCord, int yCord, MinionCard card) {
         this.xCord = xCord;
         this.yCord = yCord;
         this.card = card;
@@ -84,6 +83,7 @@ public class Square extends Parent {
     }
 
     public void setStroke(Paint paint) {
+
         rectangle.setStroke(paint);
     }
 
@@ -122,6 +122,11 @@ public class Square extends Parent {
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+
+    public MinionCard getCard() {
+        return card;
     }
 
     @Override

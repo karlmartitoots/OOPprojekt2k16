@@ -4,6 +4,7 @@ import card.GeneralCard;
 import card.Generals;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -11,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class GUI extends Application {
 
@@ -32,8 +34,19 @@ public class GUI extends Application {
         gameBoard.placeGenerals(taavi, märt);
         Pane root = new Pane();
         root.setOnMouseClicked((event) -> {
-            System.out.println(event.getSceneX() + " , " + event.getSceneY());
-            System.out.println(getSquare(event.getSceneX(), event.getSceneY()));
+            Point2D point2D = getSquare(event.getSceneX(), event.getSceneY());
+            gameBoard.setSelectedSquare(point2D);
+            System.out.println(gameBoard.getSelectedSquare());
+            if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasCardOnSquare()) {
+                List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
+                for (Square possibleSquare : possibleSquares) {
+                    possibleSquare.setFill(Color.RED);
+                    possibleSquare.setStroke(Color.BLACK);
+                    root.getChildren().add(possibleSquare);
+                }
+            }
+
+
         });
 
         double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
@@ -42,17 +55,18 @@ public class GUI extends Application {
         root.setPrefSize(prefWidth, prefHeight);
         for (int i = 0; i < gameBoard.getxDimension(); i++) {
             for (int j = 0; j < gameBoard.getyDimension(); j++) {
+                Square square;
                 if (gameBoard.getGameBoard()[i][j] == 0) {
-                    Square square = new Square(i, j, null);
+                    square = new Square(i, j, null);
                     square.setFill(Color.LIGHTBLUE);
                     square.setStroke(Color.BLACK);
                     root.getChildren().add(square);
 
                 } else {
-                    Square square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
+                    square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
                     root.getChildren().add(square.getImageView());
                 }
-
+                gameBoard.addSquare(square);
             }
         }
 
