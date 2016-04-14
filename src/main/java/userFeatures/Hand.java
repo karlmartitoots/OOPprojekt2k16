@@ -41,5 +41,7 @@ public class Hand {
     public void discardSpecificCard(int i) {
         hand.remove(i);
     }
+
+    public List<Card> getHand(){return hand;}
     
 }
