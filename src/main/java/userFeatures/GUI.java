@@ -18,18 +18,18 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.List;
 
 public class GUI extends Application {
-    private int handsize= 360;
+    private int handsize = 360;
     private Square exampleSquare = new Square(0, 0, null);
     private GameBoard gameBoard = new GameBoard();
     private Generals generals = new Generals();
-    private int x=-150;
-    Timer timer = new Timer();
-    private boolean turnStarted=true;
+    private int x = -150;
+    private boolean turnStarted = true;
     //ugly
-    Hand hand=new Hand();
-    Hand hand2=new Hand();
+    Hand hand = new Hand();
+    Hand hand2 = new Hand();
 
     public GUI() throws IOException {
     }
@@ -40,35 +40,57 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         GeneralCard taavi = generals.getAllGenerals().get(1);
         GeneralCard märt = generals.getAllGenerals().get(2);
         gameBoard.placeGenerals(taavi, märt);
         Pane root = new Pane();
         root.setOnMouseClicked((event) -> {
-            System.out.println(event.getSceneX() + " , " + event.getSceneY());
-            System.out.println(getSquare(event.getSceneX(), event.getSceneY()));
+            Point2D point2D = getSquare(event.getSceneX(), event.getSceneY());
+            gameBoard.setSelectedSquare(point2D);
+            System.out.println(gameBoard.getSelectedSquare());
+            if (gameBoard.getToRevert().size() > 0) {
+                for (Square square : gameBoard.getToRevert()) {
+                    square.setFill(Color.LIGHTBLUE);
+                    square.setStroke(Color.BLACK);
+                    if (!root.getChildren().contains(square)) {
+                        root.getChildren().add(square);
+                    }
+                }
+                gameBoard.clearRevertable();
+            }
+            if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasCardOnSquare()) {
+                List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
+                gameBoard.setToRevert(possibleSquares);
+                for (Square possibleSquare : possibleSquares) {
+                    possibleSquare.setFill(Color.RED);
+                    possibleSquare.setStroke(Color.BLACK);
+                    root.getChildren().add(possibleSquare);
+                }
+            }
+
         });
 
-        double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth()+handsize/3;
+        double prefWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
         double prefHeight = gameBoard.getyDimension() * exampleSquare.getHeigth()+handsize;
 
         root.setPrefSize(prefWidth, prefHeight);
         for (int i = 0; i < gameBoard.getxDimension(); i++) {
             for (int j = 0; j < gameBoard.getyDimension(); j++) {
+                Square square;
                 if (gameBoard.getGameBoard()[i][j] == 0) {
-                    Square square = new Square(i, j, null);
+                    square = new Square(i, j, null);
                     square.setFill(Color.LIGHTBLUE);
                     square.setStroke(Color.BLACK);
                     root.getChildren().add(square);
 
                 } else {
-                    Square square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
+                    square = new Square(i, j, generals.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
                     root.getChildren().add(square.getImageView());
                 }
-
+                gameBoard.addSquare(square);
             }
         }
-
 
         Scene scene = new Scene(root);
         /*
@@ -85,14 +107,14 @@ public class GUI extends Application {
         });
         TODO: make resizable
         */
-        hand.addCard(new MinionCard("teine",1,"taavi",1,1,1,1));//teine.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
-        hand.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
-        hand2.addCard(new MinionCard("teine",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
-        hand2.addCard(new MinionCard("esimene",2,"taavi",2,2,2,2));//teine.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("taavi",1,"taavi",1,1,1,1));//taavi.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("märt",2,"taavi",2,2,2,2));//taavi.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("taavi",2,"taavi",2,2,2,2));//taavi.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("märt",2,"taavi",2,2,2,2));//taavi.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("taavi",2,"taavi",2,2,2,2));//taavi.jpg taaviSmall.jpg
+        hand.addCard(new MinionCard("märt",2,"taavi",2,2,2,2));//taavi.jpg taaviSmall.jpg
+        hand2.addCard(new MinionCard("taavi",2,"taavi",2,2,2,2));//taavi.jpg taaviSmall.jpg
+        hand2.addCard(new MinionCard("märt",2,"taavi",2,2,2,2));//taavi.jpg taaviSmall.jpg
 
 
 
@@ -106,7 +128,7 @@ public class GUI extends Application {
 
 
         final long startNanoTime = System.nanoTime();
-
+/*
         new AnimationTimer()
         {boolean once=false;
             double playerTurn=1;
@@ -154,11 +176,12 @@ public class GUI extends Application {
                     turnStarted=true;
                     once=true;}
                 }
-                
+
 
 
             }
         }.start();
+        */
         root.getChildren().add(imageView);
         primaryStage.setMaxWidth(prefWidth);
         primaryStage.setMaxHeight(prefHeight);

@@ -3,13 +3,16 @@ package userFeatures;
 import java.util.*;
 
 import card.*;
+import javafx.geometry.Point2D;
 
 public class GameBoard {
 
     private final int xDimension = 10;
     private final int yDimension = 10;
+    private List<Square> board = new ArrayList<>();
     private int[][] gameBoard = new int[xDimension][yDimension];
-
+    private Square selectedSquare = null;
+    private List<Square> toRevert = new ArrayList<>();
     /*Every minion can be stored as an integer on the board - negative value for player a, positive for b. Possible to put unique id for every card.
     Although keeping the data of the board can be subject to change if there is a better data structure
     */
@@ -65,24 +68,19 @@ public class GameBoard {
 
     /**
      * Finds all the possible squares a minion can go to from the given position using BFS
-     * @param minion Selected minion
      * @return All squares the minion can move
      */
-    public List<Square> getAllPossibleSquares(MinionCard minion) {
-
+    public List<Square> getAllPossibleSquares() {
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
         List<Square> squaresPossibleToMoveTo = new ArrayList<>();
-
-        Square startSquare = minion.getCurrentPosition();
-        queueOfSquaresToCheck.add(startSquare);
-
+        queueOfSquaresToCheck.add(getSelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[startSquare.intValue(xDimension)] = true;
+        hasBeenVisited[getSelectedSquare().intValue(xDimension)] = true;
         while (!queueOfSquaresToCheck.isEmpty()) {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
             List<Square> toExplore = expand(nextSquareToCheck);
             for (Square currentSquare : toExplore) {
-                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare) && (startSquare.getDistance(currentSquare) <= minion.getSpeed())) {
+                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare) && (getSelectedSquare().getDistance(currentSquare) <= getSelectedSquare().getCard().getSpeed())) {
                     hasBeenVisited[currentSquare.intValue(xDimension)] = true;
                     squaresPossibleToMoveTo.add(currentSquare);
                     queueOfSquaresToCheck.add(currentSquare);
@@ -91,6 +89,7 @@ public class GameBoard {
         }
         return squaresPossibleToMoveTo;
     }
+
 
     /**
      * Finds the fastest path to the pointed square in parameter end using BFS
@@ -127,19 +126,16 @@ public class GameBoard {
      * @param square square to expand from
      * @return Expanded squares
      */
-    private List<Square> expand(Square square) {
+    public List<Square> expand(Square square) {
         List<Square> toGoto = new ArrayList<>();
-        Square nextSquare;
-        for(int i = -1; i < 1; i++){
-            nextSquare = new Square(square.getxCord() + i, square.getyCord() + (i +1), null);
-            if (belongsToBoard(nextSquare)) {
-                toGoto.add(nextSquare);
-            }
-            nextSquare = new Square(square.getxCord() - i, square.getyCord() - (i +1), null);
-            if (belongsToBoard(nextSquare)) {
-                toGoto.add(nextSquare);
-            }
-        }
+        Square first = new Square(square.getxCord() + 1, square.getyCord(), null);
+        Square second = new Square(square.getxCord(), square.getyCord() + 1, null);
+        Square third = new Square(square.getxCord() - 1, square.getyCord(), null);
+        Square forth = new Square(square.getxCord(), square.getyCord() - 1, null);
+        if (belongsToBoard(first)) toGoto.add(first);
+        if (belongsToBoard(second)) toGoto.add(second);
+        if (belongsToBoard(third)) toGoto.add(third);
+        if (belongsToBoard(forth)) toGoto.add(forth);
         return toGoto;
     }
 
@@ -149,7 +145,9 @@ public class GameBoard {
      * @return True if belongs, false otherwise
      */
     boolean belongsToBoard(Square square) {
-        return square.getxCord() >= 0 && square.getxCord() < xDimension && square.getyCord() >= 0 && square.getyCord() < 0;
+        if (square.getxCord() >= 0 && square.getyCord() >= 0 && square.getxCord() < xDimension && square.getyCord() < yDimension) {
+            return true;
+        } else return false;
     }
 
     /**
@@ -158,7 +156,7 @@ public class GameBoard {
      * @return True if empty, false otherwise
      */
     boolean squareIsEmpty(Square square) {
-        return gameBoard[square.getxCord()][square.getyCord()] == 0;
+        return !square.hasCardOnSquare();
     }
 
     /**
@@ -181,4 +179,33 @@ public class GameBoard {
         return pathToGo;
     }
 
+    public void setSelectedSquare(Point2D point) {
+        if (point.getX() >= 0) {
+            selectedSquare = board.get((int) (point.getX() * xDimension + point.getY()));
+        } else selectedSquare = null;
+    }
+
+    public Square getSelectedSquare() {
+        return selectedSquare;
+    }
+
+    public void addSquare(Square square) {
+        board.add(square);
+    }
+
+    public List<Square> getBoard() {
+        return board;
+    }
+
+    public List<Square> getToRevert() {
+        return toRevert;
+    }
+
+    public void setToRevert(List<Square> toRevert) {
+        this.toRevert = toRevert;
+    }
+
+    public void clearRevertable() {
+        toRevert.clear();
+    }
 }

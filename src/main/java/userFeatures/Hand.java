@@ -47,5 +47,5 @@ public class Hand {
      * @return Cards in hand
      */
     public List<Card> getHand(){return hand;}
-    
+
 }

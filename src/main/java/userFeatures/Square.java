@@ -1,7 +1,7 @@
 package userFeatures;
 
 import card.GeneralCard;
-import javafx.geometry.Rectangle2D;
+import card.MinionCard;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -16,14 +16,14 @@ public class Square extends Parent {
     private final int heigth = 50;
     private Rectangle rectangle;
     private ImageView imageView;
-    private GeneralCard card;
+    private MinionCard card;
     /**
      * Constructor
      *
      * @param xCord x Coordinates of the square on the game board
      * @param yCord Y Coordinates of the square on the game board
      */
-    public Square(int xCord, int yCord, GeneralCard card) {
+    public Square(int xCord, int yCord, MinionCard card) {
         this.xCord = xCord;
         this.yCord = yCord;
         this.card = card;
@@ -36,11 +36,7 @@ public class Square extends Parent {
         } else {
             rectangle = new Rectangle(xCord * width, yCord * heigth, width, heigth);
             getChildren().add(rectangle);
-            setOnMouseClicked(event -> {
-                if (rectangle.getFill() == Color.RED) {
-                    rectangle.setFill(Color.BLUE);
-                } else rectangle.setFill(Color.RED);
-            });
+            
         }
     }
 
@@ -83,6 +79,7 @@ public class Square extends Parent {
     }
 
     public void setStroke(Paint paint) {
+
         rectangle.setStroke(paint);
     }
 
@@ -121,6 +118,16 @@ public class Square extends Parent {
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+
+    public MinionCard getCard() {
+        return card;
+    }
+
+    public boolean equals(Square square) {
+        if (square.getxCord() == xCord && square.getyCord() == yCord) return true;
+        else return false;
     }
 
     @Override
