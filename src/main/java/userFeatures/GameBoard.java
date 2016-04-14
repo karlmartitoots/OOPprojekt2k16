@@ -12,6 +12,7 @@ public class GameBoard {
     private List<Square> board = new ArrayList<>();
     private int[][] gameBoard = new int[xDimension][yDimension];
     private Square selectedSquare = null;
+    private List<Square> toRevert = new ArrayList<>();
     /*Every minion can be stored as an integer on the board - negative value for player a, positive for b. Possible to put unique id for every card.
     Although keeping the data of the board can be subject to change if there is a better data structure
     */
@@ -73,7 +74,7 @@ public class GameBoard {
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
         List<Square> squaresPossibleToMoveTo = new ArrayList<>();
         queueOfSquaresToCheck.add(getSelectedSquare());
-        boolean[] hasBeenVisited = new boolean[xDimension * yDimension + 10];
+        boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
         hasBeenVisited[getSelectedSquare().intValue(xDimension)] = true;
         while (!queueOfSquaresToCheck.isEmpty()) {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
@@ -134,7 +135,7 @@ public class GameBoard {
         if (belongsToBoard(first)) toGoto.add(first);
         if (belongsToBoard(second)) toGoto.add(second);
         if (belongsToBoard(third)) toGoto.add(third);
-        if (belongsToBoard(forth)) toGoto.add(first);
+        if (belongsToBoard(forth)) toGoto.add(forth);
         return toGoto;
     }
 
@@ -194,5 +195,13 @@ public class GameBoard {
 
     public List<Square> getBoard() {
         return board;
+    }
+
+    public List<Square> getToRevert() {
+        return toRevert;
+    }
+
+    public void setToRevert(List<Square> toRevert) {
+        this.toRevert = toRevert;
     }
 }

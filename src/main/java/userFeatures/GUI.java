@@ -4,7 +4,6 @@ import card.GeneralCard;
 import card.Generals;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -35,10 +34,21 @@ public class GUI extends Application {
         Pane root = new Pane();
         root.setOnMouseClicked((event) -> {
             Point2D point2D = getSquare(event.getSceneX(), event.getSceneY());
+            Square previous = gameBoard.getSelectedSquare();
             gameBoard.setSelectedSquare(point2D);
             System.out.println(gameBoard.getSelectedSquare());
+            if (gameBoard.getToRevert().size() > 0) {
+                for (Square square : gameBoard.getToRevert()) {
+                    square.setFill(Color.LIGHTBLUE);
+                    square.setStroke(Color.BLACK);
+                    if (!root.getChildren().contains(square)) {
+                        root.getChildren().add(square);
+                    }
+                }
+            }
             if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasCardOnSquare()) {
                 List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
+                gameBoard.setToRevert(possibleSquares);
                 for (Square possibleSquare : possibleSquares) {
                     possibleSquare.setFill(Color.RED);
                     possibleSquare.setStroke(Color.BLACK);

@@ -36,11 +36,7 @@ public class Square extends Parent {
         } else {
             rectangle = new Rectangle(xCord * width, yCord * heigth, width, heigth);
             getChildren().add(rectangle);
-            setOnMouseClicked(event -> {
-                if (rectangle.getFill() == Color.RED) {
-                    rectangle.setFill(Color.BLUE);
-                } else rectangle.setFill(Color.RED);
-            });
+            
         }
     }
 
@@ -127,6 +123,11 @@ public class Square extends Parent {
 
     public MinionCard getCard() {
         return card;
+    }
+
+    public boolean equals(Square square) {
+        if (square.getxCord() == xCord && square.getyCord() == yCord) return true;
+        else return false;
     }
 
     @Override
