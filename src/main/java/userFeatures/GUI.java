@@ -183,10 +183,10 @@ public class GUI extends Application {
 
                 } else if(gameBoard.getGameBoard()[i][j] <= 100){
                     square = new Square(i, j, creaturesOnBoard.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
-                    //root.getChildren().add(square.getImageView());
+                    root.getChildren().add(square.getImageView());
                 } else {
                     square = new Square(i, j, creaturesOnBoard.getAllMinions().get(Math.abs(gameBoard.getGameBoard()[i][j])));
-                    //root.getChildren().add(square.getImageView());
+                    root.getChildren().add(square.getImageView());
                 }
                 gameBoard.addSquare(square);
             }
