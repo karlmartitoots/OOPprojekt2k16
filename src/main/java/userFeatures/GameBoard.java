@@ -52,6 +52,10 @@ public class GameBoard {
         gameBoard[black.getStartingBlack().getxCord()][black.getStartingBlack().getyCord()] = black.getID() * (-1);
     }
 
+    public void placeMinion(MinionCard minion, String side, int xCoord, int yCoord){
+        gameBoard[xCoord][yCoord] = minion.getID()*(side.equals("white") ? 1 : -1);
+    }
+
     /**
      * Moves the selected unit to the target square
      * @param minion MinionCard to move
@@ -145,9 +149,7 @@ public class GameBoard {
      * @return True if belongs, false otherwise
      */
     boolean belongsToBoard(Square square) {
-        if (square.getxCord() >= 0 && square.getyCord() >= 0 && square.getxCord() < xDimension && square.getyCord() < yDimension) {
-            return true;
-        } else return false;
+        return square.getxCord() >= 0 && square.getyCord() >= 0 && square.getxCord() < xDimension && square.getyCord() < yDimension;
     }
 
     /**
@@ -156,7 +158,7 @@ public class GameBoard {
      * @return True if empty, false otherwise
      */
     boolean squareIsEmpty(Square square) {
-        return !square.hasCardOnSquare();
+        return !square.hasMinionOnSquare();
     }
 
     /**
@@ -207,5 +209,17 @@ public class GameBoard {
 
     public void clearRevertable() {
         toRevert.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "GameBoard{" +
+                "\nxDimension=" + xDimension +
+                ", \nyDimension=" + yDimension +
+                ", \nboard=" + board +
+                ", \ngameBoard=" + Arrays.toString(gameBoard) +
+                ", \nselectedSquare=" + selectedSquare +
+                ", \ntoRevert=" + toRevert +
+                '}';
     }
 }

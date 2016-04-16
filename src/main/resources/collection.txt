@@ -1,0 +1,11 @@
+/This text file holds every card
+/Templates:
+/GENERAL;name;0(cost for summoning);descriptionOnTheCard;ID;attack;health;speed
+/MINION;name;cost;description;ID;attack;health;speed
+/SPELL;name;cost;description;ID;effect (dont create any spell cards yet until implemented)
+/EQUIPMENT;cost;description;ID;addAttack;addHealth;addSpeed
+
+/ID rules: until a better system is developed, generals will have ID from 0 to 100
+
+GENERAL;General Taavi;0;A General named Taavi.;1;0;999;5
+GENERAL;General Märt;0;A General named Märt.;2;0;999;5

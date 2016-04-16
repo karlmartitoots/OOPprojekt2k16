@@ -97,4 +97,12 @@ public class Deck {
     public List<Card> getDeckOfCards() {
         return deckOfCards;
     }
+
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "\ndeckOfCards=" + deckOfCards +
+                ", \ndeckSize=" + deckSize +
+                '}';
+    }
 }

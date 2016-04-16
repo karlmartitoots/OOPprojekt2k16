@@ -7,10 +7,9 @@ import userFeatures.Square;
  * GeneralCard is subclass of the MinionCard class. It is a minion that represents the main leader of the army in the game.
  */
 public class GeneralCard extends MinionCard {
+
     private final Square startingWhite = new Square(1, 5, null);
     private final Square startingBlack = new Square(8, 4, null);
-
-
 
     /**
      * Constructor
@@ -43,4 +42,9 @@ public class GeneralCard extends MinionCard {
     public Square getStartingBlack() {
         return startingBlack;
     }
+
+    public void summonMinion(Square squareToSummon){
+        //TODO: implement
+    }
+
 }

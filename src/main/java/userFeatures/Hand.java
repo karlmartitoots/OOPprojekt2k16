@@ -48,4 +48,11 @@ public class Hand {
      */
     public List<Card> getHand(){return hand;}
 
+    @Override
+    public String toString() {
+        return "Hand{" +
+                "\nhandSize=" + handSize +
+                ", \nhand=" + hand +
+                '}';
+    }
 }

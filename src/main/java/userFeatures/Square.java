@@ -4,7 +4,6 @@ import card.GeneralCard;
 import card.MinionCard;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
@@ -28,7 +27,7 @@ public class Square extends Parent {
         this.yCord = yCord;
         this.card = card;
 
-        if (hasCardOnSquare()) {
+        if (hasMinionOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
             imageView.setX(xCord*50);
             imageView.setY(yCord*50);
@@ -112,7 +111,7 @@ public class Square extends Parent {
      *
      * @return true if has a card on the square, false if otherwise
      */
-    public boolean hasCardOnSquare() {
+    public boolean hasMinionOnSquare() {
         return card != null;
     }
 
@@ -126,17 +125,16 @@ public class Square extends Parent {
     }
 
     public boolean equals(Square square) {
-        if (square.getxCord() == xCord && square.getyCord() == yCord) return true;
-        else return false;
+        return square.getxCord() == xCord && square.getyCord() == yCord;
     }
 
     @Override
     public String toString() {
         return "Square{" +
-                "xCord=" + xCord +
-                ", yCord=" + yCord +
-                ", rectangle=" + rectangle +
-                ", imageView=" + imageView +
+                "\nxCord=" + xCord +
+                ", \nyCord=" + yCord +
+                ", \nrectangle=" + rectangle +
+                ", \nimageView=" + imageView +
                 '}';
     }
     }

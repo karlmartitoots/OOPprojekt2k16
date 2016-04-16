@@ -52,10 +52,10 @@ public class MinionCard extends Card {
 
     /**
      * Sets the square the minion is currently standing on
-     * @param currentPosition Current position of the minion
+     * @param nextPosition Next position of the minion
      */
-    public void setCurrentPosition(Square currentPosition) {
-        this.currentPosition = currentPosition;
+    public void setCurrentPosition(Square nextPosition) {
+        this.currentPosition = nextPosition;
     }
 
     /**

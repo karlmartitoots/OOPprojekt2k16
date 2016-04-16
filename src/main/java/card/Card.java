@@ -49,4 +49,14 @@ public abstract class Card {
         this.smallImage = new Image(name + "Small.jpg");
     }
 
+    @Override
+    public String toString() {
+        return "Card{" +
+                "name='" + name + '\'' +
+                ", cost=" + cost +
+                ", description='" + description + '\'' +
+                ", image=" + image +
+                ", smallImage=" + smallImage +
+                '}';
+    }
 }
