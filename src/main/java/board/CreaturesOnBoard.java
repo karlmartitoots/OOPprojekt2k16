@@ -25,10 +25,18 @@ public class CreaturesOnBoard {
         allGenerals.put(2, blackGeneral);
     }
 
+    /**
+     * For getting all possible generals.
+     * @return Returns a HashMap of ID->General.
+     */
     public Map<Integer, GeneralCard> getAllGenerals() {
         return allGenerals;
     }
 
+    /**
+     * For getting all possible minions.
+     * @return Returns a HashMap of ID->Minion.
+     */
     public Map<Integer, MinionCard> getAllMinions(){
         return allMinions;
     }

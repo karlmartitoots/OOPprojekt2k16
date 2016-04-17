@@ -8,8 +8,9 @@ import userFeatures.Square;
  */
 public class GeneralCard extends MinionCard {
 
-    private final Square startingWhite = new Square(1, 5, null);
-    private final Square startingBlack = new Square(8, 4, null);
+    private final Square startingWhite = getStartingWhite();
+
+    private final Square startingBlack = getStartingBlack();
 
     /**
      * Constructor
@@ -31,6 +32,8 @@ public class GeneralCard extends MinionCard {
      * @return Starting Square if white
      */
     public Square getStartingWhite() {
+        Square startingWhite = new Square(6, 5, null);
+        startingWhite.setxCordOnBoard(1);
         return startingWhite;
     }
 
@@ -40,6 +43,8 @@ public class GeneralCard extends MinionCard {
      */
 
     public Square getStartingBlack() {
+        Square startingBlack = new Square(13, 4, null);
+        startingBlack.setxCordOnBoard(8);
         return startingBlack;
     }
 

@@ -57,9 +57,11 @@ public class Deck {
      * @param allCards All cards currently available
      */
     public void loadDeck(List<Card> allCards) {
-        for (int i = 0; i < deckSize; i++) {
-            deckOfCards.add(allCards.get(
-                    (int) Math.round(Math.random()*allCards.size())));
+        synchronized (allCards) {
+            for (int i = 0; i < deckSize; i++) {
+                deckOfCards.add(allCards.get(
+                        (int) Math.round(Math.random() * allCards.size())));
+            }
         }
     }
 

@@ -48,8 +48,11 @@ public class GameBoard {
      * @param black The general used by the black player
      */
     public void placeGenerals(GeneralCard white, GeneralCard black) {
-        gameBoard[white.getStartingWhite().getxCord()][white.getStartingWhite().getyCord()] = white.getID();
-        gameBoard[black.getStartingBlack().getxCord()][black.getStartingBlack().getyCord()] = black.getID() * (-1);
+        //gameBoard[white.getStartingWhite().getxCordOnBoard()][white.getStartingWhite().getyCordOnBoard()] = white.getID();
+        //gameBoard[black.getStartingBlack().getxCordOnBoard()][black.getStartingBlack().getyCordOnBoard()] = black.getID() * (-1);
+        gameBoard[1][5] = white.getID();
+        gameBoard[8][4] = black.getID() * (-1);
+
     }
 
     public void placeMinion(MinionCard minion, String side, int xCoord, int yCoord){
@@ -132,10 +135,10 @@ public class GameBoard {
      */
     public List<Square> expand(Square square) {
         List<Square> toGoto = new ArrayList<>();
-        Square first = new Square(square.getxCord() + 1, square.getyCord(), null);
-        Square second = new Square(square.getxCord(), square.getyCord() + 1, null);
-        Square third = new Square(square.getxCord() - 1, square.getyCord(), null);
-        Square forth = new Square(square.getxCord(), square.getyCord() - 1, null);
+        Square first = new Square(square.getxCordOnGUI() + 1, square.getyCordOnGUI(), null);
+        Square second = new Square(square.getxCordOnGUI(), square.getyCordOnGUI() + 1, null);
+        Square third = new Square(square.getxCordOnGUI() - 1, square.getyCordOnGUI(), null);
+        Square forth = new Square(square.getxCordOnGUI(), square.getyCordOnGUI() - 1, null);
         if (belongsToBoard(first)) toGoto.add(first);
         if (belongsToBoard(second)) toGoto.add(second);
         if (belongsToBoard(third)) toGoto.add(third);
@@ -149,7 +152,7 @@ public class GameBoard {
      * @return True if belongs, false otherwise
      */
     boolean belongsToBoard(Square square) {
-        return square.getxCord() >= 0 && square.getyCord() >= 0 && square.getxCord() < xDimension && square.getyCord() < yDimension;
+        return square.getxCordOnGUI() >= 0 && square.getyCordOnGUI() >= 0 && square.getxCordOnGUI() < xDimension && square.getyCordOnGUI() < yDimension;
     }
 
     /**

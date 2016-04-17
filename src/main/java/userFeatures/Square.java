@@ -9,8 +9,12 @@ import javafx.scene.shape.Rectangle;
 
 
 public class Square extends Parent {
-    private int xCord;
-    private int yCord;
+    private int xCordOnGUI;
+    private int yCordOnGUI;
+
+    private int xCordOnBoard;
+    private int yCordOnBoard;
+
     private final int width = 50;
     private final int heigth = 50;
     private Rectangle rectangle;
@@ -19,33 +23,35 @@ public class Square extends Parent {
     /**
      * Constructor
      *
-     * @param xCord x Coordinates of the square on the game board
-     * @param yCord Y Coordinates of the square on the game board
+     * @param xCordOnGUI x Coordinates of the square on the GUI
+     * @param yCordOnGUI Y Coordinates of the square on the GUI
      */
-    public Square(int xCord, int yCord, MinionCard card) {
-        this.xCord = xCord;
-        this.yCord = yCord;
+    public Square(int xCordOnGUI, int yCordOnGUI, MinionCard card) {
+        this.xCordOnGUI = xCordOnGUI;
+        this.yCordOnGUI = yCordOnGUI;
+        this.xCordOnBoard = xCordOnGUI;
+        this.yCordOnBoard = yCordOnGUI;
         this.card = card;
 
         if (hasMinionOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
-            imageView.setX(xCord*50);
-            imageView.setY(yCord*50);
+            imageView.setX(xCordOnGUI *50);
+            imageView.setY(yCordOnGUI *50);
             getChildren().add(imageView);
         } else {
-            rectangle = new Rectangle(xCord * width, yCord * heigth, width, heigth);
+            rectangle = new Rectangle(xCordOnGUI * width, yCordOnGUI * heigth, width, heigth);
             getChildren().add(rectangle);
-            
+
         }
     }
 
     /**
-     * Calculates the value of the square as if all the squares on the board would be in straight line. This is done using the formula xDim*xCord+yCord
+     * Calculates the value of the square as if all the squares on the board would be in straight line. This is done using the formula xDim*xCordOnGUI+yCordOnGUI
      * @param xDim The X dimension of the board
      * @return The place the square would be on the line
      */
     public int intValue(int xDim) {
-        return xDim * xCord + yCord;
+        return xDim * xCordOnBoard + yCordOnBoard;
     }
 
     /**
@@ -55,22 +61,22 @@ public class Square extends Parent {
      * @return the Moves needed to make
      */
     public int getDistance(Square toMoveTo) {
-        return Math.abs(xCord - toMoveTo.getxCord()) + Math.abs(yCord - toMoveTo.getyCord());
+        return Math.abs(xCordOnBoard - toMoveTo.getxCordOnGUI()) + Math.abs(yCordOnBoard - toMoveTo.getyCordOnGUI());
     }
-    public int getxCord() {
-        return xCord;
-    }
-
-    public void setxCord(int xCord) {
-        this.xCord = xCord;
+    public int getxCordOnGUI() {
+        return xCordOnGUI;
     }
 
-    public int getyCord() {
-        return yCord;
+    public void setxCordOnGUI(int xCordOnGUI) {
+        this.xCordOnGUI = xCordOnGUI;
     }
 
-    public void setyCord(int yCord) {
-        this.yCord = yCord;
+    public int getyCordOnGUI() {
+        return yCordOnGUI;
+    }
+
+    public void setyCordOnGUI(int yCordOnGUI) {
+        this.yCordOnGUI = yCordOnGUI;
     }
 
     public void setFill(Paint paint) {
@@ -84,6 +90,21 @@ public class Square extends Parent {
 
     public int getWidth() {
         return width;
+    }
+    public int getxCordOnBoard() {
+        return xCordOnBoard;
+    }
+
+    public void setxCordOnBoard(int xCordOnBoard) {
+        this.xCordOnBoard = xCordOnBoard;
+    }
+
+    public int getyCordOnBoard() {
+        return yCordOnBoard;
+    }
+
+    public void setyCordOnBoard(int yCordOnBoard) {
+        this.yCordOnBoard = yCordOnBoard;
     }
 
     public int getHeigth() {
@@ -125,16 +146,21 @@ public class Square extends Parent {
     }
 
     public boolean equals(Square square) {
-        return square.getxCord() == xCord && square.getyCord() == yCord;
+        return square.getxCordOnGUI() == xCordOnGUI && square.getyCordOnGUI() == yCordOnGUI;
     }
 
     @Override
     public String toString() {
         return "Square{" +
-                "\nxCord=" + xCord +
-                ", \nyCord=" + yCord +
-                ", \nrectangle=" + rectangle +
-                ", \nimageView=" + imageView +
+                "xCordOnGUI=" + xCordOnGUI +
+                ", yCordOnGUI=" + yCordOnGUI +
+                ", xCordOnBoard=" + xCordOnBoard +
+                ", yCordOnBoard=" + yCordOnBoard +
+                ", width=" + width +
+                ", heigth=" + heigth +
+                ", rectangle=" + rectangle +
+                ", imageView=" + imageView +
+                ", card=" + card +
                 '}';
     }
-    }
+}
