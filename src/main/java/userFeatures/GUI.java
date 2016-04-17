@@ -3,21 +3,31 @@ package userFeatures;
 import board.CreaturesOnBoard;
 import card.*;
 import collection.Collection;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class GUI extends Application {
     /*
-    At the start of the game, GUI will load the board with generals and cards in the players hands.
+    At the start of the game, GUI will load the board with generals on the board and cards in the players hands.
     Then a turnCycle begins. While its one players turn, the other can not alter the board in any way.
     A turnCycle lasts for 60 seconds. Whether the player does or does not do anything, if his turn is up,
     the turnCycle starts over and the other player can play.
@@ -25,6 +35,9 @@ public class GUI extends Application {
     In the beginning of a turnCycle, the player receives one mana. During the turnCycle he can see what moves
     he can do, make moves using mana and read the cards he has.
      */
+    private static final Integer turnStartTime = 60;
+    private IntegerProperty timeSeconds = new SimpleIntegerProperty(turnStartTime);
+    private Timeline turnTimeline;
     private Square exampleSquare = new Square(0, 0, null);
     private GameBoard gameBoard = new GameBoard();
     private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
@@ -32,11 +45,8 @@ public class GUI extends Application {
     private double preferredGUIWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
     private double preferredGUIHeight = gameBoard.getyDimension() * exampleSquare.getHeigth()+ 360;
     private Hand playerHand = new Hand();
+    private Deck playerDeck = new Deck(new ArrayList<>());
     private int playerMana = 0;
-    //ugly
-    Hand hand = new Hand();
-    Hand hand2 = new Hand();
-    private int x = -150;
 
     public static void main(String[] args) {
         launch(args);
@@ -61,77 +71,34 @@ public class GUI extends Application {
         loadBoard(root);
         //load collection
         Map<Integer, Card> allCards = new Collection().getAllCards();
+        //TODO: choose a random deck for the player
         //start turnCycle loop
-        /*
-        ImageView imageView = new ImageView();
-        Image image = null;
-        imageView.setImage(image);
-        imageView.setX(200);
+        //TODO: make a countdown timer
+        Label timerLabel = new Label();
+        timerLabel.setText(timeSeconds.toString());
+        timerLabel.setTextFill(Color.RED);
+        timerLabel.setStyle("-fx-font-size: 4em;");
+        timerLabel.textProperty().bind(timeSeconds.asString());
+        root.getChildren().add(timerLabel);
 
-        final long startNanoTime = System.nanoTime();
-        new AnimationTimer() {
-
-            boolean once = false;
-            double playerTurn=1;
-
-            public void handle(long currentNanoTime)
-            {
-                double time = (currentNanoTime - startNanoTime) / 1000000000.0;
-                double turnTime=time;
-
-                if(turnTime>1) {
-                    if(isTurn ==true) {
-                        Image image = new Image("rope.gif");
-                        imageView.setImage(image);
-                        isTurn = false;
-                        if(playerTurn==1){
-                            for(Card card:hand.getHand()){
-                                x+=150;
-                                ImageView imageView = new ImageView();
-                                imageView.setY(500);
-                                image = card.getImage();
-                                imageView.setX(x);
-                                imageView.setImage(image);
-                                root.getChildren().add(imageView);
-                            }
-                        }
-                        if(playerTurn==2)
-                        {
-                            x=0;
-                            System.out.println("test");
-                            for(Card card:hand2.getHand()){
-                                x+=150;
-                                ImageView imageView = new ImageView();
-                                imageView.setY(500);
-                                image = card.getImage();
-                                imageView.setX(x);
-                                imageView.setImage(image);
-                                root.getChildren().add(imageView);
-                            }
-                        }
-                    }
-                }
-                if(turnTime>5){
-                    playerTurn=2;
-                    if(once==false){
-                        isTurn =true;
-                        once=true;}
-                }
-            }
-        }.start();
-        */
+        timeSeconds.set(turnStartTime);
+        turnTimeline = new Timeline();
+        turnTimeline.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(turnStartTime + 1),
+                        new KeyValue(timeSeconds,0)));
+        turnTimeline.play();
         //first turnCycle:
         //load all cards in hand
+        //load the board in case the opponent started first
 
 
         //one turnCycle:
         //load all cards in hand
-
-
         //if isTurn add mana, event listeners, show scene
         //else show scene
         root.setOnMouseClicked((event) -> showPossibleSquares(root, event));
         //TODO: (high priority)add event listener function for making a move
+        //TODO: (high priority)add event listener for attacking
 
         //TODO: add event listener function for summoning minion
 
