@@ -284,7 +284,7 @@ public class GUI extends Application {
      * @return The X Pixel coordinates of the given square.
      */
     public double getPixelsForSquareX(int x) {
-        return x * exampleSquare.getWidth();
+        return x * exampleSquare.getWidth() + exampleSquare.getxTopMostValue();
     }
 
     /**
@@ -294,7 +294,7 @@ public class GUI extends Application {
      * @return The Y Pixel coordinates of the given square.
      */
     public double getPixelsForSquareY(int y) {
-        return y * exampleSquare.getHeigth();
+        return y * exampleSquare.getHeigth() + exampleSquare.getyLeftMostValue();
     }
 
     /**

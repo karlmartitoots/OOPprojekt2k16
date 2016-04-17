@@ -11,7 +11,8 @@ import javafx.scene.shape.Rectangle;
 public class Square extends Parent {
     private int xCordOnBoard;
     private int yCordOnBoard;
-
+    private final int xTopMostValue = 0;
+    private final int yLeftMostValue = 0;
     private final int width = 50;
     private final int heigth = 50;
     private Rectangle rectangle;
@@ -30,14 +31,22 @@ public class Square extends Parent {
 
         if (hasMinionOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
-            imageView.setX(xCordOnBoard *50);
-            imageView.setY(yCordOnBoard *50);
+            imageView.setX(xCordOnBoard * 50 + xTopMostValue);
+            imageView.setY(yCordOnBoard * 50 + yLeftMostValue);
             getChildren().add(imageView);
         } else {
             rectangle = new Rectangle(xCordOnBoard * width, yCordOnBoard * heigth, width, heigth);
             getChildren().add(rectangle);
 
         }
+    }
+
+    public int getxTopMostValue() {
+        return xTopMostValue;
+    }
+
+    public int getyLeftMostValue() {
+        return yLeftMostValue;
     }
 
     /**
