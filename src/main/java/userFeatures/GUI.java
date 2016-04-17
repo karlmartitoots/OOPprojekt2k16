@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -63,22 +64,25 @@ public class GUI extends Application {
         Scene scene = new Scene(gamePane);
 
         loadGenerals(whiteGeneral, blackGeneral);
-        synchronized (gamePane){
-            ImageView gamePaneFrame = new ImageView(new Image("GUI frame.jpg"));
-            gamePane.getChildren().add(gamePaneFrame);
-        }
-        synchronized (gamePane){
-            loadBoard(gamePane);
-        }
+        ImageView gamePaneFrame = new ImageView(new Image("GUI frame.jpg"));
+        gamePane.getChildren().add(gamePaneFrame);
+
+        loadBoard(gamePane);
+
         //TODO: fix loadPlayerDeck
-        //loadPlayerDeck();
+        Map<Integer, Card> allCards = new Collection().getAllCards();
+        List<Card> listOfCards = new ArrayList<>();
+        synchronized (allCards) {
+            for (Card card : allCards.values()) {
+                listOfCards.add(card);
+            }
+        }
+        playerDeck.loadDeck(listOfCards);
 
         //start turnCycle loop
         if(isTurn) {
             addMana(1);
-            synchronized (gamePane) {
-                startTurnCounter(gamePane);
-            }
+            startTurnCounter(gamePane);
         }/*else{
 
         }*/
@@ -152,7 +156,7 @@ public class GUI extends Application {
         timerLabel.textProperty().bind(timeSeconds.asString());
         root.getChildren().add(timerLabel);
 
-        EventHandler whenFinished = (EventHandler<ActionEvent>) t -> root.getChildren().remove(timerLabel);
+        EventHandler<ActionEvent> whenFinished = t -> root.getChildren().remove(timerLabel);
 
         timeSeconds.set(turnStartTime);
         turnTimeline = new Timeline();
@@ -175,21 +179,6 @@ public class GUI extends Application {
 
         //TODO: (low priority)add event listener function for using spell card
 
-    }
-
-    /**
-     * Initiates the players deck of cards.
-     * TODO: fix
-     */
-    private void loadPlayerDeck() {
-        Map<Integer, Card> allCards = new Collection().getAllCards();
-        List<Card> listOfCards = new ArrayList<>();
-        synchronized (allCards) {
-            for (Card card : allCards.values()) {
-                listOfCards.add(card);
-            }
-        }
-        playerDeck.loadDeck(listOfCards);
     }
 
     /**
