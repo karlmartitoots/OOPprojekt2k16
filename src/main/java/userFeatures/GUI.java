@@ -24,9 +24,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
 
 public class GUI extends Application {
     /*
@@ -193,7 +196,11 @@ public class GUI extends Application {
 
 
         //TODO: add interrupt for ending turn with a button
-        root.setOnMouseClicked((event) -> showPossibleSquares(root, event));
+        root.setOnMouseClicked((event) -> {showPossibleSquares(root, event);
+                if(event.getX()>buttonView.getX()&& buttonView.getX()+150>event.getX()&&
+                        event.getY()>buttonView.getY()&& buttonView.getY()+150>event.getY()){
+            buttonView.setImage(buttonImageOff);
+                root.getChildren().remove(timerLabel);}});
         //TODO: (high priority)add event listener function for making a move
         //TODO: (high priority)add event listener for attacking
 
