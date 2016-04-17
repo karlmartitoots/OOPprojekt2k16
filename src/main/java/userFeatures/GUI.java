@@ -45,6 +45,7 @@ public class GUI extends Application {
     private Hand playerHand = new Hand();
     private Deck playerDeck = new Deck(new ArrayList<>());
     private int playerMana = 0;
+    private ImageView buttonView = new ImageView();
 
     public static void main(String[] args) {
         launch(args);
@@ -66,6 +67,7 @@ public class GUI extends Application {
 
         loadGenerals(whiteGeneral, blackGeneral);
         ImageView gamePaneFrame = new ImageView(new Image("GUI frame.jpg"));
+
         gamePane.getChildren().add(gamePaneFrame);
 
         loadBoard(gamePane);
@@ -144,32 +146,53 @@ public class GUI extends Application {
      *
      * @param root Pane to display the counter label on.
      */
+
     private void startTurnCounter(Pane root) {
 
         final Integer turnStartTime = 60;
         IntegerProperty timeSeconds = new SimpleIntegerProperty(turnStartTime);
         Timeline turnTimeline;
+        Image buttonImageOn = new Image("buttonon.png");
+        Image buttonImageOff = new Image("buttonoff.png");
+
         Label timerLabel = new Label();
 
         timerLabel.setText(timeSeconds.toString());
+
         timerLabel.setTextFill(Color.RED);
         timerLabel.setStyle("-fx-font-size: 4em;");
         timerLabel.textProperty().bind(timeSeconds.asString());
+
+
         root.getChildren().add(timerLabel);
 
-        EventHandler<ActionEvent> whenFinished = t -> root.getChildren().remove(timerLabel);
+        EventHandler<ActionEvent> whenFinished = t -> {
+            root.getChildren().remove(timerLabel);
 
+            buttonView.setImage(buttonImageOff);
+
+        };
         timeSeconds.set(turnStartTime);
         turnTimeline = new Timeline();
         turnTimeline.getKeyFrames().addAll(
-                new KeyFrame(Duration.seconds(turnStartTime + 1),
-                        new KeyValue(timeSeconds,0)),
+        new KeyFrame(Duration.seconds(turnStartTime + 1),
+                new KeyValue(timeSeconds,0)),
+
                 new KeyFrame(Duration.seconds(turnStartTime + 1),
                         whenFinished
-        ));
-        turnTimeline.play();
-        //TODO: add interrupt for ending turn with a button
 
+                ));
+        turnTimeline.play();
+
+
+
+
+        buttonView.setImage(buttonImageOn);
+        buttonView.setX(500);
+        root.getChildren().add(buttonView);
+
+
+        //TODO: add interrupt for ending turn with a button
         root.setOnMouseClicked((event) -> showPossibleSquares(root, event));
         //TODO: (high priority)add event listener function for making a move
         //TODO: (high priority)add event listener for attacking
