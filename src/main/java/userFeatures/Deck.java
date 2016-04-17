@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Scanner;
 
 import card.*;
+import collection.Collection;
 
 public class Deck {
 
     private List<Card> deckOfCards = new ArrayList<>();
-    private final int deckSize = 30;
+    private final int deckSize = 7;
 
     /**
      * Constructor
@@ -51,43 +52,16 @@ public class Deck {
         } else return null;
     }
 
-    /*
-     * Loads a deck of 30 cards
-     * @param fileName Name of the file that contains all cards
-     * @return Returns a deck of cards
-     * @throws FileNotFoundException Throws a FileNotFoundException if fileName.txt doesnt exist.
-    public List<Card> loadDeck(String fileName) {
-        fileName += ".txt";
-        List<Card> deck = new ArrayList<>();
-        try (
-                Scanner sc = new Scanner(new File(fileName), "UTF-8")){
-            int counter = 0;
-            String[] parts;
-            while (sc.hasNextLine() && counter < deckSize) {
-                parts = sc.nextLine().split(";");
-                switch(parts[0]){
-                    case "EquipmentCard":
-                        deck.add(new EquipmentCard(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
-                        break;
-                    case "MinionCard":
-                        deck.add(new EquipmentCard(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
-                        break;
-                    case "SpellCard":
-                        deck.add(new EquipmentCard(parts[1], Integer.parseInt(parts[2]), parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
-                        break;
-                    default:
-                        System.out.println("File with cards is broken on line: " + (counter + 1));
-                        System.exit(-1);
-                }
-                counter++;
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't load deck. File of cards not found.");
+    /**
+     * Loads a deck of deckSize cards
+     * @param allCards All cards currently available
+     */
+    public void loadDeck(List<Card> allCards) {
+        for (int i = 0; i < deckSize; i++) {
+            deckOfCards.add(allCards.get(
+                    (int) Math.round(Math.random()*allCards.size())));
         }
-        return deck;
     }
-    TODO: match with game structure
-    */
 
     /**
      * Gets the current cards in the deck

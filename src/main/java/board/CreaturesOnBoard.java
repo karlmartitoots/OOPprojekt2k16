@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class CreaturesOnBoard {
 
-    private GeneralCard whiteGeneral = new GeneralCard("taavi", 0, "taavi", 1, 30, 30, 5);
-    private GeneralCard blackGeneral = new GeneralCard("märt", 0, "märt", 2, 30, 30, 5);
+    private GeneralCard whiteGeneral = new GeneralCard("General Taavi", 0, "This is taavi.", 1, 30, 30, 5);
+    private GeneralCard blackGeneral = new GeneralCard("General Märt", 0, "This is märt.", 2, 30, 30, 5);
     private Map<Integer, GeneralCard> allGenerals = new HashMap<>(3);
     private Map<Integer, MinionCard> allMinions = new HashMap<>();
 

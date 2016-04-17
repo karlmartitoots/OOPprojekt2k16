@@ -69,24 +69,11 @@ public class GUI extends Application {
         loadGenerals(whiteGeneral, blackGeneral);
         //load board
         loadBoard(root);
-        //load collection
-        Map<Integer, Card> allCards = new Collection().getAllCards();
-        //TODO: choose a random deck for the player
-        //start turnCycle loop
-        //TODO: make a countdown timer
-        Label timerLabel = new Label();
-        timerLabel.setText(timeSeconds.toString());
-        timerLabel.setTextFill(Color.RED);
-        timerLabel.setStyle("-fx-font-size: 4em;");
-        timerLabel.textProperty().bind(timeSeconds.asString());
-        root.getChildren().add(timerLabel);
+        //loads the players deck
+        loadPlayerDeck();
 
-        timeSeconds.set(turnStartTime);
-        turnTimeline = new Timeline();
-        turnTimeline.getKeyFrames().add(
-                new KeyFrame(Duration.seconds(turnStartTime + 1),
-                        new KeyValue(timeSeconds,0)));
-        turnTimeline.play();
+        //start turnCycle loop
+        startTurnCounter(root);
         //first turnCycle:
         //load all cards in hand
         //load the board in case the opponent started first
@@ -132,6 +119,31 @@ public class GUI extends Application {
         primaryStage.show();
 
 
+    }
+
+    private void startTurnCounter(Pane root) {
+        Label timerLabel = new Label();
+        timerLabel.setText(timeSeconds.toString());
+        timerLabel.setTextFill(Color.RED);
+        timerLabel.setStyle("-fx-font-size: 4em;");
+        timerLabel.textProperty().bind(timeSeconds.asString());
+        root.getChildren().add(timerLabel);
+
+        timeSeconds.set(turnStartTime);
+        turnTimeline = new Timeline();
+        turnTimeline.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(turnStartTime + 1),
+                        new KeyValue(timeSeconds,0)));
+        turnTimeline.play();
+    }
+
+    private void loadPlayerDeck() {
+        Map<Integer, Card> allCards = new Collection().getAllCards();
+        List<Card> listOfCards = new ArrayList<>();
+        for (Card card : allCards.values()) {
+            listOfCards.add(card);
+        }
+        playerDeck.loadDeck(listOfCards);
     }
 
     private void loadGenerals(GeneralCard whiteGeneral, GeneralCard blackGeneral) {

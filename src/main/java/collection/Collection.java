@@ -2,6 +2,8 @@ package collection;
 
 import card.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -12,15 +14,18 @@ public class Collection {
     private Map<Integer, Card> allCards = new HashMap<>();
 
     public Collection(){
-        try(Scanner fileReader = new Scanner("collection.txt")){
+        try(Scanner fileReader = new Scanner(new File("src/main/resources/collection.txt"))){
             String line;
             while(fileReader.hasNextLine()){
                 line = fileReader.nextLine();
-                if(!line.startsWith("/")){
+                if(!line.startsWith("/") && !line.equals("")){
                     String[] parts = line.split(";");
                     createCard(parts);
                 }
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Dis collection file is impossible to find.");
+            System.exit(-1);
         }
     }
 

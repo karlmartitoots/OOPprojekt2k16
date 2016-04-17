@@ -9,3 +9,18 @@
 
 GENERAL;General Taavi;0;A General named Taavi.;1;0;999;5
 GENERAL;General Märt;0;A General named Märt.;2;0;999;5
+
+MINION;Silverguard Squire;1;The first minion to be ever created.;101;1;4;1
+MINION;Azurite Lion;2;The second minion to be ever created.;102;2;3;2
+MINION;Lightchaser;2;Chases lights.;103;3;2;2
+MINION;Sunstone Templar;2;The sunstone guy.;104;1;4;2
+MINION;Windblade Adept;2;Uses a blade of wind.;105;2;3;1
+MINION;Arclyte Sentinel;3;Dis guy huuuge.;106;2;4;3
+MINION;Silverguard Knight;3;Don't challenge him to a duel.;107;1;5;1
+
+
+
+
+
+
+
