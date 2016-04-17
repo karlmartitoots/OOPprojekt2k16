@@ -48,11 +48,8 @@ public class GameBoard {
      * @param black The general used by the black player
      */
     public void placeGenerals(GeneralCard white, GeneralCard black) {
-        //gameBoard[white.getStartingWhite().getxCordOnBoard()][white.getStartingWhite().getyCordOnBoard()] = white.getID();
-        //gameBoard[black.getStartingBlack().getxCordOnBoard()][black.getStartingBlack().getyCordOnBoard()] = black.getID() * (-1);
-        gameBoard[1][5] = white.getID();
-        gameBoard[8][4] = black.getID() * (-1);
-
+        gameBoard[white.getStartingWhite().getxCordOnBoard()][white.getStartingWhite().getyCordOnBoard()] = white.getID();
+        gameBoard[black.getStartingBlack().getxCordOnBoard()][black.getStartingBlack().getyCordOnBoard()] = black.getID() * (-1);
     }
 
     public void placeMinion(MinionCard minion, String side, int xCoord, int yCoord){
@@ -135,10 +132,10 @@ public class GameBoard {
      */
     public List<Square> expand(Square square) {
         List<Square> toGoto = new ArrayList<>();
-        Square first = new Square(square.getxCordOnGUI() + 1, square.getyCordOnGUI(), null);
-        Square second = new Square(square.getxCordOnGUI(), square.getyCordOnGUI() + 1, null);
-        Square third = new Square(square.getxCordOnGUI() - 1, square.getyCordOnGUI(), null);
-        Square forth = new Square(square.getxCordOnGUI(), square.getyCordOnGUI() - 1, null);
+        Square first = new Square(square.getxCordOnBoard() + 1, square.getyCordOnBoard(), null);
+        Square second = new Square(square.getxCordOnBoard(), square.getyCordOnBoard() + 1, null);
+        Square third = new Square(square.getxCordOnBoard() - 1, square.getyCordOnBoard(), null);
+        Square forth = new Square(square.getxCordOnBoard(), square.getyCordOnBoard() - 1, null);
         if (belongsToBoard(first)) toGoto.add(first);
         if (belongsToBoard(second)) toGoto.add(second);
         if (belongsToBoard(third)) toGoto.add(third);
@@ -152,7 +149,7 @@ public class GameBoard {
      * @return True if belongs, false otherwise
      */
     boolean belongsToBoard(Square square) {
-        return square.getxCordOnGUI() >= 0 && square.getyCordOnGUI() >= 0 && square.getxCordOnGUI() < xDimension && square.getyCordOnGUI() < yDimension;
+        return square.getxCordOnBoard() >= 0 && square.getyCordOnBoard() >= 0 && square.getxCordOnBoard() < xDimension && square.getyCordOnBoard() < yDimension;
     }
 
     /**

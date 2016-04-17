@@ -54,6 +54,7 @@ public class GUI extends Application {
     public void start(Stage primaryStage) {
         //choose generals
 
+        Pane generalChoicePane = new Pane();
         //TODO: add choice pane
         GeneralCard whiteGeneral = creaturesOnBoard.getAllGenerals().get(1);
         GeneralCard blackGeneral = creaturesOnBoard.getAllGenerals().get(2);
