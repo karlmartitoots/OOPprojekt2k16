@@ -18,35 +18,35 @@ Sources for images:
 </tr>
 <tr>
 <td>27.03</td>
-<td>Mängu loogika töötab</td>
+<td>Osa mängu loogikast töötab</td>
 </tr>
 <tr>
 <td>03.04</td>
-<td>Väike GUI, kus on võimalik koostada oma kaardi pakk</td>
+<td>Väike GUI, kus on võimalik näha lauda ja kaardislote</td>
 </tr>
 <tr>
 <td>10.04</td>
-<td>On tehtud nii palju kaarte et on võimalik koostada oma kaadripakk, ja kaardid töötavad</td>
+<td>Töötavad algoritmid, mis määravad liikumise mängulaual</td>
 </tr>
 <tr>
 <td>17.04</td>
-<td>Mäng on tehtud ja töötab ühe arvuti peale</td>
+<td>On tehtud counter, mis loeb käigu aega 0-ni. Olemas kaartide laadimissüsteem, kaardikollektsioonifail, GUI-l on valmis mängu layout</td>
 </tr>
 <tr>
 <td>24.04</td>
-<td>Panna kokku server ja klient	</td>
+<td>Panna kokku server ja klient, lisada GUI funktsionaalsused, mis võimaldavad mängufunktsioone testida</td>
 </tr>
 <tr>
 <td>01.05</td>
-<td>On võimalik mängida kahest arvutist	</td>
+<td>On võimalik mängida ühes arvutis</td>
 </tr>
 <tr>
 <td>09.05</td>
-<td>Catchup nadäl	</td>
+<td>Catchup nädal, võiks proovida kahel arvutil mängida</td>
 </tr>
 <tr>
 <td>16.05</td>
-<td>Mäng saab mängida client/server abil</td>
+<td>Mängu saab mängida client/server abil, on kõrvaldatud bugid, loopholed, threading on optimaalne</td>
 </tr>
 </table>
 Games for reference:
