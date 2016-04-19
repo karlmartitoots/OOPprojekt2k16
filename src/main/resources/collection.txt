@@ -3,7 +3,7 @@
 /GENERAL;name;0(cost for summoning);descriptionOnTheCard;ID;attack;health;speed
 /MINION;name;cost;description;ID;attack;health;speed
 /SPELL;name;cost;description;ID;effect (dont create any spell cards yet until implemented)
-/EQUIPMENT;cost;description;ID;addAttack;addHealth;addSpeed
+/EQUIPMENT;name;cost;description;ID;addAttack;addHealth;addSpeed;effect
 
 /ID rules: until a better system is developed, generals will have ID from 0 to 100
 

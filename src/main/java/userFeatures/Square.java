@@ -11,10 +11,10 @@ import javafx.scene.shape.Rectangle;
 public class Square extends Parent {
     private int xCordOnBoard;
     private int yCordOnBoard;
-    private final int xTopMostValue = 0;
-    private final int yLeftMostValue = 0;
-    private final int width = 50;
-    private final int heigth = 50;
+    private final static int xTopMostValue = 0;
+    private final static int yLeftMostValue = 0;
+    private final static int width = 50;
+    private final static int heigth = 50;
     private Rectangle rectangle;
     private ImageView imageView;
     private MinionCard card;
@@ -31,8 +31,8 @@ public class Square extends Parent {
 
         if (hasMinionOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
-            imageView.setX(xCordOnBoard * 50 + xTopMostValue);
-            imageView.setY(yCordOnBoard * 50 + yLeftMostValue);
+            imageView.setX(xCordOnBoard * width + xTopMostValue);
+            imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
             getChildren().add(imageView);
         } else {
             rectangle = new Rectangle(xCordOnBoard * width, yCordOnBoard * heigth, width, heigth);
@@ -41,11 +41,11 @@ public class Square extends Parent {
         }
     }
 
-    public int getxTopMostValue() {
+    public static int getxTopMostValue() {
         return xTopMostValue;
     }
 
-    public int getyLeftMostValue() {
+    public static int getyLeftMostValue() {
         return yLeftMostValue;
     }
 
@@ -91,13 +91,14 @@ public class Square extends Parent {
         rectangle.setStroke(paint);
     }
 
-    public int getWidth() {
+    public static int getWidth() {
         return width;
     }
 
-    public int getHeigth() {
+    public static int getHeigth() {
         return heigth;
     }
+
 
     /**
      * Places the card on the board;
@@ -134,7 +135,8 @@ public class Square extends Parent {
     }
 
     public boolean equals(Square square) {
-        return square.getxCordOnBoard() == xCordOnBoard && square.getyCordOnBoard() == yCordOnBoard;
+        if (square.getxCordOnBoard() == xCordOnBoard && square.getyCordOnBoard() == yCordOnBoard) return true;
+        else return false;
     }
 
     @Override

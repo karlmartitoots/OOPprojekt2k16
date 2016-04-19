@@ -30,6 +30,8 @@ public class Collection {
     }
 
     private void createCard(String[] parts) {
+
+
         switch (parts[0]){
             case "GENERAL":
                 allCards.put(Integer.parseInt(parts[4]), new GeneralCard(

@@ -41,7 +41,7 @@ public class GUI extends Application {
     In the beginning of a turnCycle, the player receives one mana. During the turnCycle he can see what moves
     he can do, make moves using mana and read the cards he has. Ending the turn earlier will also be implemented.
      */
-    private Square exampleSquare = new Square(0, 0, null);
+
     private GameBoard gameBoard = new GameBoard();
     private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
     private boolean isTurn = true;
@@ -132,8 +132,8 @@ public class GUI extends Application {
      */
     private void setPrimaryStageProperties(Stage primaryStage, Pane gamePane) {
         int GUITopPanelHeight = 47;//pixels
-        int preferredGUIWidth = 2 * gameBoard.getxDimension() * exampleSquare.getWidth();
-        int preferredGUIHeight = (gameBoard.getyDimension() + 6)* exampleSquare.getHeigth() + GUITopPanelHeight;
+        int preferredGUIWidth = 2 * gameBoard.getxDimension() * Square.getWidth();
+        int preferredGUIHeight = (gameBoard.getyDimension() + 6) * Square.getHeigth() + GUITopPanelHeight;
         int preferredCardHeight = 250;//pixels
         int preferredCardWidth = 125;//pixels
         gamePane.setPrefSize(preferredGUIWidth, preferredGUIHeight);
@@ -284,7 +284,7 @@ public class GUI extends Application {
      * @return The X Pixel coordinates of the given square.
      */
     public double getPixelsForSquareX(int x) {
-        return x * exampleSquare.getWidth() + exampleSquare.getxTopMostValue();
+        return x * Square.getWidth() + Square.getxTopMostValue();
     }
 
     /**
@@ -294,7 +294,7 @@ public class GUI extends Application {
      * @return The Y Pixel coordinates of the given square.
      */
     public double getPixelsForSquareY(int y) {
-        return y * exampleSquare.getHeigth() + exampleSquare.getyLeftMostValue();
+        return y * Square.getHeigth() + Square.getyLeftMostValue();
     }
 
     /**
@@ -310,7 +310,7 @@ public class GUI extends Application {
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
                 double left = getPixelsForSquareX(x);
                 double top = getPixelsForSquareY(y);
-                Rectangle rectangle = new Rectangle(left, top, exampleSquare.getWidth(), exampleSquare.getHeigth());
+                Rectangle rectangle = new Rectangle(left, top, Square.getWidth(), Square.getHeigth());
                 if (rectangle.contains(pixelX, pixelY)) {
                     return new Point2D(x, y);
                 }
