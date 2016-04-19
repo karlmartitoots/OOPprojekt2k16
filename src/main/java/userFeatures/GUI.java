@@ -7,6 +7,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,12 +23,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class GUI extends Application {
     /*
@@ -41,7 +46,9 @@ public class GUI extends Application {
     private Square exampleSquare = new Square(0, 0, null);
     private GameBoard gameBoard = new GameBoard();
     private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
+    private Collection collection = new Collection();
     private boolean isTurn = true;
+    private boolean turnFinished = true;
     private Hand playerHand = new Hand();
     private Deck playerDeck = new Deck(new ArrayList<>());
     private int playerMana = 0;
@@ -54,8 +61,33 @@ public class GUI extends Application {
     public void start(Stage primaryStage) {
         //choose generals
 
-        Pane generalChoicePane = new Pane();
-        //TODO: add choice pane
+        Pane choosingPane = new Pane();
+        Scene scene = new Scene(choosingPane);
+        Label chooseGeneralLabel = new Label("Choose your general: ");
+        chooseGeneralLabel.relocate(50, 50);
+        List<GeneralCard> allGeneralCards = collection.getAllGeneralCards();
+        ChoiceBox<String> generalNames = new ChoiceBox<>();
+        generalNames.relocate(50, 100);
+        for (GeneralCard generalCard : allGeneralCards) {
+            generalNames.getItems().add(generalCard.getName());
+        }
+        choosingPane.getChildren().addAll(chooseGeneralLabel,generalNames);
+
+        generalNames.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                GeneralCard whiteGeneral = stringToGeneralCard(generalNames.getValue());
+                primaryStage.close();
+            }
+        });
+
+        primaryStage.setMinWidth(150);
+        primaryStage.setMinHeight(200);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        /*
+        //TODO: add choice root
         GeneralCard whiteGeneral = creaturesOnBoard.getAllGenerals().get(1);
         GeneralCard blackGeneral = creaturesOnBoard.getAllGenerals().get(2);
 
@@ -69,8 +101,8 @@ public class GUI extends Application {
         gamePane.getChildren().add(gamePaneFrame);
 
         loadBoard(gamePane);
-
-        //TODO: fix loadPlayerDeck
+        */
+        /*
         Map<Integer, Card> allCards = new Collection().getAllCards();
         List<Card> listOfCards = new ArrayList<>();
         synchronized (allCards) {
@@ -79,14 +111,16 @@ public class GUI extends Application {
             }
         }
         playerDeck.loadDeck(listOfCards);
+        */
 
+        //TODO: fix loadPlayerDeck
         //start turnCycle loop
-        if(isTurn) {
-            addMana(1);
-            startTurnCounter(gamePane);
-        }/*else{
 
-        }*/
+        /*
+        TurnLoopHandler turnLoopHandler = new TurnLoopHandler(gamePane);
+        new Thread(turnLoopHandler).start();
+        */
+
         //first turnCycle:
         //load all cards in hand
         //load the board in case the opponent started first
@@ -112,18 +146,12 @@ public class GUI extends Application {
         TODO: make resizable
         */
 
-        setPrimaryStageProperties(primaryStage, gamePane);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Card game");
-        primaryStage.show();
-
-
     }
 
     /**
-     * Method for declaring the properties of the GUI pane.
+     * Method for declaring the properties of the GUI root.
      * @param primaryStage Primary stage of GUI.
-     * @param gamePane The GUI's pane.
+     * @param gamePane The GUI's root.
      */
     private void setPrimaryStageProperties(Stage primaryStage, Pane gamePane) {
         int GUITopPanelHeight = 47;//pixels
@@ -139,50 +167,6 @@ public class GUI extends Application {
     }
 
     /**
-     * Counts down from turnStartTime to 0 and displays it.To be initiated when someones turn starts.
-     * Runs concurrently with turnWaiter.
-     *
-     * @param root Pane to display the counter label on.
-     */
-    private void startTurnCounter(Pane root) {
-
-        final Integer turnStartTime = 60;
-        IntegerProperty timeSeconds = new SimpleIntegerProperty(turnStartTime);
-        Timeline turnTimeline;
-        Label timerLabel = new Label();
-
-        timerLabel.setText(timeSeconds.toString());
-        timerLabel.setTextFill(Color.RED);
-        timerLabel.setStyle("-fx-font-size: 4em;");
-        timerLabel.textProperty().bind(timeSeconds.asString());
-        root.getChildren().add(timerLabel);
-
-        EventHandler<ActionEvent> whenFinished = t -> root.getChildren().remove(timerLabel);
-
-        timeSeconds.set(turnStartTime);
-        turnTimeline = new Timeline();
-        turnTimeline.getKeyFrames().addAll(
-                new KeyFrame(Duration.seconds(turnStartTime + 1),
-                        new KeyValue(timeSeconds,0)),
-                new KeyFrame(Duration.seconds(turnStartTime + 1),
-                        whenFinished
-        ));
-        turnTimeline.play();
-        //TODO: add interrupt for ending turn with a button
-
-        root.setOnMouseClicked((event) -> showPossibleSquares(root, event));
-        //TODO: (high priority)add event listener function for making a move
-        //TODO: (high priority)add event listener for attacking
-
-        //TODO: add event listener function for summoning minion
-
-        //TODO: (low priority)add event listener function for using equipment card
-
-        //TODO: (low priority)add event listener function for using spell card
-
-    }
-
-    /**
      * Places generals on the gameboard.
      * @param whiteGeneral White side general card.
      * @param blackGeneral Black side general card.
@@ -192,7 +176,7 @@ public class GUI extends Application {
     }
 
     /**
-     * Initiates the board on the root pane.
+     * Initiates the board on the root root.
      * @param root Pane to initiate board on.
      */
     private void loadBoard(Pane root) {
@@ -296,6 +280,19 @@ public class GUI extends Application {
      */
     public void addMana(int newMana){
         this.playerMana += newMana;
+    }
+
+    public boolean gameOver(){
+        return (creaturesOnBoard.getAllGenerals().get(1).isDead() || creaturesOnBoard.getAllGenerals().get(2).isDead());
+    }
+
+    public GeneralCard stringToGeneralCard(String generalName){
+        List<GeneralCard> generalCards = collection.getAllGeneralCards();
+        for (GeneralCard generalCard : generalCards) {
+            if(generalCard.getName().equals(generalName))
+                return generalCard;
+        }
+        return new GeneralCard("General Märt", 0, "This is Märt", 1, 0, 999, 5);
     }
 
 }

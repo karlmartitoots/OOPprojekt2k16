@@ -49,6 +49,9 @@ public abstract class Card {
         this.smallImage = new Image(name + "Small.jpg");
     }
 
+    public String getName(){
+        return this.name;
+    }
     @Override
     public String toString() {
         return "Card{" +
@@ -59,4 +62,5 @@ public abstract class Card {
                 ", smallImage=" + smallImage +
                 '}';
     }
+
 }

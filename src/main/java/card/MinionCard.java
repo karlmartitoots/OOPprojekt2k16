@@ -65,4 +65,9 @@ public class MinionCard extends Card {
     public int getSpeed() {
         return speed;
     }
+
+    public boolean isDead(){
+        return (this.maxHp <= 0);
+    }
+
 }
