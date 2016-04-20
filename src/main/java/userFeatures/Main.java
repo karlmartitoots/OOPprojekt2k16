@@ -14,6 +14,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,11 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
 
-public class GUI extends Application {
+public class Main extends Application {
     /*
-    At the start of the game, GUI will load the board with generals on the board and cards in the players hands.
+    At the start of the game, Main will load the board with generals on the board and cards in the players hands.
     Then a turnCycle begins. While its one players turn, the other can not alter the board in any way.
     A turnCycle lasts for 60 seconds. Whether the player does or does not do anything, if his turn is up,
     the turnCycle starts over and the other player can play.
@@ -44,11 +44,6 @@ public class GUI extends Application {
 
     private GameBoard gameBoard = new GameBoard();
     private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
-    private boolean isTurn = true;
-    private Hand playerHand = new Hand();
-    private Deck playerDeck = new Deck(new ArrayList<>());
-    private int playerMana = 0;
-    private ImageView buttonView = new ImageView();
 
     public static void main(String[] args) {
         launch(args);
@@ -56,17 +51,14 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //choose generals
 
-        Pane generalChoicePane = new Pane();
-        //TODO: add choice pane
+        Pane gamePane = new Pane();
+        Scene scene = new Scene(gamePane);
+
         GeneralCard whiteGeneral = creaturesOnBoard.getAllGenerals().get(1);
         GeneralCard blackGeneral = creaturesOnBoard.getAllGenerals().get(2);
 
         //first time loading:
-
-        Pane gamePane = new Pane();
-        Scene scene = new Scene(gamePane);
 
         loadGenerals(whiteGeneral, blackGeneral);
         ImageView gamePaneFrame = new ImageView(new Image("GUI frame.jpg"));
@@ -75,27 +67,15 @@ public class GUI extends Application {
 
         loadBoard(gamePane);
 
-        //TODO: fix loadPlayerDeck
-        Map<Integer, Card> allCards = new Collection().getAllCards();
-        List<Card> listOfCards = new ArrayList<>();
-        synchronized (allCards) {
-            for (Card card : allCards.values()) {
-                listOfCards.add(card);
-            }
-        }
-        playerDeck.loadDeck(listOfCards);
-
         //start turnCycle loop
+        /*
         if(isTurn) {
             addMana(1);
             startTurnCounter(gamePane);
-        }/*else{
+        }else{
 
-        }*/
-        //first turnCycle:
-        //load all cards in hand
-        //load the board in case the opponent started first
-
+        }
+        */
 
         //one turnCycle:
         //load all cards in hand
@@ -126,9 +106,9 @@ public class GUI extends Application {
     }
 
     /**
-     * Method for declaring the properties of the GUI pane.
-     * @param primaryStage Primary stage of GUI.
-     * @param gamePane The GUI's pane.
+     * Method for declaring the properties of the Main pane.
+     * @param primaryStage Primary stage of Main.
+     * @param gamePane The Main's pane.
      */
     private void setPrimaryStageProperties(Stage primaryStage, Pane gamePane) {
         int GUITopPanelHeight = 47;//pixels
@@ -141,75 +121,6 @@ public class GUI extends Application {
         primaryStage.setMaxHeight(preferredGUIHeight);
         primaryStage.setMinWidth(preferredGUIWidth);
         primaryStage.setMinHeight(preferredGUIHeight);
-    }
-
-    /**
-     * Counts down from turnStartTime to 0 and displays it.To be initiated when someones turn starts.
-     * Runs concurrently with turnWaiter.
-     *
-     * @param root Pane to display the counter label on.
-     */
-
-    private void startTurnCounter(Pane root) {
-
-        final Integer turnStartTime = 60;
-        IntegerProperty timeSeconds = new SimpleIntegerProperty(turnStartTime);
-        Timeline turnTimeline;
-        Image buttonImageOn = new Image("buttonon.png");
-        Image buttonImageOff = new Image("buttonoff.png");
-
-        Label timerLabel = new Label();
-
-        timerLabel.setText(timeSeconds.toString());
-
-        timerLabel.setTextFill(Color.RED);
-        timerLabel.setStyle("-fx-font-size: 4em;");
-        timerLabel.textProperty().bind(timeSeconds.asString());
-
-
-        root.getChildren().add(timerLabel);
-
-        EventHandler<ActionEvent> whenFinished = t -> {
-            root.getChildren().remove(timerLabel);
-
-            buttonView.setImage(buttonImageOff);
-
-        };
-        timeSeconds.set(turnStartTime);
-        turnTimeline = new Timeline();
-        turnTimeline.getKeyFrames().addAll(
-        new KeyFrame(Duration.seconds(turnStartTime + 1),
-                new KeyValue(timeSeconds,0)),
-
-                new KeyFrame(Duration.seconds(turnStartTime + 1),
-                        whenFinished
-
-                ));
-        turnTimeline.play();
-
-
-
-
-        buttonView.setImage(buttonImageOn);
-        buttonView.setX(500);
-        root.getChildren().add(buttonView);
-
-
-        //TODO: add interrupt for ending turn with a button
-        root.setOnMouseClicked((event) -> {showPossibleSquares(root, event);
-                if(event.getX()>buttonView.getX()&& buttonView.getX()+150>event.getX()&&
-                        event.getY()>buttonView.getY()&& buttonView.getY()+150>event.getY()){
-            buttonView.setImage(buttonImageOff);
-                root.getChildren().remove(timerLabel);}});
-        //TODO: (high priority)add event listener function for making a move
-        //TODO: (high priority)add event listener for attacking
-
-        //TODO: add event listener function for summoning minion
-
-        //TODO: (low priority)add event listener function for using equipment card
-
-        //TODO: (low priority)add event listener function for using spell card
-
     }
 
     /**
@@ -324,8 +235,5 @@ public class GUI extends Application {
      * Triggers in the beginning of a turnCycle. Usually adds 1 mana to players manapool.
      * @param newMana The amount of mana to be added.
      */
-    public void addMana(int newMana){
-        this.playerMana += newMana;
-    }
 
 }

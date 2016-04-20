@@ -21,8 +21,8 @@ public class Square extends Parent {
     /**
      * Constructor
      *
-     * @param xCordOnBoard x Coordinates of the square on the GUI
-     * @param yCordOnBoard Y Coordinates of the square on the GUI
+     * @param xCordOnBoard x Coordinates of the square on the Main
+     * @param yCordOnBoard Y Coordinates of the square on the Main
      */
     public Square(int xCordOnBoard, int yCordOnBoard, MinionCard card) {
         this.xCordOnBoard = xCordOnBoard;

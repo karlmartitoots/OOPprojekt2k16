@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Hand {
 
-    private final int handSize = 7;
     private List<Card> hand = new ArrayList<>();
 
     /**
@@ -51,7 +50,6 @@ public class Hand {
     @Override
     public String toString() {
         return "Hand{" +
-                "\nhandSize=" + handSize +
                 ", \nhand=" + hand +
                 '}';
     }

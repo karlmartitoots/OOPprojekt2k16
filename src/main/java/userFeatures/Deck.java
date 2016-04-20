@@ -10,8 +10,10 @@ import collection.Collection;
 
 public class Deck {
 
+    /**
+     * Field for holding all cards in a deck.
+     */
     private List<Card> deckOfCards = new ArrayList<>();
-    private final int deckSize = 7;
 
     /**
      * Constructor
@@ -53,18 +55,20 @@ public class Deck {
     }
 
     /**
-     * Loads a deck of deckSize cards
-     * @param allCards All cards currently available
+     * Returns the next card in the deck, removes the card from the deck and shifts all cards toward the top.
+     * @return
      */
-    public void loadDeck(List<Card> allCards) {
-        synchronized (allCards) {
-            for (int i = 0; i < deckSize; i++) {
-                deckOfCards.add(allCards.get(
-                        (int) Math.round(Math.random() * allCards.size())));
-            }
-        }
+    public Card getNextCard(){
+        return deckOfCards.remove(0);
     }
 
+    /**
+     * Adds a new card on the bottom of the deck.
+     * @param newCard The new card to be added.
+     */
+    public void addCard(Card newCard){
+        deckOfCards.add(newCard);
+    }
     /**
      * Gets the current cards in the deck
      *
@@ -74,11 +78,14 @@ public class Deck {
         return deckOfCards;
     }
 
+    /**
+     * A toString method for getting the object as a string.
+     * @return String interpretation of a Deck object.
+     */
     @Override
     public String toString() {
         return "Deck{" +
                 "\ndeckOfCards=" + deckOfCards +
-                ", \ndeckSize=" + deckSize +
                 '}';
     }
 }
