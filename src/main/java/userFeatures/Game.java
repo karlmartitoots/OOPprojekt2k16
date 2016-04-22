@@ -4,6 +4,7 @@ import board.CreaturesOnBoard;
 import card.GeneralCard;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,8 +26,9 @@ public class Game extends Scene{
         super(root);
 
         loadGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral());
-        loadBoard(root);
         root.getChildren().add(gameFrame);
+        loadBoard(root);
+
 
         //probably make 2 Player objects and a Gamecycle object, then start tossing those around in a while(!gameOver()) loop
 

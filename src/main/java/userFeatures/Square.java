@@ -2,6 +2,7 @@ package userFeatures;
 
 import card.GeneralCard;
 import card.MinionCard;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
@@ -11,7 +12,7 @@ import javafx.scene.shape.Rectangle;
 public class Square extends Parent {
     private int xCordOnBoard;
     private int yCordOnBoard;
-    private final static int xTopMostValue = 0;
+    private final static int xTopMostValue = 260;
     private final static int yLeftMostValue = 0;
     private final static int width = 50;
     private final static int heigth = 50;
@@ -35,7 +36,7 @@ public class Square extends Parent {
             imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
             getChildren().add(imageView);
         } else {
-            rectangle = new Rectangle(xCordOnBoard * width, yCordOnBoard * heigth, width, heigth);
+            rectangle = new Rectangle(xTopMostValue + xCordOnBoard * width, yLeftMostValue + yCordOnBoard * heigth, width, heigth);
             getChildren().add(rectangle);
 
         }
