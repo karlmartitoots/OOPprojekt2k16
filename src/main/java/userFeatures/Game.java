@@ -28,7 +28,9 @@ public class Game extends Scene{
         loadGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral());
         root.getChildren().add(gameFrame);
         loadBoard(root);
-
+        root.setOnMouseClicked((event) ->
+                showPossibleSquares(root, event)
+        );
 
         //probably make 2 Player objects and a Gamecycle object, then start tossing those around in a while(!gameOver()) loop
 
