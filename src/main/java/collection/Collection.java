@@ -4,9 +4,7 @@ import card.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Collection {
 
@@ -78,6 +76,15 @@ public class Collection {
 
     public Map<Integer, Card> getAllCards(){
         return allCards;
+    }
+
+    public Map<String, GeneralCard> getAllGeneralCardsByName(){
+        Map<String, GeneralCard> generalCards = new HashMap<>();
+        for (Card card : allCards.values()) {
+            if(card instanceof GeneralCard)
+                generalCards.put(card.getName(),(GeneralCard) card);
+        }
+        return generalCards;
     }
 
 }
