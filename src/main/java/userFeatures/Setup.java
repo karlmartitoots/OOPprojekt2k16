@@ -45,6 +45,7 @@ public class Setup extends Scene {
         enterButton.relocate(100, 150);
 
         root.getChildren().addAll(chooseGeneralLabel,whiteGeneralNames, whiteChoiceBoxLabel, blackChoiceBoxLabel, blackGeneralNames, enterButton);
+
         boolean[] generalIsSet = {false, false};
         whiteGeneralNames.getSelectionModel().selectedItemProperty().addListener(event -> {
             generalIsSet[0] = true;

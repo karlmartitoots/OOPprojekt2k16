@@ -19,7 +19,6 @@ public class GameBoard {
 
     /**
      * Gets the length of the board on the X axis
-     *
      * @return x Dimension length
      */
     public int getxDimension() {

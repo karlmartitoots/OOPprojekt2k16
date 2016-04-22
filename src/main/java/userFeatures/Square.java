@@ -2,23 +2,19 @@ package userFeatures;
 
 import card.GeneralCard;
 import card.MinionCard;
-import javafx.scene.Group;
-import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 
 
-public class Square extends Parent {
+public class Square {
     private int xCordOnBoard;
     private int yCordOnBoard;
     private final static int xTopMostValue = 260;
     private final static int yLeftMostValue = 0;
     private final static int width = 50;
     private final static int heigth = 50;
-    private Rectangle rectangle;
-    private ImageView imageView;
     private MinionCard card;
+    private ImageView imageView = new ImageView(new Image("defaultSquare.jpg"));
     /**
      * Constructor
      *
@@ -34,12 +30,9 @@ public class Square extends Parent {
             imageView = new ImageView(card.getSmallImage());
             imageView.setX(xCordOnBoard * width + xTopMostValue);
             imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
-            getChildren().add(imageView);
-        } else {
-            rectangle = new Rectangle(xTopMostValue + xCordOnBoard * width, yLeftMostValue + yCordOnBoard * heigth, width, heigth);
-            getChildren().add(rectangle);
-
         }
+        imageView.setX(xCordOnBoard * width + xTopMostValue);
+        imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
     }
 
     public static int getxTopMostValue() {
@@ -84,12 +77,18 @@ public class Square extends Parent {
         this.yCordOnBoard = yCordOnBoard;
     }
 
-    public void setFill(Paint paint) {
-        rectangle.setFill(paint);
+    public void setChosen() {
+        double tempX = imageView.getX(), tempY = imageView.getY();
+        this.imageView = new ImageView(new Image("chosenSquare.jpg"));
+        imageView.setX(tempX);
+        imageView.setY(tempY);
     }
 
-    public void setStroke(Paint paint) {
-        rectangle.setStroke(paint);
+    public void setNotChosen(){
+        double tempX = imageView.getX(), tempY = imageView.getY();
+        this.imageView = new ImageView(new Image("defaultSquare.jpg"));
+        imageView.setX(tempX);
+        imageView.setY(tempY);
     }
 
     public static int getWidth() {
@@ -136,8 +135,7 @@ public class Square extends Parent {
     }
 
     public boolean equals(Square square) {
-        if (square.getxCordOnBoard() == xCordOnBoard && square.getyCordOnBoard() == yCordOnBoard) return true;
-        else return false;
+        return square.getxCordOnBoard() == xCordOnBoard && square.getyCordOnBoard() == yCordOnBoard;
     }
 
     @Override
@@ -147,7 +145,6 @@ public class Square extends Parent {
                 ", yCordOnBoard=" + yCordOnBoard +
                 ", width=" + width +
                 ", heigth=" + heigth +
-                ", rectangle=" + rectangle +
                 ", imageView=" + imageView +
                 ", card=" + card +
                 '}';

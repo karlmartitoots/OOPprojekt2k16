@@ -74,9 +74,7 @@ public class Game extends Scene{
                 Square square;
                 if (gameBoard.getGameBoard()[i][j] == 0) {
                     square = new Square(i, j, null);
-                    square.setFill(Color.LIGHTBLUE);
-                    square.setStroke(Color.BLACK);
-                    root.getChildren().add(square);
+                    root.getChildren().add(square.getImageView());
                 } else if(gameBoard.getGameBoard()[i][j] <= 100){
                     square = new Square(i, j, creaturesOnBoard.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
                     root.getChildren().add(square.getImageView());
@@ -118,10 +116,9 @@ public class Game extends Scene{
         System.out.println(gameBoard.getSelectedSquare());
         if (gameBoard.getToRevert().size() > 0) {
             for (Square square : gameBoard.getToRevert()) {
-                square.setFill(Color.LIGHTBLUE);
-                square.setStroke(Color.BLACK);
                 if (!root.getChildren().contains(square)) {
-                    root.getChildren().add(square);
+                    square.setNotChosen();
+                    root.getChildren().add(square.getImageView());
                 }
             }
             gameBoard.clearRevertable();
@@ -130,9 +127,8 @@ public class Game extends Scene{
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setToRevert(possibleSquares);
             for (Square possibleSquare : possibleSquares) {
-                possibleSquare.setFill(Color.RED);
-                possibleSquare.setStroke(Color.BLACK);
-                root.getChildren().add(possibleSquare);
+                possibleSquare.setChosen();
+                root.getChildren().add(possibleSquare.getImageView());
             }
         }
     }
