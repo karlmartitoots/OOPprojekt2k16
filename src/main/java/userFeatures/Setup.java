@@ -21,7 +21,8 @@ public class Setup extends Scene {
     private Map<String, GeneralCard> allGeneralCards = collection.getAllGeneralCardsByName();
     private GeneralCard whiteGeneral = null, blackGeneral = null;
     private Image popupIcon = new Image("errorPopupIcon.jpg");
-    private Image settingsIcon = new Image("settingsIcon.png");
+    //private Image settingsIcon = new Image("settingsIcon.png");//will be Setup's icon if gameIcon gets fixed
+    private Image gameIcon = new Image("gameIcon.jpg");
 
     public Setup(Group root, Stage primaryStage) {
         super(root);
@@ -66,7 +67,7 @@ public class Setup extends Scene {
 
         primaryStage.setMinWidth(300);
         primaryStage.setMinHeight(250);
-        primaryStage.getIcons().add(settingsIcon);
+        primaryStage.getIcons().add(gameIcon);
         primaryStage.setTitle("Setup");
         primaryStage.setScene(this);
         primaryStage.show();

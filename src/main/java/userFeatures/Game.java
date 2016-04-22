@@ -19,7 +19,7 @@ public class Game extends Scene{
     private GameBoard gameBoard = new GameBoard();
     private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
     private ImageView gameFrame = new ImageView(new Image("GUI frame.jpg"));
-    private Image gameIcon = new Image("gameIcon.jpg");
+    private String gameTitle = "Card Game 1.0";
 
     public Game(Group root, Stage primaryStage, Settings settings) {
         super(root);
@@ -28,10 +28,12 @@ public class Game extends Scene{
         loadBoard(root);
         root.getChildren().add(gameFrame);
 
+        //probably make 2 Player objects and a Gamecycle object, then start tossing those around in a while(!gameOver()) loop
+
         setPrimaryStageProperties(primaryStage, root);
         primaryStage.setScene(this);
-        primaryStage.getIcons().add(gameIcon);
-        primaryStage.setTitle("Card game");
+        //primaryStage.getIcons().add(gameIcon);//don't know why this doesn't work
+        primaryStage.setTitle(gameTitle);
         primaryStage.show();
         /*
         Width and Height listeners for resizable support
