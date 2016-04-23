@@ -51,15 +51,36 @@ public class GameBoard {
         gameBoard[black.getStartingBlack().getxCordOnBoard()][black.getStartingBlack().getyCordOnBoard()] = black.getID() * (-1);
     }
 
+    public void updateBoard() {
+        for (Square square : board) {
+            if (square.hasMinionOnSquare()) {
+                gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = square.getCard().getID();
+            } else gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = 0;
+            square.updateImage();
+        }
+
+    }
+
+    public void moveCard(Square previous, Square current) {
+        if (!current.hasMinionOnSquare()) {
+            MinionCard minion = previous.getCard();
+            previous.placeCard(null);
+            board.set(previous.intValue(xDimension), previous);
+            current.placeCard(minion);
+            board.set(current.intValue(xDimension), current);
+        }
+    }
+
     public void placeMinion(MinionCard minion, String side, int xCoord, int yCoord){
         gameBoard[xCoord][yCoord] = minion.getID()*(side.equals("white") ? 1 : -1);
     }
-
+    /*
     /**
      * Moves the selected unit to the target square
      * @param minion MinionCard to move
      * @param target Target square
      */
+    /*
     public void moveUnit(MinionCard minion, Square target) {
         Square parent = minion.getCurrentPosition();
         Stack<Square> path = getPath(parent, target);
@@ -68,38 +89,45 @@ public class GameBoard {
         }
 
     }
-
+    */
     /**
      * Finds all the possible squares a minion can go to from the given position using BFS
      * @return All squares the minion can move
      */
     public List<Square> getAllPossibleSquares() {
+        Map<Square, Integer> movesUsedToGo = new HashMap<>();
+        movesUsedToGo.put(getSelectedSquare(), 0);
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
         List<Square> squaresPossibleToMoveTo = new ArrayList<>();
         queueOfSquaresToCheck.add(getSelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
         hasBeenVisited[getSelectedSquare().intValue(xDimension)] = true;
+        for (Square square : board) {
+            if (square.hasMinionOnSquare()) hasBeenVisited[square.intValue(xDimension)] = true;
+        }
         while (!queueOfSquaresToCheck.isEmpty()) {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
             List<Square> toExplore = expand(nextSquareToCheck);
             for (Square currentSquare : toExplore) {
-                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare) && (getSelectedSquare().getDistance(currentSquare) <= getSelectedSquare().getCard().getSpeed())) {
+                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
                     hasBeenVisited[currentSquare.intValue(xDimension)] = true;
                     squaresPossibleToMoveTo.add(currentSquare);
                     queueOfSquaresToCheck.add(currentSquare);
+                    movesUsedToGo.put(currentSquare, movesUsedToGo.get(nextSquareToCheck) + 1);
                 }
             }
         }
         return squaresPossibleToMoveTo;
     }
 
-
+    /*
     /**
      * Finds the fastest path to the pointed square in parameter end using BFS
      * @param start Starting square
      * @param end End square
      * @return Returns a stack. The next square on the path is on top of the stack.
      */
+    /*
     public Stack<Square> getPath(Square start, Square end) {
         //TODO: Should merge with the other BFS method if possible
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
@@ -123,7 +151,7 @@ public class GameBoard {
         }
         return generatePath(paths, start, end);
     }
-
+    */
     /**
      * Expands the current search space for searching
      * @param square square to expand from

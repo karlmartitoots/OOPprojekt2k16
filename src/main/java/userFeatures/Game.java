@@ -112,8 +112,6 @@ public class Game extends Scene{
      */
     private void showPossibleSquares(Group root, MouseEvent event) {
         Point2D point2D = getSquare(event.getSceneX(), event.getSceneY());
-        gameBoard.setSelectedSquare(point2D);
-        System.out.println(gameBoard.getSelectedSquare());
         if (gameBoard.getToRevert().size() > 0) {
             for (Square square : gameBoard.getToRevert()) {
                 if (!root.getChildren().contains(square)) {
@@ -121,8 +119,21 @@ public class Game extends Scene{
                     root.getChildren().add(square.getImageView());
                 }
             }
+            if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
+                if (point2D.getX() != -1) {
+                    Square target = gameBoard.getBoard().get((int) (point2D.getX() * gameBoard.getxDimension() + point2D.getY()));
+                    gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
+                    gameBoard.updateBoard();
+                    for (Square square : gameBoard.getBoard()) {
+                        square.updateImage();
+                        root.getChildren().add(square.getImageView());
+                    }
+                }
+            }
             gameBoard.clearRevertable();
         }
+        gameBoard.setSelectedSquare(point2D);
+
         if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setToRevert(possibleSquares);

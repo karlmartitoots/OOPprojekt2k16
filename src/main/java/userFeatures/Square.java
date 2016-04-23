@@ -28,8 +28,6 @@ public class Square {
 
         if (hasMinionOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
-            imageView.setX(xCordOnBoard * width + xTopMostValue);
-            imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
         }
         imageView.setX(xCordOnBoard * width + xTopMostValue);
         imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
@@ -105,8 +103,21 @@ public class Square {
      *
      * @param card card to place on square
      */
-    public void placeCard(GeneralCard card) {
+    public void placeCard(MinionCard card) {
         this.card = card;
+    }
+
+    public void updateImage() {
+        if (hasMinionOnSquare()) {
+            imageView = new ImageView(card.getSmallImage());
+            imageView.setX(xCordOnBoard * width + xTopMostValue);
+            imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
+        } else {
+            imageView = new ImageView(new Image("defaultSquare.jpg"));
+            imageView.setX(xCordOnBoard * width + xTopMostValue);
+            imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
+        }
+
     }
 
     /**
