@@ -62,7 +62,12 @@ public class GameBoard {
     }
 
     public void moveCard(Square previous, Square current) {
-        if (!current.hasMinionOnSquare()) {
+        boolean contains = false;
+        for (Square square : toRevert) {
+            if (current.getxCordOnBoard() == square.getxCordOnBoard() && current.getyCordOnBoard() == square.getyCordOnBoard())
+                contains = true;
+        }
+        if (!current.hasMinionOnSquare() && contains) {
             MinionCard minion = previous.getCard();
             previous.placeCard(null);
             board.set(previous.intValue(xDimension), previous);
