@@ -7,6 +7,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
@@ -14,13 +15,13 @@ public class Gamecycle {
 
     final Integer turnStartTime = 60;
     private Player player;
-    private boolean isTurn;
     IntegerProperty timeSeconds = new SimpleIntegerProperty(turnStartTime);
     Timeline turnTimeline;
     private ImageView buttonView = new ImageView();
 
-    Gamecycle(Player currentPlayer){
+    Gamecycle(Player currentPlayer, Group root){
         this.player = currentPlayer;
+
     }
 
     public void getTime(){

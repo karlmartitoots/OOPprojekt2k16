@@ -5,6 +5,9 @@ import card.Card;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * For holding all cards in hand and operating with them through gamelogic.
+ */
 public class Hand {
 
     private List<Card> hand = new ArrayList<>();

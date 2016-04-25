@@ -4,16 +4,16 @@ import board.CreaturesOnBoard;
 import card.GeneralCard;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Game extends Scene{
 
@@ -21,9 +21,22 @@ public class Game extends Scene{
     private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
     private ImageView gameFrame = new ImageView(new Image("GUI frame.jpg"));
     private String gameTitle = "Card Game 1.0";
+    private int turnCounter = 0;
+    private Player white, black;
+    private String side = "white";
+    private Map<String, Player> playerBySideString = new HashMap<>();
 
+    /**
+     * The constructor of Game conducts all whats happening in gamelogic on gui.
+     * @param root  Group, that everything is set on.
+     * @param primaryStage Stage for the scene.
+     * @param settings Initial settings that are loaded, when the game begins.
+     */
     public Game(Group root, Stage primaryStage, Settings settings) {
         super(root);
+
+        playerBySideString.put("white", white);
+        playerBySideString.put("black", black);
 
         loadGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral());
         root.getChildren().add(gameFrame);
@@ -39,20 +52,6 @@ public class Game extends Scene{
         //primaryStage.getIcons().add(gameIcon);//don't know why this doesn't work
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
-        /*
-        Width and Height listeners for resizable support
-        scene.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                System.out.println("Width: " + newSceneWidth);
-            }
-        });
-        scene.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                System.out.println("Height: " + newSceneHeight);
-            }
-        });
-        TODO: make resizable
-        */
     }
 
     /**
@@ -61,6 +60,7 @@ public class Game extends Scene{
      * @param blackGeneral Black side general card.
      */
     private void loadGenerals(GeneralCard whiteGeneral, GeneralCard blackGeneral) {
+        creaturesOnBoard.setAllGeneralsOnBoard(whiteGeneral, blackGeneral);
         gameBoard.placeGenerals(whiteGeneral, blackGeneral);
     }
 
@@ -76,10 +76,10 @@ public class Game extends Scene{
                     square = new Square(i, j, null);
                     root.getChildren().add(square.getImageView());
                 } else if(gameBoard.getGameBoard()[i][j] <= 100){
-                    square = new Square(i, j, creaturesOnBoard.getAllGenerals().get(Math.abs(gameBoard.getGameBoard()[i][j])));
+                    square = new Square(i, j, CreaturesOnBoard.getAllGeneralsOnBoard().get(Math.abs(gameBoard.getGameBoard()[i][j])));
                     root.getChildren().add(square.getImageView());
                 } else {
-                    square = new Square(i, j, creaturesOnBoard.getAllMinions().get(Math.abs(gameBoard.getGameBoard()[i][j])));
+                    square = new Square(i, j, CreaturesOnBoard.getAllMinionsOnBoard().get(Math.abs(gameBoard.getGameBoard()[i][j])));
                     root.getChildren().add(square.getImageView());
                 }
                 gameBoard.addSquare(square);
@@ -107,7 +107,7 @@ public class Game extends Scene{
     /**
      * Triggers when a minion/general is pressed on on the gameboard. Shows possible squares for
      * the said minion/general.
-     * @param root  Pane that shows the scene, where events are listened.
+     * @param root  Group that shows the scene, where events are listened.
      * @param event Event to be listened for.
      */
     private void showPossibleSquares(Group root, MouseEvent event) {
@@ -115,12 +115,12 @@ public class Game extends Scene{
         if (gameBoard.getToRevert().size() > 0) {
             for (Square square : gameBoard.getToRevert()) {
                 if (!root.getChildren().contains(square)) {
-                    square.setNotChosen();
+                    square.setNotOnThePath();
                     root.getChildren().add(square.getImageView());
                 }
             }
             if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
-                if (point2D.getX() != -1) {
+                if (point2D.getX() != -1 && playerBySideString.get(side).isAlly(gameBoard.getSelectedSquare().getCard().getID())) {
                     Square target = gameBoard.getBoard().get((int) (point2D.getX() * gameBoard.getxDimension() + point2D.getY()));
                     gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
                     gameBoard.updateBoard();
@@ -138,7 +138,7 @@ public class Game extends Scene{
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setToRevert(possibleSquares);
             for (Square possibleSquare : possibleSquares) {
-                possibleSquare.setChosen();
+                possibleSquare.setOnThePath();
                 root.getChildren().add(possibleSquare.getImageView());
             }
         }
@@ -161,7 +161,7 @@ public class Game extends Scene{
      * @return The Y Pixel coordinates of the given square.
      */
     public double getPixelsForSquareY(int y) {
-        return y * Square.getHeigth() + Square.getyLeftMostValue();
+        return y * Square.getHeight() + Square.getyLeftMostValue();
     }
 
     /**
@@ -177,7 +177,7 @@ public class Game extends Scene{
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
                 double left = getPixelsForSquareX(x);
                 double top = getPixelsForSquareY(y);
-                Rectangle rectangle = new Rectangle(left, top, Square.getWidth(), Square.getHeigth());
+                Rectangle rectangle = new Rectangle(left, top, Square.getWidth(), Square.getHeight());
                 if (rectangle.contains(pixelX, pixelY)) {
                     return new Point2D(x, y);
                 }

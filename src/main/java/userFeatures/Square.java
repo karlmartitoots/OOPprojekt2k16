@@ -1,6 +1,5 @@
 package userFeatures;
 
-import card.GeneralCard;
 import card.MinionCard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,7 +11,7 @@ public class Square {
     private final static int xTopMostValue = 260;
     private final static int yLeftMostValue = 0;
     private final static int width = 50;
-    private final static int heigth = 50;
+    private final static int height = 50;
     private MinionCard card;
     private ImageView imageView = new ImageView(new Image("defaultSquare.jpg"));
     /**
@@ -30,13 +29,21 @@ public class Square {
             imageView = new ImageView(card.getSmallImage());
         }
         imageView.setX(xCordOnBoard * width + xTopMostValue);
-        imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
+        imageView.setY(yCordOnBoard * height + yLeftMostValue);
     }
 
+    /**
+     * For getting the adjuster of the gameboard position on GUI.
+     * @return Returns the x-coordinate adjustment.
+     */
     public static int getxTopMostValue() {
         return xTopMostValue;
     }
 
+    /**
+     * For getting the adjuster of the gameboard position on GUI.
+     * @return Returns the y-coordinate adjustment.
+     */
     public static int getyLeftMostValue() {
         return yLeftMostValue;
     }
@@ -51,14 +58,18 @@ public class Square {
     }
 
     /**
-     * Calculates the moves that are needed to move from toMoveTo A to toMoveTo B. Movement is horizontal and vertical.
-     *
-     * @param toMoveTo toMove to
-     * @return the Moves needed to make
+     * Calculates the moves that are needed to move from this Square to toMoveTo. Movement is horizontal and vertical.
+     * @param toMoveTo The square to move to.
+     * @return Returns the amount of steps needed to take to reach the square toMoveTo.
      */
     public int getDistance(Square toMoveTo) {
         return Math.abs(xCordOnBoard - toMoveTo.getxCordOnBoard()) + Math.abs(yCordOnBoard - toMoveTo.getyCordOnBoard());
     }
+
+    /**
+     * Getter method for the x-coordinate of the square on the gameboard.
+     * @return Returns the x-coordinate in gameboard unit lengths.
+     */
     public int getxCordOnBoard() {
         return xCordOnBoard;
     }
@@ -75,47 +86,65 @@ public class Square {
         this.yCordOnBoard = yCordOnBoard;
     }
 
-    public void setChosen() {
+    /**
+     * A method, for when the gameboard shows a path on some action, to change the square to
+     * a picture of a path square.
+     */
+    public void setOnThePath() {
         double tempX = imageView.getX(), tempY = imageView.getY();
         this.imageView = new ImageView(new Image("chosenSquare.jpg"));
         imageView.setX(tempX);
         imageView.setY(tempY);
     }
 
-    public void setNotChosen(){
+    /**
+     * A method, for when the gameboard shows a path on some action, to change the square back
+     * to what it is like by default.
+     */
+    public void setNotOnThePath(){
         double tempX = imageView.getX(), tempY = imageView.getY();
         this.imageView = new ImageView(new Image("defaultSquare.jpg"));
         imageView.setX(tempX);
         imageView.setY(tempY);
     }
 
+    /**
+     * Getter for the width of the square.
+     * @return Returns the width of the square in pixels.
+     */
     public static int getWidth() {
         return width;
     }
 
-    public static int getHeigth() {
-        return heigth;
+    /**
+     * Getter method for square height in pixels.
+     * @return Returns the height of the square in pixels.
+     */
+    public static int getHeight() {
+        return height;
     }
 
 
     /**
-     * Places the card on the board;
-     *
+     * Places the card on the board.
      * @param card card to place on square
      */
     public void placeCard(MinionCard card) {
         this.card = card;
     }
 
+    /**
+     * Updates the image of the square when gameboard is changed.
+     */
     public void updateImage() {
         if (hasMinionOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
             imageView.setX(xCordOnBoard * width + xTopMostValue);
-            imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
+            imageView.setY(yCordOnBoard * height + yLeftMostValue);
         } else {
             imageView = new ImageView(new Image("defaultSquare.jpg"));
             imageView.setX(xCordOnBoard * width + xTopMostValue);
-            imageView.setY(yCordOnBoard * heigth + yLeftMostValue);
+            imageView.setY(yCordOnBoard * height + yLeftMostValue);
         }
 
     }
@@ -136,15 +165,27 @@ public class Square {
         return card != null;
     }
 
+    /**
+     * Gets the picture, that the square will currently display.
+     * @return Returns that pictures ImageView.
+     */
     public ImageView getImageView() {
         return imageView;
     }
 
-
+    /**
+     * Getter for the squares minionCard.
+     * @return Gets the minionCard that the square currently holds.
+     */
     public MinionCard getCard() {
         return card;
     }
 
+    /**
+     * A square is different from another square, if their coordinates differ between eachother.
+     * @param square The Square that this square will be compared to.
+     * @return Returns true, if the square has the exact same coordinates and false otherwise.
+     */
     public boolean equals(Square square) {
         return square.getxCordOnBoard() == xCordOnBoard && square.getyCordOnBoard() == yCordOnBoard;
     }
@@ -155,7 +196,7 @@ public class Square {
                 "xCordOnBoard=" + xCordOnBoard +
                 ", yCordOnBoard=" + yCordOnBoard +
                 ", width=" + width +
-                ", heigth=" + heigth +
+                ", height=" + height +
                 ", imageView=" + imageView +
                 ", card=" + card +
                 '}';

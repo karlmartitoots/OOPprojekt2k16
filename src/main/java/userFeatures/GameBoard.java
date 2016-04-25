@@ -4,15 +4,16 @@ import java.util.*;
 
 import card.*;
 import javafx.geometry.Point2D;
-
+//TODO: implement better - a very messy class right now
+//probably the reason for slowing down development on the game
 public class GameBoard {
-
     private final int xDimension = 10;
     private final int yDimension = 10;
     private List<Square> board = new ArrayList<>();
     private int[][] gameBoard = new int[xDimension][yDimension];
     private Square selectedSquare = null;
     private List<Square> toRevert = new ArrayList<>();
+
     /*Every minion can be stored as an integer on the board - negative value for player a, positive for b. Possible to put unique id for every card.
     Although keeping the data of the board can be subject to change if there is a better data structure
     */
@@ -100,6 +101,7 @@ public class GameBoard {
      * @return All squares the minion can move
      */
     public List<Square> getAllPossibleSquares() {
+        //TODO: clean up this mess
         Map<Square, Integer> movesUsedToGo = new HashMap<>();
         movesUsedToGo.put(getSelectedSquare(), 0);
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();

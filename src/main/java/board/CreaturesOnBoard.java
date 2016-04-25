@@ -2,43 +2,37 @@ package board;
 
 import card.GeneralCard;
 import card.MinionCard;
-import userFeatures.GameBoard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * Class to store all minions that are in the game
+ * Class to store info about all the minions that are on the board.
  */
 public class CreaturesOnBoard {
 
-    private GeneralCard whiteGeneral = new GeneralCard("General Taavi", 0, "This is taavi.", 1, 30, 30, 5);
-    private GeneralCard blackGeneral = new GeneralCard("General Märt", 0, "This is märt.", 2, 30, 30, 5);
-    private Map<Integer, GeneralCard> allGenerals = new HashMap<>(3);
-    private Map<Integer, MinionCard> allMinions = new HashMap<>();
+    private static Map<Integer, GeneralCard> allGeneralsOnBoard = new HashMap<>(3);
 
-    public CreaturesOnBoard() {
-        allGenerals.put(0, null);
-        allGenerals.put(1, whiteGeneral);
-        allGenerals.put(2, blackGeneral);
+    private static Map<Integer, MinionCard> allMinionsOnBoard = new HashMap<>();
+
+    public void setAllGeneralsOnBoard(GeneralCard whiteGeneral, GeneralCard blackGeneral) {
+        allGeneralsOnBoard.put(1, whiteGeneral);
+        allGeneralsOnBoard.put(2, blackGeneral);
     }
 
     /**
      * For getting all possible generals.
      * @return Returns a HashMap of ID->General.
      */
-    public Map<Integer, GeneralCard> getAllGenerals() {
-        return allGenerals;
+    public static Map<Integer, GeneralCard> getAllGeneralsOnBoard() {
+        return allGeneralsOnBoard;
     }
 
     /**
      * For getting all possible minions.
      * @return Returns a HashMap of ID->Minion.
      */
-    public Map<Integer, MinionCard> getAllMinions(){
-        return allMinions;
+    public static Map<Integer, MinionCard> getAllMinionsOnBoard(){
+        return allMinionsOnBoard;
     }
 
 }
