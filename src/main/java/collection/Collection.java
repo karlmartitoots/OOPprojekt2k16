@@ -27,6 +27,10 @@ public class Collection {
         }
     }
 
+    /**
+     * Creates a card by reading it in from collection textfile.
+     * @param parts The method is passed a string array with the card specific elements.
+     */
     private void createCard(String[] parts) {
 
 
@@ -69,15 +73,24 @@ public class Collection {
                         Integer.parseInt(parts[2]),
                         parts[3],
                         Integer.parseInt(parts[4]),
-                        Integer.parseInt(parts[5])
+                        Integer.parseInt(parts[5]),
+                        Integer.parseInt(parts[6])
                 ));
         }
     }
 
+    /**
+     * Getter for all the cards that exist
+     * @return Returns a map of integer to card correspondence elements.
+     */
     public Map<Integer, Card> getAllCards(){
         return allCards;
     }
 
+    /**
+     * Getter for every general card in the game
+     * @return Returns a map of string to GeneralCard correspondence elements.
+     */
     public Map<String, GeneralCard> getAllGeneralCardsByName(){
         Map<String, GeneralCard> generalCards = new HashMap<>();
         for (Card card : allCards.values()) {

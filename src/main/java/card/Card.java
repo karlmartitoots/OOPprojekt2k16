@@ -46,7 +46,6 @@ public abstract class Card {
         return smallImage;
     }
 
-
     public String getName() {
         return name;
     }
