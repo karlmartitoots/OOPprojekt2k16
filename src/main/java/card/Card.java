@@ -7,13 +7,12 @@ import javafx.scene.image.Image;
  * manacost and description.
  */
 public abstract class Card {
-
     private final String name;
-
     private final int cost;
     private final String description;
     private Image image;
     private Image smallImage;
+
     /**
      * Constructor
      *  @param name   Name of the card

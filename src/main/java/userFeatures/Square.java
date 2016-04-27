@@ -4,7 +4,6 @@ import card.MinionCard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-
 public class Square {
     private int xCordOnBoard;
     private int yCordOnBoard;
@@ -14,6 +13,7 @@ public class Square {
     private final static int height = 50;
     private MinionCard card;
     private ImageView imageView = new ImageView(new Image("defaultSquare.jpg"));
+
     /**
      * Constructor
      *

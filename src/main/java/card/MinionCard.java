@@ -14,22 +14,6 @@ public class MinionCard extends Card {
     private final int speed;
     private int currentHp;
 
-    public int getAttack() {
-        return attack;
-    }
-
-    public int getMaxHp() {
-        return maxHp;
-    }
-
-    public int getCurrentHp() {
-        return currentHp;
-    }
-
-    public void setCurrentHp(int currentHp) {
-        this.currentHp = currentHp;
-    }
-
     /**
      * Construtor
      *
@@ -48,6 +32,22 @@ public class MinionCard extends Card {
         this.maxHp = maxHp;
         this.speed = speed;
         this.currentHp = maxHp;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getCurrentHp() {
+        return currentHp;
+    }
+
+    public void setCurrentHp(int currentHp) {
+        this.currentHp = currentHp;
     }
 
     /**

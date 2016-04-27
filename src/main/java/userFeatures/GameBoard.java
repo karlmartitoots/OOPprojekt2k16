@@ -46,10 +46,12 @@ public class GameBoard {
      * Setups the game by placing the generals of both players on the board.
      * @param white The general used by the white player
      * @param black The general used by the black player
+     * @param whiteStartingSquare Starting location for the white general
+     * @param blackStartingSquare Starting location for the black general
      */
-    public void placeGenerals(GeneralCard white, GeneralCard black) {
-        gameBoard[white.getStartingWhite().getxCordOnBoard()][white.getStartingWhite().getyCordOnBoard()] = white.getID();
-        gameBoard[black.getStartingBlack().getxCordOnBoard()][black.getStartingBlack().getyCordOnBoard()] = black.getID() * (-1);
+    public void placeGenerals(GeneralCard white, GeneralCard black, Point2D whiteStartingSquare, Point2D blackStartingSquare) {
+        gameBoard[(int)whiteStartingSquare.getX()][(int)whiteStartingSquare.getY()] = white.getID();
+        gameBoard[(int)blackStartingSquare.getX()][(int)blackStartingSquare.getY()] = black.getID() * (-1);
     }
 
     public void updateBoard() {

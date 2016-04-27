@@ -1,7 +1,6 @@
 package userFeatures;
 
 import board.CreaturesOnBoard;
-import card.GeneralCard;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -38,7 +37,9 @@ public class Game extends Scene{
         playerBySideString.put("white", white);
         playerBySideString.put("black", black);
 
-        loadGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral());
+        creaturesOnBoard.setAllGeneralsOnBoard(settings.getWhiteGeneral(), settings.getBlackGeneral());
+        gameBoard.placeGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral(),
+                settings.getWhiteStartingSquare(), settings.getBlackStartingSquare());
         root.getChildren().add(gameFrame);
         loadBoard(root);
         root.setOnMouseClicked((event) ->
@@ -52,16 +53,6 @@ public class Game extends Scene{
         //primaryStage.getIcons().add(gameIcon);//don't know why this doesn't work
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
-    }
-
-    /**
-     * Places generals on the gameboard.
-     * @param whiteGeneral White side general card.
-     * @param blackGeneral Black side general card.
-     */
-    private void loadGenerals(GeneralCard whiteGeneral, GeneralCard blackGeneral) {
-        creaturesOnBoard.setAllGeneralsOnBoard(whiteGeneral, blackGeneral);
-        gameBoard.placeGenerals(whiteGeneral, blackGeneral);
     }
 
     /**

@@ -2,6 +2,7 @@ package userFeatures;
 
 import card.GeneralCard;
 import collection.Collection;
+import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ public class Setup extends Scene {
     private Collection collection = new Collection();
     private Map<String, GeneralCard> allGeneralCards = collection.getAllGeneralCardsByName();
     private GeneralCard whiteGeneral = null, blackGeneral = null;
+    private String startingPositionName = "";
     private Image popupIcon = new Image("errorPopupIcon.jpg");
     //private Image settingsIcon = new Image("settingsIcon.png");//will be Setup's icon if gameIcon gets fixed
     private Image gameIcon = new Image("gameIcon.jpg");
@@ -33,45 +35,61 @@ public class Setup extends Scene {
         super(root);
 
         Label chooseGeneralLabel = createLabel("Choose your general", 20, 50, 0);
-        Label whiteChoiceBoxLabel = createLabel("White", 16, 50, 50);
-        Label blackChoiceBoxLabel = createLabel("Black", 16, 50, 100);
+        Label whiteChoiceBoxLabel = createLabel("White", 16, 50, 50),
+                blackChoiceBoxLabel = createLabel("Black", 16, 50, 100);
+        Label beginningPositionsChoiceBoxLabel = createLabel("Choose beginning positions", 20, 30, 150);
 
-        ChoiceBox<String> whiteGeneralNames = createGeneralChoiceBox(100, 50);
-        ChoiceBox<String> blackGeneralNames = createGeneralChoiceBox(100, 100);
+        ChoiceBox<String> whiteGeneralNamesChoiceBox = createGeneralChoiceBox(100, 50);
+        ChoiceBox<String> blackGeneralNamesChoiceBox = createGeneralChoiceBox(100, 100);
+        //might need to rethink some logic here, because when the names are changed in
+        //Settings, they wont change in here and the code will break
+        ChoiceBox<String> positionNamesChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
+                "Corners",
+                "GoFace"
+        ));
+        positionNamesChoiceBox.relocate(100, 200);
 
         Button enterButton = new Button();
         enterButton.setText("ENTER");
-        enterButton.relocate(100, 150);
+        enterButton.relocate(100, 250);
 
         root.getChildren().addAll(chooseGeneralLabel,
-                whiteGeneralNames,
                 whiteChoiceBoxLabel,
+                whiteGeneralNamesChoiceBox,
                 blackChoiceBoxLabel,
-                blackGeneralNames,
+                blackGeneralNamesChoiceBox,
+                beginningPositionsChoiceBoxLabel,
+                positionNamesChoiceBox,
                 enterButton);
 
         boolean[] generalIsChosen = {false, false};
-        whiteGeneralNames.getSelectionModel().selectedItemProperty().addListener(event -> {
+        whiteGeneralNamesChoiceBox.getSelectionModel().selectedItemProperty().addListener(event -> {
             generalIsChosen[0] = true;
         });
 
-        blackGeneralNames.getSelectionModel().selectedItemProperty().addListener(event -> {
+        blackGeneralNamesChoiceBox.getSelectionModel().selectedItemProperty().addListener(event -> {
             generalIsChosen[1] = true;
         });
 
+        boolean[] positionIsChosen = {false};
+        positionNamesChoiceBox.getSelectionModel().selectedItemProperty().addListener(event -> {
+            positionIsChosen[0] = true;
+        });
+
         enterButton.setOnAction(event -> {
-            whiteGeneral = allGeneralCards.get(whiteGeneralNames.getValue());
-            blackGeneral = allGeneralCards.get(blackGeneralNames.getValue());
-            if(!(generalIsChosen[0] && generalIsChosen[1])){
+            whiteGeneral = allGeneralCards.get(whiteGeneralNamesChoiceBox.getValue());
+            blackGeneral = allGeneralCards.get(blackGeneralNamesChoiceBox.getValue());
+            startingPositionName = positionNamesChoiceBox.getValue();
+            if(!(generalIsChosen[0] && generalIsChosen[1] && positionIsChosen[0])){
                 showPopupDialog(primaryStage);
             }else{
                 primaryStage.close();
-                primaryStage.setScene(new Game(new Group(), primaryStage, new Settings(whiteGeneral, blackGeneral)));
+                primaryStage.setScene(new Game(new Group(), primaryStage, new Settings(whiteGeneral, blackGeneral, startingPositionName)));
             }
         });
 
         primaryStage.setMinWidth(300);
-        primaryStage.setMinHeight(250);
+        primaryStage.setMinHeight(350);
         primaryStage.getIcons().add(gameIcon);
         primaryStage.setTitle("Setup");
         primaryStage.setScene(this);
@@ -102,11 +120,11 @@ public class Setup extends Scene {
         Group dialogBoxGroup = new Group();
         dialogBox.initModality(Modality.APPLICATION_MODAL);
         dialogBox.initOwner(primaryStage);
-        Text dialog = new Text("Please choose both generals!");
+        Text dialog = new Text("Please choose both generals and the starting position!");
         dialog.setFont(new Font(25.0));
         dialog.relocate(25, 25);
         dialogBoxGroup.getChildren().add(dialog);
-        Scene dialogScene = new Scene(dialogBoxGroup, 500, 100);
+        Scene dialogScene = new Scene(dialogBoxGroup, 700, 100);
         dialogBox.setScene(dialogScene);
         dialogBox.getIcons().add(popupIcon);
         dialogBox.setTitle("ERROR");
