@@ -1,11 +1,11 @@
 package userFeatures;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import card.*;
 
 public class Deck {
-
     /**
      * Field for holding all cards in a deck.
      */
@@ -21,23 +21,10 @@ public class Deck {
     }
 
     /**
-     * Shuffles the cards in the deck, making sure they are in random sequence. Uses the inbuilt RNG.
+     * Shuffles the cards in the deck, making sure they are in random sequence. Uses the inbuilt function from Collections.
      */
     public void shuffle() {
-        for (int i = 0; i < deckOfCards.size(); i++) {
-            swap(i, (int) (Math.random() * deckOfCards.size()));
-        }
-    }
-
-    /**
-     * Swaps the places of cards with indexes i and j
-     * @param i index of the first card
-     * @param j index of the second card
-     */
-    private void swap(int i, int j) {
-        Card holder = deckOfCards.get(i);
-        deckOfCards.set(i, deckOfCards.get(j));
-        deckOfCards.set(j, holder);
+        Collections.shuffle(deckOfCards);
     }
 
     /**
@@ -48,14 +35,6 @@ public class Deck {
         if (deckOfCards.size() > 0) {
             return deckOfCards.remove(0);
         } else return null;
-    }
-
-    /**
-     * Returns the next card in the deck, removes the card from the deck and shifts all cards toward the top.
-     * @return
-     */
-    public Card getNextCard(){
-        return deckOfCards.remove(0);
     }
 
     /**

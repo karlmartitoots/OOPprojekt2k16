@@ -42,10 +42,6 @@ public class Player {
      */
     private void initiateDeck() {
         Map<Integer, Card> allCards = new Collection().getAllCards();
-        List<Card> listOfCards = new ArrayList<>();
-        for (Card card : allCards.values()) {
-                listOfCards.add(card);
-            }
         for (int i = 0; i < deckSize; i++) {
             playerDeck.addCard(allCards.get((int) Math.round(Math.random() * allCards.size())));
         }
@@ -56,7 +52,7 @@ public class Player {
      */
     private void initiateHand() {
         for (int i = 0; i < handSize; i++) {
-            playerHand.addCard(playerDeck.getNextCard());
+            playerHand.addCard(playerDeck.draw());
         }
     }
 

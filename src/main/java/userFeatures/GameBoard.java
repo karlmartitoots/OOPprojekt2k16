@@ -9,17 +9,17 @@ import javafx.geometry.Point2D;
 public class GameBoard {
     private final int xDimension = 10;
     private final int yDimension = 10;
-    private List<Square> board = new ArrayList<>();
+    private List<Square> boardBySquares = new ArrayList<>();
     private int[][] gameBoard = new int[xDimension][yDimension];
     private Square selectedSquare = null;
     private List<Square> toRevert = new ArrayList<>();
 
-    /*Every minion can be stored as an integer on the board - negative value for player a, positive for b. Possible to put unique id for every card.
-    Although keeping the data of the board can be subject to change if there is a better data structure
+    /*Every minion can be stored as an integer on the boardBySquares - negative value for player a, positive for b. Possible to put unique id for every card.
+    Although keeping the data of the boardBySquares can be subject to change if there is a better data structure
     */
 
     /**
-     * Gets the length of the board on the X axis
+     * Gets the length of the boardBySquares on the X axis
      * @return x Dimension length
      */
     public int getxDimension() {
@@ -27,7 +27,7 @@ public class GameBoard {
     }
 
     /**
-     * Gets the length of the board on the Y axis
+     * Gets the length of the boardBySquares on the Y axis
      * @return y Dimension length
      */
     public int getyDimension() {
@@ -35,7 +35,7 @@ public class GameBoard {
     }
 
     /**
-     * Gets the current state of the game board.
+     * Gets the current state of the game boardBySquares.
      * @return gameBoard
      */
     public int[][] getGameBoard() {
@@ -43,7 +43,7 @@ public class GameBoard {
     }
 
     /**
-     * Setups the game by placing the generals of both players on the board.
+     * Setups the game by placing the generals of both players on the boardBySquares.
      * @param white The general used by the white player
      * @param black The general used by the black player
      * @param whiteStartingSquare Starting location for the white general
@@ -55,7 +55,7 @@ public class GameBoard {
     }
 
     public void updateBoard() {
-        for (Square square : board) {
+        for (Square square : boardBySquares) {
             if (square.hasMinionOnSquare()) {
                 gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = square.getCard().getID();
             } else gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = 0;
@@ -73,9 +73,9 @@ public class GameBoard {
         if (!current.hasMinionOnSquare() && contains) {
             MinionCard minion = previous.getCard();
             previous.placeCard(null);
-            board.set(previous.intValue(xDimension), previous);
+            boardBySquares.set(previous.intValue(xDimension), previous);
             current.placeCard(minion);
-            board.set(current.intValue(xDimension), current);
+            boardBySquares.set(current.intValue(xDimension), current);
         }
     }
 
@@ -111,7 +111,7 @@ public class GameBoard {
         queueOfSquaresToCheck.add(getSelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
         hasBeenVisited[getSelectedSquare().intValue(xDimension)] = true;
-        for (Square square : board) {
+        for (Square square : boardBySquares) {
             if (square.hasMinionOnSquare()) hasBeenVisited[square.intValue(xDimension)] = true;
         }
         while (!queueOfSquaresToCheck.isEmpty()) {
@@ -180,8 +180,8 @@ public class GameBoard {
     }
 
     /**
-     * Checks if the square with the given coordinates belongs to the board
-     * @param square square to check if it belongs to the board
+     * Checks if the square with the given coordinates belongs to the boardBySquares
+     * @param square square to check if it belongs to the boardBySquares
      * @return True if belongs, false otherwise
      */
     boolean belongsToBoard(Square square) {
@@ -219,7 +219,7 @@ public class GameBoard {
 
     public void setSelectedSquare(Point2D point) {
         if (point.getX() >= 0) {
-            selectedSquare = board.get((int) (point.getX() * xDimension + point.getY()));
+            selectedSquare = boardBySquares.get((int) (point.getX() * xDimension + point.getY()));
         } else selectedSquare = null;
     }
 
@@ -228,11 +228,11 @@ public class GameBoard {
     }
 
     public void addSquare(Square square) {
-        board.add(square);
+        boardBySquares.add(square);
     }
 
-    public List<Square> getBoard() {
-        return board;
+    public List<Square> getBoardBySquares() {
+        return boardBySquares;
     }
 
     public List<Square> getToRevert() {
@@ -252,7 +252,7 @@ public class GameBoard {
         return "GameBoard{" +
                 "\nxDimension=" + xDimension +
                 ", \nyDimension=" + yDimension +
-                ", \nboard=" + board +
+                ", \nboardBySquares=" + boardBySquares +
                 ", \ngameBoard=" + Arrays.toString(gameBoard) +
                 ", \nselectedSquare=" + selectedSquare +
                 ", \ntoRevert=" + toRevert +

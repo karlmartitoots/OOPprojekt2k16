@@ -28,12 +28,11 @@ public class Collection {
     }
 
     /**
-     * Creates a card by reading it in from collection textfile.
+     * Creates a card by reading it in from collection textfile. What different parts mean, is documented in
+     * collection.txt.
      * @param parts The method is passed a string array with the card specific elements.
      */
     private void createCard(String[] parts) {
-
-
         switch (parts[0]){
             case "GENERAL":
                 allCards.put(Integer.parseInt(parts[4]), new GeneralCard(

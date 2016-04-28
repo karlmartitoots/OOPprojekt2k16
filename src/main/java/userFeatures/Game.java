@@ -112,10 +112,10 @@ public class Game extends Scene{
             }
             if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
                 if (point2D.getX() != -1 && playerBySideString.get(side).isAlly(gameBoard.getSelectedSquare().getCard().getID())) {
-                    Square target = gameBoard.getBoard().get((int) (point2D.getX() * gameBoard.getxDimension() + point2D.getY()));
+                    Square target = gameBoard.getBoardBySquares().get((int) (point2D.getX() * gameBoard.getxDimension() + point2D.getY()));
                     gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
                     gameBoard.updateBoard();
-                    for (Square square : gameBoard.getBoard()) {
+                    for (Square square : gameBoard.getBoardBySquares()) {
                         square.updateImage();
                         root.getChildren().add(square.getImageView());
                     }
