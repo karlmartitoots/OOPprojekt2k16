@@ -47,7 +47,7 @@ public class Game extends Scene{
         loadBoard(root);
 
         root.setOnMouseClicked((event) ->
-                showPossibleSquares(root, event)
+                mouseEventHandler(root, event)
         );
 
         //probably make 2 Player objects and a Gamecycle object, then start tossing those around in a while(!gameOver()) loop
@@ -81,7 +81,6 @@ public class Game extends Scene{
             }
         }
     }
-
     /**
      * Method for declaring the properties of the Main pane.
      * @param primaryStage Primary stage of Main.
@@ -100,47 +99,28 @@ public class Game extends Scene{
     }
 
     /**
-     * Triggers when a minion/general is pressed on on the gameboard. Shows possible squares for
-     * the said minion/general.
+     * Handles events in the case mouse is pressed
      * @param root  Group that shows the scene, where events are listened.
      * @param event Event to be listened for.
      */
-    private void showPossibleSquares(Group root, MouseEvent event) {
-        //saves the pixel x and y coordinates for the point clicked on
-        Point2D point2D = getSquare(event.getSceneX(), event.getSceneY());
-        //if a list called toRevert has size more than 0, execute the next lines
-        if (gameBoard.getToRevert().size() > 0) {
-            //iterate through that list of squares and set all the squares into defaultimages
-            for (Square square : gameBoard.getToRevert()) {
-                square.setNotOnThePath();
-                //show each of those squares
-                root.getChildren().add(square.getImageView());
-            }
-            //still, if the list has size more than 0:
-            //and if a variable in gameBoard called selectedSquare is not null
-            //AND if that same square doesnt have a card on it
-            if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
-                //if the saved point is not -1, meaning getSquare function didn't find it on the gameboard...
-                if (point2D.getX() != -1) {
-                    //then the square was found and is chosen on the board
-                    Square target = gameBoard.getBoardBySquares().get((int) (point2D.getX() * gameBoard.getxDimension() + point2D.getY()));
-                    //a card is moved to that square
-                    gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
-                    //each squares image is updated
-                    for (Square square : gameBoard.getBoardBySquares()) {
-                        square.updateImage();
-                        root.getChildren().add(square.getImageView());
-                    }
-                }
-            }
-            gameBoard.clearRevertable();
-        }
-        //if there isn't anything to revert, set the selected square as the square clicked on
-        gameBoard.setSelectedSquare(point2D);
-        //
-        if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
+    private void mouseEventHandler(Group root, MouseEvent event) {
+        Point2D squareCoordinates = getSquare(event.getSceneX(), event.getSceneY());
+        setSquaresNotOnPath(root);
+        moveMinionOnScene(root, squareCoordinates);
+        gameBoard.clearSquaresPossibleToMove();
+        gameBoard.setSelectedSquare(squareCoordinates);
+        getSquaresPossibleToMove(root);
+    }
+
+    /**
+     * If event is registered on square that has a minion, the method displays all the squares the minion can move, as well as saves them.
+     *
+     * @param root Group that shows the scene, where events are listned
+     */
+    private void getSquaresPossibleToMove(Group root) {
+        if (gameBoard.getSelectedSquare().hasMinionOnSquare() && !gameBoard.getSelectedSquare().getCard().hasMoved()) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
-            gameBoard.setToRevert(possibleSquares);
+            gameBoard.setSquaresPossibleToMove(possibleSquares);
             for (Square possibleSquare : possibleSquares) {
                 possibleSquare.setOnThePath();
                 root.getChildren().add(possibleSquare.getImageView());
@@ -149,12 +129,40 @@ public class Game extends Scene{
     }
 
     /**
-     * Gets the X coordinates of the given square in pixels.
+     * If the previously selected square had a minion on it, then the method will reposition the minion on the game board, if the minion has not moved this turn;
      *
+     * @param root              Group that shows the scene, where events are listned
+     * @param squareCoordinates coordinates of the square clicked on
+     */
+    private void moveMinionOnScene(Group root, Point2D squareCoordinates) {
+        if (gameBoard.getSelectedSquare().hasMinionOnSquare()) {
+            Square target = gameBoard.getBoardBySquares().get((int) (squareCoordinates.getX() * gameBoard.getxDimension() + squareCoordinates.getY()));
+            gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
+            for (Square square : gameBoard.getBoardBySquares()) {
+                square.updateImage();
+                root.getChildren().add(square.getImageView());
+            }
+        }
+    }
+
+    /**
+     * Deselects the squares which were able to move to by the previously selected minion.
+     *
+     * @param root Group that shows the scene, where events are listned
+     */
+    private void setSquaresNotOnPath(Group root) {
+        for (Square square : gameBoard.getSquaresPossibleToMove()) {
+            square.setNotOnThePath();
+            root.getChildren().add(square.getImageView());
+        }
+    }
+
+    /**
+     * Gets the X coordinates of the given square in pixels.
      * @param squaresXCoordOnBoard The X coordinate of the square on the board
      * @return The X Pixel coordinates of the given square.
      */
-    public double getSquaresXCoordinatesInPixels(int squaresXCoordOnBoard) {
+    private double getSquaresXCoordinatesInPixels(int squaresXCoordOnBoard) {
         return squaresXCoordOnBoard * Square.getWidth() + Square.getxTopMostValue();
     }
 
@@ -164,7 +172,7 @@ public class Game extends Scene{
      * @param squaresYCoord The Y coordinate of the square on the board
      * @return The Y Pixel coordinates of the given square.
      */
-    public double getSquaresYCoordinatesInPixels(int squaresYCoord) {
+    private double getSquaresYCoordinatesInPixels(int squaresYCoord) {
         return squaresYCoord * Square.getHeight() + Square.getyLeftMostValue();
     }
 
@@ -176,7 +184,7 @@ public class Game extends Scene{
      * @return Coordinates of the square.
      */
     //I have no idea what is the best data structure to use to store the coordinates of points so it is subject to change still.
-    public Point2D getSquare(double pixelX, double pixelY) {
+    private Point2D getSquare(double pixelX, double pixelY) {
         for (int x = 0; x < gameBoard.getxDimension(); x++) {
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
                 double left = getSquaresXCoordinatesInPixels(x);

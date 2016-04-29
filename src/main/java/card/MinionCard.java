@@ -13,6 +13,7 @@ public class MinionCard extends Card {
     private final int maxHp;
     private final int speed;
     private int currentHp;
+    private boolean hasMoved;
 
     /**
      * Construtor
@@ -80,5 +81,23 @@ public class MinionCard extends Card {
      */
     public int getSpeed() {
         return speed;
+    }
+
+    /**
+     * Returns if the minion has moved during this turn or not
+     *
+     * @return hasMoved
+     */
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    /**
+     * Sets the value for the minion if it has moved this turn or not.
+     *
+     * @param hasMoved value if the minion has moved this turn or not
+     */
+    public void setMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
     }
 }

@@ -15,6 +15,11 @@ public class Square {
     private ImageView imageView = new ImageView(new Image("defaultSquare.jpg"));
 
     /**
+     * Default constructor
+     */
+    public Square() {
+    }
+    /**
      * Constructor
      *
      * @param xCordOnBoard x Coordinates of the square on the Main

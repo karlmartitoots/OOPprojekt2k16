@@ -11,8 +11,8 @@ public class GameBoard {
     private final int yDimension = 10;
     private List<Square> boardBySquares = new ArrayList<>();
     private int[][] gameBoard = new int[xDimension][yDimension];
-    private Square selectedSquare = null;
-    private List<Square> toRevert = new ArrayList<>();
+    private Square selectedSquare = new Square();
+    private List<Square> squaresPossibleToMove = new ArrayList<>();
 
     /*Every minion can be stored as an integer on the boardBySquares - negative value for player a, positive for b. Possible to put unique id for every card.
     Although keeping the data of the boardBySquares can be subject to change if there is a better data structure
@@ -65,7 +65,7 @@ public class GameBoard {
 
     public void moveCard(Square previous, Square current) {
         boolean contains = false;
-        for (Square square : toRevert) {
+        for (Square square : squaresPossibleToMove) {
             if (current.getxCordOnBoard() == square.getxCordOnBoard() && current.getyCordOnBoard() == square.getyCordOnBoard())
                 contains = true;
         }
@@ -81,28 +81,11 @@ public class GameBoard {
     public void placeMinion(MinionCard minion, String side, int xCoord, int yCoord){
         gameBoard[xCoord][yCoord] = minion.getID()*(side.equals("white") ? 1 : -1);
     }
-    /*
-    /**
-     * Moves the selected unit to the target square
-     * @param minion MinionCard to move
-     * @param target Target square
-     */
-    /*
-    public void moveUnit(MinionCard minion, Square target) {
-        Square parent = minion.getCurrentPosition();
-        Stack<Square> path = getPath(parent, target);
-        while (!path.isEmpty()) {
-            minion.setCurrentPosition(path.pop());
-        }
-
-    }
-    */
     /**
      * Finds all the possible squares a minion can go to from the given position using BFS
      * @return All squares the minion can move
      */
     public List<Square> getAllPossibleSquares() {
-        //TODO: clean up this mess
         Map<Square, Integer> movesUsedToGo = new HashMap<>();
         movesUsedToGo.put(getSelectedSquare(), 0);
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
@@ -130,38 +113,6 @@ public class GameBoard {
         return squaresPossibleToMoveTo;
     }
 
-    /*
-    /**
-     * Finds the fastest path to the pointed square in parameter end using BFS
-     * @param start Starting square
-     * @param end End square
-     * @return Returns a stack. The next square on the path is on top of the stack.
-     */
-    /*
-    public Stack<Square> getPath(Square start, Square end) {
-        //TODO: Should merge with the other BFS method if possible
-        Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
-        Map<Square, Square> paths = new HashMap<>();
-
-        queueOfSquaresToCheck.add(start);
-        boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[start.squares1DPosition(xDimension)] = true;
-        while (!queueOfSquaresToCheck.isEmpty()) {
-
-            Square nextSquare = queueOfSquaresToCheck.poll();
-            if (nextSquare == end) break;
-            List<Square> toExplore = expand(nextSquare);
-            for (Square currentSquare : toExplore) {
-                if (!hasBeenVisited[currentSquare.squares1DPosition(xDimension)] && squareIsEmpty(currentSquare)) {
-                    hasBeenVisited[currentSquare.squares1DPosition(xDimension)] = true;
-                    paths.put(currentSquare, nextSquare);
-                    queueOfSquaresToCheck.add(currentSquare);
-                }
-            }
-        }
-        return generatePath(paths, start, end);
-    }
-    */
     /**
      * Expands the current search space for searching
      * @param square square to expand from
@@ -221,7 +172,7 @@ public class GameBoard {
     public void setSelectedSquare(Point2D point) {
         if (point.getX() >= 0) {
             selectedSquare = boardBySquares.get((int) (point.getX() * xDimension + point.getY()));
-        } else selectedSquare = null;
+        } else selectedSquare = new Square();
     }
 
     public Square getSelectedSquare() {
@@ -236,16 +187,16 @@ public class GameBoard {
         return boardBySquares;
     }
 
-    public List<Square> getToRevert() {
-        return toRevert;
+    public List<Square> getSquaresPossibleToMove() {
+        return squaresPossibleToMove;
     }
 
-    public void setToRevert(List<Square> toRevert) {
-        this.toRevert = toRevert;
+    public void setSquaresPossibleToMove(List<Square> squaresPossibleToMove) {
+        this.squaresPossibleToMove = squaresPossibleToMove;
     }
 
-    public void clearRevertable() {
-        toRevert.clear();
+    public void clearSquaresPossibleToMove() {
+        squaresPossibleToMove.clear();
     }
 
     @Override
@@ -256,7 +207,7 @@ public class GameBoard {
                 ", \nboardBySquares=" + boardBySquares +
                 ", \ngameBoard=" + Arrays.toString(gameBoard) +
                 ", \nselectedSquare=" + selectedSquare +
-                ", \ntoRevert=" + toRevert +
+                ", \nsquaresPossibleToMove=" + squaresPossibleToMove +
                 '}';
     }
 }
