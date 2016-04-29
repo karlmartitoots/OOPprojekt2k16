@@ -59,7 +59,6 @@ public class GameBoard {
             if (square.hasMinionOnSquare()) {
                 gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = square.getCard().getID();
             } else gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = 0;
-            square.updateImage();
         }
 
     }
@@ -73,9 +72,9 @@ public class GameBoard {
         if (!current.hasMinionOnSquare() && contains) {
             MinionCard minion = previous.getCard();
             previous.placeCard(null);
-            boardBySquares.set(previous.intValue(xDimension), previous);
+            boardBySquares.set(previous.squares1DPosition(xDimension), previous);
             current.placeCard(minion);
-            boardBySquares.set(current.intValue(xDimension), current);
+            boardBySquares.set(current.squares1DPosition(xDimension), current);
         }
     }
 
@@ -110,16 +109,18 @@ public class GameBoard {
         List<Square> squaresPossibleToMoveTo = new ArrayList<>();
         queueOfSquaresToCheck.add(getSelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[getSelectedSquare().intValue(xDimension)] = true;
+        hasBeenVisited[getSelectedSquare().squares1DPosition(xDimension)] = true;
         for (Square square : boardBySquares) {
-            if (square.hasMinionOnSquare()) hasBeenVisited[square.intValue(xDimension)] = true;
+            if (square.hasMinionOnSquare()) hasBeenVisited[square.squares1DPosition(xDimension)] = true;
         }
         while (!queueOfSquaresToCheck.isEmpty()) {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
             List<Square> toExplore = expand(nextSquareToCheck);
+
             for (Square currentSquare : toExplore) {
-                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
-                    hasBeenVisited[currentSquare.intValue(xDimension)] = true;
+
+                if (!hasBeenVisited[currentSquare.squares1DPosition(xDimension)] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
+                    hasBeenVisited[currentSquare.squares1DPosition(xDimension)] = true;
                     squaresPossibleToMoveTo.add(currentSquare);
                     queueOfSquaresToCheck.add(currentSquare);
                     movesUsedToGo.put(currentSquare, movesUsedToGo.get(nextSquareToCheck) + 1);
@@ -144,15 +145,15 @@ public class GameBoard {
 
         queueOfSquaresToCheck.add(start);
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[start.intValue(xDimension)] = true;
+        hasBeenVisited[start.squares1DPosition(xDimension)] = true;
         while (!queueOfSquaresToCheck.isEmpty()) {
 
             Square nextSquare = queueOfSquaresToCheck.poll();
             if (nextSquare == end) break;
             List<Square> toExplore = expand(nextSquare);
             for (Square currentSquare : toExplore) {
-                if (!hasBeenVisited[currentSquare.intValue(xDimension)] && squareIsEmpty(currentSquare)) {
-                    hasBeenVisited[currentSquare.intValue(xDimension)] = true;
+                if (!hasBeenVisited[currentSquare.squares1DPosition(xDimension)] && squareIsEmpty(currentSquare)) {
+                    hasBeenVisited[currentSquare.squares1DPosition(xDimension)] = true;
                     paths.put(currentSquare, nextSquare);
                     queueOfSquaresToCheck.add(currentSquare);
                 }

@@ -34,14 +34,18 @@ public class Game extends Scene{
     public Game(Group root, Stage primaryStage, Settings settings) {
         super(root);
 
-        playerBySideString.put("white", white);
-        playerBySideString.put("black", black);
+        //playerBySideString.put("white", white);
+        //playerBySideString.put("black", black);
 
         creaturesOnBoard.setAllGeneralsOnBoard(settings.getWhiteGeneral(), settings.getBlackGeneral());
+
         gameBoard.placeGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral(),
                 settings.getWhiteStartingSquare(), settings.getBlackStartingSquare());
+
         root.getChildren().add(gameFrame);
+
         loadBoard(root);
+
         root.setOnMouseClicked((event) ->
                 showPossibleSquares(root, event)
         );
@@ -60,17 +64,17 @@ public class Game extends Scene{
      * @param root Pane to initiate board on.
      */
     private void loadBoard(Group root) {
-        for (int i = 0; i < gameBoard.getxDimension(); i++) {
-            for (int j = 0; j < gameBoard.getyDimension(); j++) {
+        for (int x = 0; x < gameBoard.getxDimension(); x++) {
+            for (int y = 0; y < gameBoard.getyDimension(); y++) {
                 Square square;
-                if (gameBoard.getGameBoard()[i][j] == 0) {
-                    square = new Square(i, j, null);
+                if (gameBoard.getGameBoard()[x][y] == 0) {
+                    square = new Square(x, y, null);
                     root.getChildren().add(square.getImageView());
-                } else if(gameBoard.getGameBoard()[i][j] <= 100){
-                    square = new Square(i, j, CreaturesOnBoard.getAllGeneralsOnBoard().get(Math.abs(gameBoard.getGameBoard()[i][j])));
+                } else if(gameBoard.getGameBoard()[x][y] <= 100){
+                    square = new Square(x, y, CreaturesOnBoard.getAllGeneralsOnBoard().get(Math.abs(gameBoard.getGameBoard()[x][y])));
                     root.getChildren().add(square.getImageView());
                 } else {
-                    square = new Square(i, j, CreaturesOnBoard.getAllMinionsOnBoard().get(Math.abs(gameBoard.getGameBoard()[i][j])));
+                    square = new Square(x, y, CreaturesOnBoard.getAllMinionsOnBoard().get(Math.abs(gameBoard.getGameBoard()[x][y])));
                     root.getChildren().add(square.getImageView());
                 }
                 gameBoard.addSquare(square);
@@ -102,19 +106,27 @@ public class Game extends Scene{
      * @param event Event to be listened for.
      */
     private void showPossibleSquares(Group root, MouseEvent event) {
+        //saves the pixel x and y coordinates for the point clicked on
         Point2D point2D = getSquare(event.getSceneX(), event.getSceneY());
+        //if a list called toRevert has size more than 0, execute the next lines
         if (gameBoard.getToRevert().size() > 0) {
+            //iterate through that list of squares and set all the squares into defaultimages
             for (Square square : gameBoard.getToRevert()) {
-                if (!root.getChildren().contains(square)) {
-                    square.setNotOnThePath();
-                    root.getChildren().add(square.getImageView());
-                }
+                square.setNotOnThePath();
+                //show each of those squares
+                root.getChildren().add(square.getImageView());
             }
+            //still, if the list has size more than 0:
+            //and if a variable in gameBoard called selectedSquare is not null
+            //AND if that same square doesnt have a card on it
             if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
+                //if the saved point is not -1, meaning getSquare function didn't find it on the gameboard...
                 if (point2D.getX() != -1) {
+                    //then the square was found and is chosen on the board
                     Square target = gameBoard.getBoardBySquares().get((int) (point2D.getX() * gameBoard.getxDimension() + point2D.getY()));
+                    //a card is moved to that square
                     gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
-                    gameBoard.updateBoard();
+                    //each squares image is updated
                     for (Square square : gameBoard.getBoardBySquares()) {
                         square.updateImage();
                         root.getChildren().add(square.getImageView());
@@ -123,8 +135,9 @@ public class Game extends Scene{
             }
             gameBoard.clearRevertable();
         }
+        //if there isn't anything to revert, set the selected square as the square clicked on
         gameBoard.setSelectedSquare(point2D);
-
+        //
         if (gameBoard.getSelectedSquare() != null && gameBoard.getSelectedSquare().hasMinionOnSquare()) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setToRevert(possibleSquares);
@@ -138,21 +151,21 @@ public class Game extends Scene{
     /**
      * Gets the X coordinates of the given square in pixels.
      *
-     * @param x The X coordinate of the square on the board
+     * @param squaresXCoordOnBoard The X coordinate of the square on the board
      * @return The X Pixel coordinates of the given square.
      */
-    public double getPixelsForSquareX(int x) {
-        return x * Square.getWidth() + Square.getxTopMostValue();
+    public double getSquaresXCoordinatesInPixels(int squaresXCoordOnBoard) {
+        return squaresXCoordOnBoard * Square.getWidth() + Square.getxTopMostValue();
     }
 
     /**
      * Gets the Y coordinates of the given square in pixels.
      *
-     * @param y The Y coordinate of the square on the board
+     * @param squaresYCoord The Y coordinate of the square on the board
      * @return The Y Pixel coordinates of the given square.
      */
-    public double getPixelsForSquareY(int y) {
-        return y * Square.getHeight() + Square.getyLeftMostValue();
+    public double getSquaresYCoordinatesInPixels(int squaresYCoord) {
+        return squaresYCoord * Square.getHeight() + Square.getyLeftMostValue();
     }
 
     /**
@@ -166,8 +179,8 @@ public class Game extends Scene{
     public Point2D getSquare(double pixelX, double pixelY) {
         for (int x = 0; x < gameBoard.getxDimension(); x++) {
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
-                double left = getPixelsForSquareX(x);
-                double top = getPixelsForSquareY(y);
+                double left = getSquaresXCoordinatesInPixels(x);
+                double top = getSquaresYCoordinatesInPixels(y);
                 Rectangle rectangle = new Rectangle(left, top, Square.getWidth(), Square.getHeight());
                 if (rectangle.contains(pixelX, pixelY)) {
                     return new Point2D(x, y);
@@ -177,6 +190,4 @@ public class Game extends Scene{
         }
         return new Point2D(-1, -1);
     }
-
-
 }

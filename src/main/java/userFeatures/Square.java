@@ -53,7 +53,7 @@ public class Square {
      * @param xDim The X dimension of the board
      * @return The place the square would be on the line
      */
-    public int intValue(int xDim) {
+    public int squares1DPosition(int xDim) {
         return xDim * xCordOnBoard + yCordOnBoard;
     }
 
@@ -146,7 +146,6 @@ public class Square {
             imageView.setX(xCordOnBoard * width + xTopMostValue);
             imageView.setY(yCordOnBoard * height + yLeftMostValue);
         }
-
     }
 
     /**
