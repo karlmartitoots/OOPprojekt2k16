@@ -10,9 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Game extends Scene{
 
@@ -22,8 +20,8 @@ public class Game extends Scene{
     private String gameTitle = "Card Game 1.0";
     private int turnCounter = 0;
     private Player white, black;
-    private String side = "white";
-    private Map<String, Player> playerBySideString = new HashMap<>();
+    //white starts
+    private Side currentSide = Side.WHITE;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
@@ -34,16 +32,21 @@ public class Game extends Scene{
     public Game(Group root, Stage primaryStage, Settings settings) {
         super(root);
 
-        //playerBySideString.put("white", white);
-        //playerBySideString.put("black", black);
-
+        //set generals in  creaturesOnBoard
         creaturesOnBoard.setAllGeneralsOnBoard(settings.getWhiteGeneral(), settings.getBlackGeneral());
 
+        //set sides on the generals
+        settings.getWhiteGeneral().setSide(Side.WHITE);
+        settings.getBlackGeneral().setSide(Side.BLACK);
+
+        //place generals on board
         gameBoard.placeGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral(),
                 settings.getWhiteStartingSquare(), settings.getBlackStartingSquare());
 
+        //load the gameframe onto the gui
         root.getChildren().add(gameFrame);
 
+        //load the board onto the gui
         loadBoard(root);
 
         root.setOnMouseClicked((event) ->
@@ -60,8 +63,8 @@ public class Game extends Scene{
     }
 
     /**
-     * Initiates the board on the root pane.
-     * @param root Pane to initiate board on.
+     * Initiates the board on the root group.
+     * @param root Group to initiate board on.
      */
     private void loadBoard(Group root) {
         for (int x = 0; x < gameBoard.getxDimension(); x++) {
@@ -118,7 +121,7 @@ public class Game extends Scene{
      * @param root Group that shows the scene, where events are listned
      */
     private void getSquaresPossibleToMove(Group root) {
-        if (gameBoard.getSelectedSquare().hasMinionOnSquare() && !gameBoard.getSelectedSquare().getCard().hasMoved()) {
+        if (gameBoard.getSelectedSquare().hasMinionOnSquare() && !gameBoard.getSelectedSquare().getCard().hasMoved() && gameBoard.getSelectedSquare().getCard().getSide() == currentSide) {
             gameBoard.getSelectedSquare().getCard().setMoved(true);
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setSquaresPossibleToMove(possibleSquares);
@@ -200,4 +203,15 @@ public class Game extends Scene{
         }
         return new Point2D(-1, -1);
     }
+
+    private void switchTurns(){
+        if(this.currentSide == Side.WHITE)
+            this.currentSide = Side.BLACK;
+        else this.currentSide = Side.WHITE;
+    }
+
+    private Side getCurrentSide(){
+        return this.currentSide;
+    }
+
 }

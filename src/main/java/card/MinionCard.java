@@ -1,6 +1,7 @@
 
 package card;
 
+import userFeatures.Side;
 import userFeatures.Square;
 
 /**
@@ -14,6 +15,7 @@ public class MinionCard extends Card {
     private final int speed;
     private int currentHp;
     private boolean hasMoved;
+    private Side side;
 
     /**
      * Construtor
@@ -33,6 +35,14 @@ public class MinionCard extends Card {
         this.maxHp = maxHp;
         this.speed = speed;
         this.currentHp = maxHp;
+    }
+
+    public Side getSide(){
+        return side;
+    }
+
+    public void setSide(Side side){
+        this.side = side;
     }
 
     public int getAttack() {

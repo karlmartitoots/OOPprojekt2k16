@@ -1,5 +1,6 @@
 package card;
 
+import userFeatures.Side;
 import userFeatures.Square;
 
 /**

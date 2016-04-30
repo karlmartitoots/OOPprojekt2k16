@@ -11,7 +11,6 @@ import java.util.*;
 public class CreaturesOnBoard {
 
     private static Map<Integer, GeneralCard> allGeneralsOnBoard = new HashMap<>(3);
-
     private static Map<Integer, MinionCard> allMinionsOnBoard = new HashMap<>();
 
     public void setAllGeneralsOnBoard(GeneralCard whiteGeneral, GeneralCard blackGeneral) {

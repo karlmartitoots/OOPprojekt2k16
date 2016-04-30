@@ -1,7 +1,6 @@
 package userFeatures;
 
 import card.Card;
-import card.GeneralCard;
 import card.MinionCard;
 import collection.Collection;
 
@@ -25,13 +24,13 @@ public class Player {
     private Hand playerHand = new Hand();
     private Deck playerDeck = new Deck(new ArrayList<>());
     private List<MinionCard> controlledAllies = new ArrayList<>();
-    private String side;
+    private Side side;
 
     /**
      * Initiates a player for the game
      * @param side Either black or white, depending on the setup
      */
-    public Player(String side, GeneralCard generalCard){
+    public Player(Side side){
         this.side = side;
         initiateDeck();
         initiateHand();
@@ -62,24 +61,6 @@ public class Player {
      */
     public void addMana(int newMana){
         this.playerMana += newMana;
-    }
-
-    /**
-     * Adds a minion to the controlledAllies list.
-     * @param minionCard    The minion to be added
-     */
-    public void addAlly(MinionCard minionCard){
-        this.controlledAllies.add(minionCard);
-    }
-
-    /**
-     * Checks, if a minion is an ally by finding if their ID is positive or negative.
-     * @param ID    ID to be checked
-     * @return  True, if the side is black and id is negative or side is white and
-     * id is positive, false otherwise.
-     */
-    public boolean isAlly(int ID){
-        return (side.equals("white") && ID > 0) || (side.equals("black") && ID < 0);
     }
 
 }

@@ -1,11 +1,11 @@
 package userFeatures;
 
+import card.GeneralCard;
+import card.MinionCard;
+import javafx.geometry.Point2D;
+
 import java.util.*;
 
-import card.*;
-import javafx.geometry.Point2D;
-//TODO: implement better - a very messy class right now
-//probably the reason for slowing down development on the game
 public class GameBoard {
     private final int xDimension = 10;
     private final int yDimension = 10;
@@ -54,15 +54,6 @@ public class GameBoard {
         gameBoard[(int)blackStartingSquare.getX()][(int)blackStartingSquare.getY()] = black.getID() * (-1);
     }
 
-    public void updateBoard() {
-        for (Square square : boardBySquares) {
-            if (square.hasMinionOnSquare()) {
-                gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = square.getCard().getID();
-            } else gameBoard[square.getxCordOnBoard()][square.getyCordOnBoard()] = 0;
-        }
-
-    }
-
     public void moveCard(Square previous, Square current) {
         boolean contains = false;
         for (Square square : squaresPossibleToMove) {
@@ -78,9 +69,6 @@ public class GameBoard {
         }
     }
 
-    public void placeMinion(MinionCard minion, String side, int xCoord, int yCoord){
-        gameBoard[xCoord][yCoord] = minion.getID()*(side.equals("white") ? 1 : -1);
-    }
     /**
      * Finds all the possible squares a minion can go to from the given position using BFS
      * @return All squares the minion can move
@@ -147,26 +135,6 @@ public class GameBoard {
      */
     boolean squareIsEmpty(Square square) {
         return !square.hasMinionOnSquare();
-    }
-
-    /**
-     * Generates the path to move from the given map into the stack for easier processing
-     * @param paths Map containing paths
-     * @param start Starting Square
-     * @param end Ending Square
-     * @return Stack of the path to move.
-     */
-    private Stack<Square> generatePath(Map<Square, Square> paths, Square start, Square end) {
-
-        Stack<Square> pathToGo = new Stack<>();
-        Square toGo;
-
-        Square previous = end;
-        while ((toGo = paths.get(previous)) != start) {
-            pathToGo.add(toGo);
-            previous = toGo;
-        }
-        return pathToGo;
     }
 
     public void setSelectedSquare(Point2D point) {
