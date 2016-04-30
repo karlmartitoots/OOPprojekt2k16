@@ -119,6 +119,7 @@ public class Game extends Scene{
      */
     private void getSquaresPossibleToMove(Group root) {
         if (gameBoard.getSelectedSquare().hasMinionOnSquare() && !gameBoard.getSelectedSquare().getCard().hasMoved()) {
+            gameBoard.getSelectedSquare().getCard().setMoved(true);
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setSquaresPossibleToMove(possibleSquares);
             for (Square possibleSquare : possibleSquares) {
@@ -142,6 +143,7 @@ public class Game extends Scene{
                 square.updateImage();
                 root.getChildren().add(square.getImageView());
             }
+
         }
     }
 
