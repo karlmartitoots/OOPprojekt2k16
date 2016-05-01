@@ -1,6 +1,5 @@
 package userFeatures;
 
-import card.GeneralCard;
 import card.MinionCard;
 import javafx.geometry.Point2D;
 
@@ -10,7 +9,6 @@ public class GameBoard {
     private final int xDimension = 10;
     private final int yDimension = 10;
     private List<Square> boardBySquares = new ArrayList<>();
-    private int[][] gameBoard = new int[xDimension][yDimension];
     private Square selectedSquare = new Square();
     private List<Square> squaresPossibleToMove = new ArrayList<>();
 
@@ -34,26 +32,6 @@ public class GameBoard {
         return yDimension;
     }
 
-    /**
-     * Gets the current state of the game boardBySquares.
-     * @return gameBoard
-     */
-    public int[][] getGameBoard() {
-        return gameBoard;
-    }
-
-    /**
-     * Setups the game by placing the generals of both players on the boardBySquares.
-     * @param white The general used by the white player
-     * @param black The general used by the black player
-     * @param whiteStartingSquare Starting location for the white general
-     * @param blackStartingSquare Starting location for the black general
-     */
-    public void placeGenerals(GeneralCard white, GeneralCard black, Point2D whiteStartingSquare, Point2D blackStartingSquare) {
-        gameBoard[(int)whiteStartingSquare.getX()][(int)whiteStartingSquare.getY()] = white.getID();
-        gameBoard[(int)blackStartingSquare.getX()][(int)blackStartingSquare.getY()] = black.getID() * (-1);
-    }
-
     public void moveCard(Square previous, Square current) {
         boolean contains = false;
         for (Square square : squaresPossibleToMove) {
@@ -62,9 +40,9 @@ public class GameBoard {
         }
         if (!current.hasMinionOnSquare() && contains) {
             MinionCard minion = previous.getCard();
-            previous.placeCard(null);
+            previous.removeCard();
             boardBySquares.set(previous.squares1DPosition(xDimension), previous);
-            current.placeCard(minion);
+            current.setCard(minion);
             boardBySquares.set(current.squares1DPosition(xDimension), current);
             current.getCard().setMoved(true);
         }
@@ -148,7 +126,7 @@ public class GameBoard {
         return selectedSquare;
     }
 
-    public void addSquare(Square square) {
+    public void addSquareToBoardBySquares(Square square) {
         boardBySquares.add(square);
     }
 
@@ -174,7 +152,6 @@ public class GameBoard {
                 "\nxDimension=" + xDimension +
                 ", \nyDimension=" + yDimension +
                 ", \nboardBySquares=" + boardBySquares +
-                ", \ngameBoard=" + Arrays.toString(gameBoard) +
                 ", \nselectedSquare=" + selectedSquare +
                 ", \nsquaresPossibleToMove=" + squaresPossibleToMove +
                 '}';

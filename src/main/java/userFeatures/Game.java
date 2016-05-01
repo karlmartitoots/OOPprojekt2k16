@@ -47,19 +47,15 @@ public class Game extends Scene{
         //set generals in  creaturesOnBoard
         creaturesOnBoard.setAllGeneralsOnBoard(settings.getWhiteGeneral(), settings.getBlackGeneral());
 
-        //set sides on the generals
-        settings.getWhiteGeneral().setSide(Side.WHITE);
-        settings.getBlackGeneral().setSide(Side.BLACK);
-
-        //place generals on board
-        gameBoard.placeGenerals(settings.getWhiteGeneral(), settings.getBlackGeneral(),
-                settings.getWhiteStartingSquare(), settings.getBlackStartingSquare());
-
         //load the gameframe onto the gui
         root.getChildren().add(gameFrame);
 
         //load the board onto the gui
         loadGameboardForStartOfGame(root);
+
+        //load the generals onto the board
+        //TODO: FIX generals loading, some line of code is missing somewhere probably
+        placeGenerals(root,settings);
 
         //load the timer and a label that shows whos turn it is
         Text timerText = createAndPlaceTimer(root);
@@ -75,6 +71,7 @@ public class Game extends Scene{
                 switchTurnAndResetToStartOfATurn(timerText, turnLabel));
 
         //event listener for handling the clicks on the group.
+        //TODO: sometimes the mouseclick eventlistener gets negative coordinates. Needs to be fixed somehow.
         root.setOnMouseClicked((event) ->
                 mouseEventHandler(root, event)
         );
@@ -82,11 +79,32 @@ public class Game extends Scene{
         //When the GUI window is closed, stops the timer scheduler thread.
         primaryStage.setOnCloseRequest(event -> timerScheduler.shutdown());
 
-        setPrimaryStageProperties(primaryStage, root);
+        setPrimaryStageProperties(primaryStage);
         primaryStage.setScene(this);
         //primaryStage.getIcons().add(gameIcon);//don't know why this doesn't work
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
+    }
+
+    /**
+     * Method to initially place both generals on the GUI and in gameboard class.
+     * @param settings Settings for getting which GeneralCard's and where they will be placed.
+     */
+    private void placeGenerals(Group root, Settings settings){
+        Point2D whiteGeneralStartingCoordinates = settings.getWhiteStartingSquare();
+        Point2D blackGeneralStartingCoordinates = settings.getBlackStartingSquare();
+        //get the squares for generals
+        Square whiteGeneralSquare = gameBoard.getBoardBySquares().get(
+                (int) (whiteGeneralStartingCoordinates.getX()*gameBoard.getxDimension() + whiteGeneralStartingCoordinates.getY())),
+                blackGeneralSquare = gameBoard.getBoardBySquares().get(
+                (int) (blackGeneralStartingCoordinates.getX()*gameBoard.getxDimension() + blackGeneralStartingCoordinates.getY()));
+        //add in the generals and set their sides
+        whiteGeneralSquare.setCard(settings.getWhiteGeneral());
+        whiteGeneralSquare.getCard().setSide(Side.WHITE);
+        blackGeneralSquare.setCard(settings.getBlackGeneral());
+        blackGeneralSquare.getCard().setSide(Side.BLACK);
+        root.getChildren().add(whiteGeneralSquare.getImageView());
+        root.getChildren().add(blackGeneralSquare.getImageView());
     }
 
     /**
@@ -116,32 +134,22 @@ public class Game extends Scene{
 
     /**
      * Initiates the board on the root group.
-     * @param root Group to initiate board on.
+     * @param root Group that the squares will be loaded in on.
      */
     private void loadGameboardForStartOfGame(Group root) {
         for (int x = 0; x < gameBoard.getxDimension(); x++) {
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
-                Square square;
-                if (gameBoard.getGameBoard()[x][y] == 0) {
-                    square = new Square(x, y, null);
-                    root.getChildren().add(square.getImageView());
-                } else if(gameBoard.getGameBoard()[x][y] <= 100){
-                    square = new Square(x, y, CreaturesOnBoard.getAllGeneralsOnBoard().get(Math.abs(gameBoard.getGameBoard()[x][y])));
-                    root.getChildren().add(square.getImageView());
-                } else {
-                    square = new Square(x, y, CreaturesOnBoard.getAllMinionsOnBoard().get(Math.abs(gameBoard.getGameBoard()[x][y])));
-                    root.getChildren().add(square.getImageView());
-                }
-                gameBoard.addSquare(square);
+                Square initialSquare;
+                gameBoard.addSquareToBoardBySquares(initialSquare = new Square(x, y, null));
+                root.getChildren().add(initialSquare.getImageView());
             }
         }
     }
     /**
-     * Method for declaring the properties of the Main pane.
-     * @param primaryStage Primary stage of Main.
-     * @param gamePane The Main's pane.
+     * Method for declaring the properties of the game GUI.
+     * @param primaryStage Primary stage of GUI.
      */
-    private void setPrimaryStageProperties(Stage primaryStage, Group gamePane) {
+    private void setPrimaryStageProperties(Stage primaryStage) {
         int GUITopPanelHeight = 47;//pixels
         int preferredGUIWidth = 1000;
         int preferredGUIHeight = 800 + GUITopPanelHeight;
@@ -312,12 +320,16 @@ public class Game extends Scene{
         setAllCreaturesToHaventMoved();
         switchCurrentSide();
         sideLabel.setText(currentSide.toString());
-        increaseTurnCounter();
+        incrementTurnCounter();
     }
 
-    private void increaseTurnCounter(){
+    /**
+     * Increases the turn counter by 1.
+     */
+    private void incrementTurnCounter(){
         turnCounter += 1;
     }
+
     /**
      * Finds all the creatures on the gameboard and sets their hasMoved state to false.
      */

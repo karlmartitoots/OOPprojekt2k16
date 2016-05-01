@@ -132,10 +132,13 @@ public class Square {
 
     /**
      * Places the card on the board.
-     * @param card card to place on square
+     * @param minionCard card to place on square
      */
-    public void placeCard(MinionCard card) {
-        this.card = card;
+    public void setCard(MinionCard minionCard) {
+        this.card = minionCard;
+        imageView = new ImageView(minionCard.getSmallImage());
+        imageView.setX(xCordOnBoard * width + xTopMostValue);
+        imageView.setY(yCordOnBoard * height + yLeftMostValue);
     }
 
     /**
