@@ -59,27 +59,28 @@ public class Game extends Scene{
         root.getChildren().add(gameFrame);
 
         //load the board onto the gui
-        loadBoard(root);
+        loadGameboardForStartOfGame(root);
 
         //load the timer and a label that shows whos turn it is
-        Text timerText = placeTimer(root);
-        Label turnLabel = loadTurnLabel(root);
+        Text timerText = createAndPlaceTimer(root);
+        Label turnLabel = createAndPlaceTurnLabel(root);
         ScheduledFuture<?> timerControl = timerScheduler.scheduleAtFixedRate((Runnable) () ->
-                reduceTimer(timerText, turnLabel),0L, 1L, SECONDS);
+                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel),0L, 1L, SECONDS);
 
         //load the turn ending button
-        Button endTurnButton = loadEndTurnButton(root);
+        Button endTurnButton = createAndPlaceEndTurnButton(root);
 
         //event listener for turn ending button
         endTurnButton.setOnAction(event ->
-                switchTurn(timerText, turnLabel));
+                switchTurnAndResetToStartOfATurn(timerText, turnLabel));
 
         //event listener for handling the clicks on the group.
         root.setOnMouseClicked((event) ->
                 mouseEventHandler(root, event)
         );
 
-        //probably make 2 Player objects and a Gamecycle object, then start tossing those around in a while(!gameOver()) loop
+        //When the GUI window is closed, stops the timer scheduler thread.
+        primaryStage.setOnCloseRequest(event -> timerScheduler.shutdown());
 
         setPrimaryStageProperties(primaryStage, root);
         primaryStage.setScene(this);
@@ -93,7 +94,7 @@ public class Game extends Scene{
      * @param root Group that the label will be shown on.
      * @return Returns the created label
      */
-    private Label loadTurnLabel(Group root) {
+    private Label createAndPlaceTurnLabel(Group root) {
         Label turnLabel = new Label(currentSide.toString());
         turnLabel.relocate(80, 10);
         turnLabel.setFont(new Font(30));
@@ -106,7 +107,7 @@ public class Game extends Scene{
      * @param root Group that the button will be shown on.
      * @return Returns the button itself.
      */
-    private Button loadEndTurnButton(Group root) {
+    private Button createAndPlaceEndTurnButton(Group root) {
         Button endTurnButton = new Button("End turn");
         endTurnButton.relocate(100, 250);
         root.getChildren().add(endTurnButton);
@@ -117,7 +118,7 @@ public class Game extends Scene{
      * Initiates the board on the root group.
      * @param root Group to initiate board on.
      */
-    private void loadBoard(Group root) {
+    private void loadGameboardForStartOfGame(Group root) {
         for (int x = 0; x < gameBoard.getxDimension(); x++) {
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
                 Square square;
@@ -254,7 +255,7 @@ public class Game extends Scene{
     /**
      * Changes the currentSide variable into the opposite side.
      */
-    private void switchSides(){
+    private void switchCurrentSide(){
         if(this.currentSide == Side.WHITE)
             this.currentSide = Side.BLACK;
         else this.currentSide = Side.WHITE;
@@ -273,7 +274,7 @@ public class Game extends Scene{
      * @param root Group, that the timer text will be placed on.
      * @return Returns the text that shows the current time left on someone's turn.
      */
-    private Text placeTimer(Group root){
+    private Text createAndPlaceTimer(Group root){
         Text timerText = new Text(10, 210, String.valueOf(timerStartTime));
         timerText.setFont(new Font(220));
         root.getChildren().add(timerText);
@@ -285,9 +286,9 @@ public class Game extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void reduceTimer(Text timerText, Label sideLabel){
+    private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel){
         if(timerText.getText().equals("1")){
-            switchTurn(timerText, sideLabel);
+            switchTurnAndResetToStartOfATurn(timerText, sideLabel);
         }else {
             timerText.setText(String.valueOf(Integer.parseInt(timerText.getText()) - 1));
         }
@@ -306,10 +307,10 @@ public class Game extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void switchTurn(Text timerText, Label sideLabel){
+    private void switchTurnAndResetToStartOfATurn(Text timerText, Label sideLabel){
         resetTimer(timerText);
         setAllCreaturesToHaventMoved();
-        switchSides();
+        switchCurrentSide();
         sideLabel.setText(currentSide.toString());
         increaseTurnCounter();
     }
