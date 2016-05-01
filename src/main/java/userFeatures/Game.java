@@ -4,22 +4,34 @@ import board.CreaturesOnBoard;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Game extends Scene{
 
     private GameBoard gameBoard = new GameBoard();
     private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
+    private int timerStartTime = 60;
+    private final ScheduledExecutorService timerScheduler =
+            Executors.newScheduledThreadPool(1);
     private ImageView gameFrame = new ImageView(new Image("GUI frame.jpg"));
     private String gameTitle = "Card Game 1.0";
-    private int turnCounter = 0;
-    private Player white, black;
+    private int turnCounter = 0;//currently has no application
+    private Player white, black;//currently have no application
     //white starts
     private Side currentSide = Side.WHITE;
 
@@ -29,7 +41,7 @@ public class Game extends Scene{
      * @param primaryStage Stage for the scene.
      * @param settings Initial settings that are loaded, when the game begins.
      */
-    public Game(Group root, Stage primaryStage, Settings settings) {
+    Game(Group root, Stage primaryStage, Settings settings) {
         super(root);
 
         //set generals in  creaturesOnBoard
@@ -49,6 +61,20 @@ public class Game extends Scene{
         //load the board onto the gui
         loadBoard(root);
 
+        //load the timer and a label that shows whos turn it is
+        Text timerText = placeTimer(root);
+        Label turnLabel = loadTurnLabel(root);
+        ScheduledFuture<?> timerControl = timerScheduler.scheduleAtFixedRate((Runnable) () ->
+                reduceTimer(timerText, turnLabel),0L, 1L, SECONDS);
+
+        //load the turn ending button
+        Button endTurnButton = loadEndTurnButton(root);
+
+        //event listener for turn ending button
+        endTurnButton.setOnAction(event ->
+                switchTurn(timerText, turnLabel));
+
+        //event listener for handling the clicks on the group.
         root.setOnMouseClicked((event) ->
                 mouseEventHandler(root, event)
         );
@@ -60,6 +86,31 @@ public class Game extends Scene{
         //primaryStage.getIcons().add(gameIcon);//don't know why this doesn't work
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
+    }
+
+    /**
+     * Creates a label that shows, who's turn it is currently.
+     * @param root Group that the label will be shown on.
+     * @return Returns the created label
+     */
+    private Label loadTurnLabel(Group root) {
+        Label turnLabel = new Label(currentSide.toString());
+        turnLabel.relocate(80, 10);
+        turnLabel.setFont(new Font(30));
+        root.getChildren().add(turnLabel);
+        return turnLabel;
+    }
+
+    /**
+     * Creates a button to end the current players turn.
+     * @param root Group that the button will be shown on.
+     * @return Returns the button itself.
+     */
+    private Button loadEndTurnButton(Group root) {
+        Button endTurnButton = new Button("End turn");
+        endTurnButton.relocate(100, 250);
+        root.getChildren().add(endTurnButton);
+        return endTurnButton;
     }
 
     /**
@@ -117,12 +168,10 @@ public class Game extends Scene{
 
     /**
      * If event is registered on square that has a minion, the method displays all the squares the minion can move, as well as saves them.
-     *
      * @param root Group that shows the scene, where events are listned
      */
     private void getSquaresPossibleToMove(Group root) {
         if (gameBoard.getSelectedSquare().hasMinionOnSquare() && !gameBoard.getSelectedSquare().getCard().hasMoved() && gameBoard.getSelectedSquare().getCard().getSide() == currentSide) {
-            gameBoard.getSelectedSquare().getCard().setMoved(true);
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setSquaresPossibleToMove(possibleSquares);
             for (Square possibleSquare : possibleSquares) {
@@ -134,8 +183,7 @@ public class Game extends Scene{
 
     /**
      * If the previously selected square had a minion on it, then the method will reposition the minion on the game board, if the minion has not moved this turn;
-     *
-     * @param root              Group that shows the scene, where events are listned
+     * @param root Group that shows the scene, where events are listened
      * @param squareCoordinates coordinates of the square clicked on
      */
     private void moveMinionOnScene(Group root, Point2D squareCoordinates) {
@@ -152,7 +200,6 @@ public class Game extends Scene{
 
     /**
      * Deselects the squares which were able to move to by the previously selected minion.
-     *
      * @param root Group that shows the scene, where events are listned
      */
     private void setSquaresNotOnPath(Group root) {
@@ -204,14 +251,81 @@ public class Game extends Scene{
         return new Point2D(-1, -1);
     }
 
-    private void switchTurns(){
+    /**
+     * Changes the currentSide variable into the opposite side.
+     */
+    private void switchSides(){
         if(this.currentSide == Side.WHITE)
             this.currentSide = Side.BLACK;
         else this.currentSide = Side.WHITE;
     }
 
+    /**
+     * Getter method for getting the side who is currently playing.
+     * @return Returns the side who's turn it is currently.
+     */
     private Side getCurrentSide(){
         return this.currentSide;
+    }
+
+    /**
+     * Creates and places the timer on the game GUI.
+     * @param root Group, that the timer text will be placed on.
+     * @return Returns the text that shows the current time left on someone's turn.
+     */
+    private Text placeTimer(Group root){
+        Text timerText = new Text(10, 210, String.valueOf(timerStartTime));
+        timerText.setFont(new Font(220));
+        root.getChildren().add(timerText);
+        return timerText;
+    }
+
+    /**
+     * Method for reducing the timer by one unit or switching turns when the time is up.
+     * @param timerText The text, which shows the time.
+     * @param sideLabel Label, that shows who's turn it currently is.
+     */
+    private void reduceTimer(Text timerText, Label sideLabel){
+        if(timerText.getText().equals("1")){
+            switchTurn(timerText, sideLabel);
+        }else {
+            timerText.setText(String.valueOf(Integer.parseInt(timerText.getText()) - 1));
+        }
+    }
+
+    /**
+     * Method for resetting the timer to the time in the beginning of a turn.
+     * @param timerText The text, which shows the time.
+     */
+    private void resetTimer(Text timerText){
+        timerText.setText(String.valueOf(timerStartTime));
+    }
+
+    /**
+     * Switches turns and does all the operations needed in the end and start of a turn.
+     * @param timerText The text, which shows the time.
+     * @param sideLabel Label, that shows who's turn it currently is.
+     */
+    private void switchTurn(Text timerText, Label sideLabel){
+        resetTimer(timerText);
+        setAllCreaturesToHaventMoved();
+        switchSides();
+        sideLabel.setText(currentSide.toString());
+        increaseTurnCounter();
+    }
+
+    private void increaseTurnCounter(){
+        turnCounter += 1;
+    }
+    /**
+     * Finds all the creatures on the gameboard and sets their hasMoved state to false.
+     */
+    private void setAllCreaturesToHaventMoved(){
+        for (Square square : gameBoard.getBoardBySquares()) {
+            if(square.hasMinionOnSquare()){
+                square.getCard().setMoved(false);
+            }
+        }
     }
 
 }

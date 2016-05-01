@@ -34,4 +34,9 @@ public class CreaturesOnBoard {
         return allMinionsOnBoard;
     }
 
+    public void setAllCreaturesToHaventMoved(){
+        for (MinionCard minionCard : allMinionsOnBoard.values()) {
+            minionCard.setMoved(false);
+        }
+    }
 }

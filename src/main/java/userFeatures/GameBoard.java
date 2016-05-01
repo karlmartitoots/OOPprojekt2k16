@@ -66,6 +66,7 @@ public class GameBoard {
             boardBySquares.set(previous.squares1DPosition(xDimension), previous);
             current.placeCard(minion);
             boardBySquares.set(current.squares1DPosition(xDimension), current);
+            current.getCard().setMoved(true);
         }
     }
 
