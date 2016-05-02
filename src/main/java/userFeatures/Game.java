@@ -154,7 +154,7 @@ public class Game extends Scene{
         int preferredGUIWidth = 1000;
         int preferredGUIHeight = 800 + GUITopPanelHeight;
         int preferredCardHeight = 250;//pixels
-        int preferredCardWidth = 125;//pixels
+        int preferredCardWidth = 140;//pixels
         primaryStage.setMaxWidth(preferredGUIWidth);
         primaryStage.setMaxHeight(preferredGUIHeight);
         primaryStage.setMinWidth(preferredGUIWidth);
@@ -168,11 +168,14 @@ public class Game extends Scene{
      */
     private void mouseEventHandler(Group root, MouseEvent event) {
         Point2D squareCoordinates = getSquare(event.getSceneX(), event.getSceneY());
+        int cardSlotNumber = getCardSlot(event.getSceneX(), event.getSceneY());
+        System.out.println(cardSlotNumber);
         setSquaresNotOnPath(root);
         moveMinionOnScene(root, squareCoordinates);
         gameBoard.clearSquaresPossibleToMove();
         gameBoard.setSelectedSquare(squareCoordinates);
         getSquaresPossibleToMove(root);
+        System.out.println("X: " + event.getX() + ", Y:" + event.getY());
     }
 
     /**
@@ -242,9 +245,9 @@ public class Game extends Scene{
      *
      * @param pixelX X pixel coordinates of the square
      * @param pixelY Y pixel coordinates of the square
-     * @return Coordinates of the square.
+     * @return Coordinates of the square. -1,-1 if not a square
      */
-    //I have no idea what is the best data structure to use to store the coordinates of points so it is subject to change still.
+
     private Point2D getSquare(double pixelX, double pixelY) {
         for (int x = 0; x < gameBoard.getxDimension(); x++) {
             for (int y = 0; y < gameBoard.getyDimension(); y++) {
@@ -258,6 +261,27 @@ public class Game extends Scene{
 
         }
         return new Point2D(-1, -1);
+    }
+
+    /**
+     * Finds the card slot on the board by their pixel value.
+     *
+     * @param pixelX X position of the mouse event
+     * @param pixelY Y position of the mouse event
+     * @return The card slot number that has been currently clicked on, -1 if not a card slot
+     */
+    private int getCardSlot(double pixelX, double pixelY) {
+        //Currently has magic values for total number of card slots, and the pixel values. I think we can make a new class for the slots
+        //Similar to square, and hand can be the place where all of them are.
+        for (int possibleCardSlot = 0; possibleCardSlot < 7; possibleCardSlot++) {
+            double left = 0 + possibleCardSlot * 140;
+            double top = 500;
+            Rectangle rectangle = new Rectangle(left, top, 140, 250);
+            if (rectangle.contains(pixelX, pixelY)) {
+                return possibleCardSlot;
+            }
+        }
+        return -1;
     }
 
     /**
