@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * For holding all cards in hand and operating with them through gamelogic.
  */
-public class Hand {
+class Hand {
 
     private List<Card> hand = new ArrayList<>();
 
@@ -17,7 +17,7 @@ public class Hand {
      *
      * @param card Card to add to hand
      */
-    public void addCard(Card card) {
+    void addCard(Card card) {
         hand.add(card);
     }
 

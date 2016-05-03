@@ -5,7 +5,7 @@ import javafx.geometry.Point2D;
 
 import java.util.*;
 
-public class GameBoard {
+class GameBoard {
     private final int xDimension = 10;
     private final int yDimension = 10;
     private List<Square> boardBySquares = new ArrayList<>();
@@ -20,7 +20,7 @@ public class GameBoard {
      * Gets the length of the boardBySquares on the X axis
      * @return x Dimension length
      */
-    public int getxDimension() {
+    int getxDimension() {
         return xDimension;
     }
 
@@ -28,23 +28,28 @@ public class GameBoard {
      * Gets the length of the boardBySquares on the Y axis
      * @return y Dimension length
      */
-    public int getyDimension() {
+    int getyDimension() {
         return yDimension;
     }
 
-    public void moveCard(Square previous, Square current) {
-        boolean contains = false;
+    /**
+     * Moves a minion from a previous square to the next square.
+     * @param previousSquare The previous square the minion was on (or is on before moving).
+     * @param nextSquare The next square the minion will be on.
+     */
+    void moveCard(Square previousSquare, Square nextSquare) {
+        boolean squaresPossibleToMoveContainsSquareToMoveTo = false;
         for (Square square : squaresPossibleToMove) {
-            if (current.getxCordOnBoard() == square.getxCordOnBoard() && current.getyCordOnBoard() == square.getyCordOnBoard())
-                contains = true;
+            if (nextSquare.getxCordOnBoard() == square.getxCordOnBoard() && nextSquare.getyCordOnBoard() == square.getyCordOnBoard())
+                squaresPossibleToMoveContainsSquareToMoveTo = true;
         }
-        if (!current.hasMinionOnSquare() && contains) {
-            MinionCard minion = previous.getCard();
-            previous.removeCard();
-            boardBySquares.set(previous.squares1DPosition(xDimension), previous);
-            current.setCard(minion);
-            boardBySquares.set(current.squares1DPosition(xDimension), current);
-            current.getCard().setMoved(true);
+        if (!nextSquare.hasMinionOnSquare() && squaresPossibleToMoveContainsSquareToMoveTo) {
+            MinionCard minion = previousSquare.getCard();
+            previousSquare.removeCard();
+            boardBySquares.set(previousSquare.squares1DPosition(xDimension), previousSquare);
+            nextSquare.setCard(minion);
+            boardBySquares.set(nextSquare.squares1DPosition(xDimension), nextSquare);
+            nextSquare.getCard().setMoved(true);
         }
     }
 
@@ -52,7 +57,7 @@ public class GameBoard {
      * Finds all the possible squares a minion can go to from the given position using BFS
      * @return All squares the minion can move
      */
-    public List<Square> getAllPossibleSquares() {
+    List<Square> getAllPossibleSquares() {
         Map<Square, Integer> movesUsedToGo = new HashMap<>();
         movesUsedToGo.put(getSelectedSquare(), 0);
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
@@ -60,6 +65,7 @@ public class GameBoard {
         queueOfSquaresToCheck.add(getSelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
         hasBeenVisited[getSelectedSquare().squares1DPosition(xDimension)] = true;
+        //TODO: see if what intellij suggests: boardBySquares.stream().filter(square -> square.hasMinionOnSquare()).forEach(square -> hasBeenVisited[square.squares1DPosition(xDimension)] = true); might work better
         for (Square square : boardBySquares) {
             if (square.hasMinionOnSquare()) hasBeenVisited[square.squares1DPosition(xDimension)] = true;
         }
@@ -67,6 +73,7 @@ public class GameBoard {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
             List<Square> toExplore = expand(nextSquareToCheck);
 
+            //TODO: see if foreach lambda works better
             for (Square currentSquare : toExplore) {
 
                 if (!hasBeenVisited[currentSquare.squares1DPosition(xDimension)] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
@@ -85,7 +92,7 @@ public class GameBoard {
      * @param square square to expand from
      * @return Expanded squares
      */
-    public List<Square> expand(Square square) {
+    private List<Square> expand(Square square) {
         List<Square> toGoto = new ArrayList<>();
         Square first = new Square(square.getxCordOnBoard() + 1, square.getyCordOnBoard(), null);
         Square second = new Square(square.getxCordOnBoard(), square.getyCordOnBoard() + 1, null);
@@ -103,7 +110,7 @@ public class GameBoard {
      * @param square square to check if it belongs to the boardBySquares
      * @return True if belongs, false otherwise
      */
-    boolean belongsToBoard(Square square) {
+    private boolean belongsToBoard(Square square) {
         return square.getxCordOnBoard() >= 0 && square.getyCordOnBoard() >= 0 && square.getxCordOnBoard() < xDimension && square.getyCordOnBoard() < yDimension;
     }
 
@@ -112,37 +119,66 @@ public class GameBoard {
      * @param square square to check if it is occupied
      * @return True if empty, false otherwise
      */
-    boolean squareIsEmpty(Square square) {
+    private boolean squareIsEmpty(Square square) {
         return !square.hasMinionOnSquare();
     }
 
-    public void setSelectedSquare(Point2D point) {
+    /**
+     * Translates Point2D coordinates on the screen into gameboard coordinates and if the point is on the gameboard,
+     * sets that square as the current previously selected square.
+     * @param point Point on the GUI that will be translated to gameboard coordinates.
+     */
+    void setSelectedSquare(Point2D point) {
         if (point.getX() >= 0) {
             selectedSquare = boardBySquares.get((int) (point.getX() * xDimension + point.getY()));
         } else selectedSquare = new Square();
     }
 
-    public Square getSelectedSquare() {
+    /**
+     * Getter method for the gameboard square, previously clicked on.
+     * @return Returns the previously selected square.
+     */
+    Square getSelectedSquare() {
         return selectedSquare;
     }
 
-    public void addSquareToBoardBySquares(Square square) {
+    /**
+     * Add method for boardBySquares for adding squares in, in the beginning of the game.
+     * TODO: we can make a static initializer for the board in GUI, to add all the squares so we might not need a loadBoard
+     * @param square The square added to boardBySquares.
+     */
+    void addSquareToBoardBySquares(Square square) {
         boardBySquares.add(square);
     }
 
-    public List<Square> getBoardBySquares() {
+    /**
+     * Getter method to get boardBySquares list. BoardBySquares contains all the squares on the gameboard.
+     * @return Returns a list of all the squares on the gameboard.
+     */
+    List<Square> getBoardBySquares() {
         return boardBySquares;
     }
 
-    public List<Square> getSquaresPossibleToMove() {
+    /**
+     * Getter method for the squaresPossibleToMove field.
+     * @return Returns a previously saved list of squares that a minion could have moved to.
+     */
+    List<Square> getSquaresPossibleToMove() {
         return squaresPossibleToMove;
     }
 
-    public void setSquaresPossibleToMove(List<Square> squaresPossibleToMove) {
+    /**
+     * Setter method for the squaresPossibleToMove field.
+     * @param squaresPossibleToMove The list given as a parameter for the method is set as the objects squarePossibleToMove.
+     */
+    void setSquaresPossibleToMove(List<Square> squaresPossibleToMove) {
         this.squaresPossibleToMove = squaresPossibleToMove;
     }
 
-    public void clearSquaresPossibleToMove() {
+    /**
+     * Removes all squares from squaresPossibleToMove .
+     */
+    void clearSquaresPossibleToMove() {
         squaresPossibleToMove.clear();
     }
 

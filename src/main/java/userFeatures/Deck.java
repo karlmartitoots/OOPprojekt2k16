@@ -1,11 +1,11 @@
 package userFeatures;
+import card.Card;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import card.*;
-
-public class Deck {
+class Deck {
     /**
      * Field for holding all cards in a deck.
      */
@@ -16,7 +16,7 @@ public class Deck {
      *
      * @param deckOfCards the Deck of cards
      */
-    public Deck(List<Card> deckOfCards) {
+    Deck(List<Card> deckOfCards) {
         this.deckOfCards = deckOfCards;
     }
 
@@ -31,7 +31,7 @@ public class Deck {
      * Draws a card from the top of the deck
      * @return Card drawn
      */
-    public Card draw() {
+    Card draw() {
         if (deckOfCards.size() > 0) {
             return deckOfCards.remove(0);
         } else return null;
@@ -41,7 +41,7 @@ public class Deck {
      * Adds a new card on the bottom of the deck.
      * @param newCard The new card to be added.
      */
-    public void addCard(Card newCard){
+    void addCard(Card newCard){
         deckOfCards.add(newCard);
     }
     /**

@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * When the game begins, 2 players are created. A Player class will hold anything, that
  * can or has to be different between players.
+ * TODO: implement
  */
 public class Player {
 

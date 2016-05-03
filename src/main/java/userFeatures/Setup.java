@@ -16,22 +16,20 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-public class Setup extends Scene {
+class Setup extends Scene {
 
     private Collection collection = new Collection();
     private Map<String, GeneralCard> allGeneralCards = collection.getAllGeneralCardsByName();
     private GeneralCard whiteGeneral = null, blackGeneral = null;
     private String startingPositionName = "";
     private Image popupIcon = new Image("errorPopupIcon.jpg");
-    //private Image settingsIcon = new Image("settingsIcon.png");//will be Setup's icon if gameIcon gets fixed
-    private Image gameIcon = new Image("gameIcon.jpg");
 
     /**
      * The constructor of Setup is like the main class of Setup.
      * @param root  Main class passes Setup a Group to place everything onto.
      * @param primaryStage The stage that everything happens in.
      */
-    public Setup(Group root, Stage primaryStage) {
+    Setup(Group root, Stage primaryStage) {
         super(root);
 
         Label chooseGeneralLabel = createLabel("Choose your general", 20, 50, 0);
@@ -45,7 +43,8 @@ public class Setup extends Scene {
         //Settings, they wont change in here and the code will break
         ChoiceBox<String> positionNamesChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
                 "Corners",
-                "GoFace"
+                "GoFace",
+                "Chess"
         ));
         positionNamesChoiceBox.relocate(100, 200);
 
@@ -90,6 +89,7 @@ public class Setup extends Scene {
 
         primaryStage.setMinWidth(300);
         primaryStage.setMinHeight(350);
+        Image gameIcon = new Image("gameIcon.jpg");
         primaryStage.getIcons().add(gameIcon);
         primaryStage.setTitle("Setup");
         primaryStage.setScene(this);

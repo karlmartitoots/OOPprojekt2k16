@@ -21,19 +21,15 @@ import java.util.concurrent.ScheduledFuture;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class Game extends Scene{
+class Game extends Scene{
 
     private GameBoard gameBoard = new GameBoard();
-    private CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
     private int timerStartTime = 60;
     private final ScheduledExecutorService timerScheduler =
             Executors.newScheduledThreadPool(1);
-    private ImageView gameFrame = new ImageView(new Image("GUI frame.jpg"));
-    private String gameTitle = "Card Game 1.0";
-    private int turnCounter = 0;//currently has no application
-    private Player white, black;//currently have no application
     //white starts
     private Side currentSide = Side.WHITE;
+    private int turnCounter = 0;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
@@ -45,9 +41,11 @@ public class Game extends Scene{
         super(root);
 
         //set generals in  creaturesOnBoard
+        CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
         creaturesOnBoard.setAllGeneralsOnBoard(settings.getWhiteGeneral(), settings.getBlackGeneral());
 
         //load the gameframe onto the gui
+        ImageView gameFrame = new ImageView(new Image("GUI frame.jpg"));
         root.getChildren().add(gameFrame);
 
         //load the board onto the gui
@@ -82,6 +80,7 @@ public class Game extends Scene{
         setPrimaryStageProperties(primaryStage);
         primaryStage.setScene(this);
         //primaryStage.getIcons().add(gameIcon);//don't know why this doesn't work
+        String gameTitle = "Card Game 1.0";
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
     }
@@ -126,8 +125,10 @@ public class Game extends Scene{
      * @return Returns the button itself.
      */
     private Button createAndPlaceEndTurnButton(Group root) {
-        Button endTurnButton = new Button("End turn");
-        endTurnButton.relocate(100, 250);
+        Button endTurnButton = new Button("END TURN");
+        endTurnButton.relocate(5, 250);
+        endTurnButton.setMinSize(250, 245);
+        endTurnButton.setFont(new Font(40));
         root.getChildren().add(endTurnButton);
         return endTurnButton;
     }
@@ -274,7 +275,7 @@ public class Game extends Scene{
         //Currently has magic values for total number of card slots, and the pixel values. I think we can make a new class for the slots
         //Similar to square, and hand can be the place where all of them are.
         for (int possibleCardSlot = 0; possibleCardSlot < 7; possibleCardSlot++) {
-            double left = 0 + possibleCardSlot * 140;
+            double left = possibleCardSlot * 140;
             double top = 500;
             Rectangle rectangle = new Rectangle(left, top, 140, 250);
             if (rectangle.contains(pixelX, pixelY)) {

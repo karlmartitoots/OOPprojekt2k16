@@ -17,7 +17,7 @@ public class Square {
     /**
      * Default constructor
      */
-    public Square() {
+    Square() {
     }
     /**
      * Constructor
@@ -25,7 +25,7 @@ public class Square {
      * @param xCordOnBoard x Coordinates of the square on the Main
      * @param yCordOnBoard Y Coordinates of the square on the Main
      */
-    public Square(int xCordOnBoard, int yCordOnBoard, MinionCard card) {
+    Square(int xCordOnBoard, int yCordOnBoard, MinionCard card) {
         this.xCordOnBoard = xCordOnBoard;
         this.yCordOnBoard = yCordOnBoard;
         this.card = card;
@@ -41,7 +41,7 @@ public class Square {
      * For getting the adjuster of the gameboard position on GUI.
      * @return Returns the x-coordinate adjustment.
      */
-    public static int getxTopMostValue() {
+    static int getxTopMostValue() {
         return xTopMostValue;
     }
 
@@ -49,7 +49,7 @@ public class Square {
      * For getting the adjuster of the gameboard position on GUI.
      * @return Returns the y-coordinate adjustment.
      */
-    public static int getyLeftMostValue() {
+    static int getyLeftMostValue() {
         return yLeftMostValue;
     }
 
@@ -58,7 +58,7 @@ public class Square {
      * @param xDim The X dimension of the board
      * @return The place the square would be on the line
      */
-    public int squares1DPosition(int xDim) {
+    int squares1DPosition(int xDim) {
         return xDim * xCordOnBoard + yCordOnBoard;
     }
 
@@ -75,27 +75,23 @@ public class Square {
      * Getter method for the x-coordinate of the square on the gameboard.
      * @return Returns the x-coordinate in gameboard unit lengths.
      */
-    public int getxCordOnBoard() {
+    int getxCordOnBoard() {
         return xCordOnBoard;
     }
 
-    public void setxCordOnBoard(int xCordOnBoard) {
-        this.xCordOnBoard = xCordOnBoard;
-    }
-
-    public int getyCordOnBoard() {
+    /**
+     * Getter method for the y-coordinate of the square on the gameboard.
+     * @return Returns the y-coordinate in gameboard unit lengths.
+     */
+    int getyCordOnBoard() {
         return yCordOnBoard;
-    }
-
-    public void setyCordOnBoard(int yCordOnBoard) {
-        this.yCordOnBoard = yCordOnBoard;
     }
 
     /**
      * A method, for when the gameboard shows a path on some action, to change the square to
      * a picture of a path square.
      */
-    public void setOnThePath() {
+    void setOnThePath() {
         double tempX = imageView.getX(), tempY = imageView.getY();
         this.imageView = new ImageView(new Image("chosenSquare.jpg"));
         imageView.setX(tempX);
@@ -106,7 +102,7 @@ public class Square {
      * A method, for when the gameboard shows a path on some action, to change the square back
      * to what it is like by default.
      */
-    public void setNotOnThePath(){
+    void setNotOnThePath(){
         double tempX = imageView.getX(), tempY = imageView.getY();
         this.imageView = new ImageView(new Image("defaultSquare.jpg"));
         imageView.setX(tempX);
@@ -117,7 +113,7 @@ public class Square {
      * Getter for the width of the square.
      * @return Returns the width of the square in pixels.
      */
-    public static int getWidth() {
+    static int getWidth() {
         return width;
     }
 
@@ -125,7 +121,7 @@ public class Square {
      * Getter method for square height in pixels.
      * @return Returns the height of the square in pixels.
      */
-    public static int getHeight() {
+    static int getHeight() {
         return height;
     }
 
@@ -144,7 +140,7 @@ public class Square {
     /**
      * Updates the image of the square when gameboard is changed.
      */
-    public void updateImage() {
+    void updateImage() {
         if (hasMinionOnSquare()) {
             imageView = new ImageView(card.getSmallImage());
             imageView.setX(xCordOnBoard * width + xTopMostValue);
@@ -159,7 +155,7 @@ public class Square {
     /**
      * Removes a card from the current square
      */
-    public void removeCard() {
+    void removeCard() {
         card = null;
     }
 
@@ -168,7 +164,7 @@ public class Square {
      *
      * @return true if has a card on the square, false if otherwise
      */
-    public boolean hasMinionOnSquare() {
+    boolean hasMinionOnSquare() {
         return card != null;
     }
 
@@ -176,7 +172,7 @@ public class Square {
      * Gets the picture, that the square will currently display.
      * @return Returns that pictures ImageView.
      */
-    public ImageView getImageView() {
+    ImageView getImageView() {
         return imageView;
     }
 

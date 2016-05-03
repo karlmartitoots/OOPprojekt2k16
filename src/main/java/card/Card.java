@@ -19,7 +19,7 @@ public abstract class Card {
      * @param cost   Manacost of the card
      * @param description Text description of the card
      */
-    public Card(String name, int cost, String description) {
+    Card(String name, int cost, String description) {
         this.name = name;
         this.cost = cost;
         this.description = description;
