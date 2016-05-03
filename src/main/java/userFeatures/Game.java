@@ -69,7 +69,6 @@ class Game extends Scene{
                 switchTurnAndResetToStartOfATurn(timerText, turnLabel));
 
         //event listener for handling the clicks on the group.
-        //TODO: sometimes the mouseclick eventlistener gets negative coordinates. Needs to be fixed somehow.
         root.setOnMouseClicked((event) ->
                 mouseEventHandler(root, event)
         );
@@ -154,8 +153,6 @@ class Game extends Scene{
         int GUITopPanelHeight = 47;//pixels
         int preferredGUIWidth = 1000;
         int preferredGUIHeight = 800 + GUITopPanelHeight;
-        int preferredCardHeight = 250;//pixels
-        int preferredCardWidth = 140;//pixels
         primaryStage.setMaxWidth(preferredGUIWidth);
         primaryStage.setMaxHeight(preferredGUIHeight);
         primaryStage.setMinWidth(preferredGUIWidth);
@@ -171,12 +168,23 @@ class Game extends Scene{
         Point2D squareCoordinates = getSquare(event.getSceneX(), event.getSceneY());
         int cardSlotNumber = getCardSlot(event.getSceneX(), event.getSceneY());
         System.out.println(cardSlotNumber);
-        setSquaresNotOnPath(root);
-        moveMinionOnScene(root, squareCoordinates);
-        gameBoard.clearSquaresPossibleToMove();
-        gameBoard.setSelectedSquare(squareCoordinates);
-        getSquaresPossibleToMove(root);
+        processClickOnBoard(root, squareCoordinates);
         System.out.println("X: " + event.getX() + ", Y:" + event.getY());
+    }
+
+    /**
+     * Handles events that happens when the mouse is clicked on the board
+     * @param root Group that shows the scene, where events are listened.
+     * @param squareCoordinates coordinates of the square clicked on
+     */
+    private void processClickOnBoard(Group root, Point2D squareCoordinates) {
+        if (squareCoordinates.getX() >= 0) {
+            setSquaresNotOnPath(root);
+            moveMinionOnScene(root, squareCoordinates);
+            gameBoard.clearSquaresPossibleToMove();
+            gameBoard.setSelectedSquare(squareCoordinates);
+            getSquaresPossibleToMove(root);
+        }
     }
 
     /**
@@ -272,12 +280,10 @@ class Game extends Scene{
      * @return The card slot number that has been currently clicked on, -1 if not a card slot
      */
     private int getCardSlot(double pixelX, double pixelY) {
-        //Currently has magic values for total number of card slots, and the pixel values. I think we can make a new class for the slots
-        //Similar to square, and hand can be the place where all of them are.
-        for (int possibleCardSlot = 0; possibleCardSlot < 7; possibleCardSlot++) {
-            double left = possibleCardSlot * 140;
+        for (int possibleCardSlot = 0; possibleCardSlot < Hand.getMaximalHandSize(); possibleCardSlot++) {
+            double left = possibleCardSlot * Hand.getPreferredCardWidth();
             double top = 500;
-            Rectangle rectangle = new Rectangle(left, top, 140, 250);
+            Rectangle rectangle = new Rectangle(left, top, Hand.getPreferredCardWidth(), Hand.getPreferredCardHeight());
             if (rectangle.contains(pixelX, pixelY)) {
                 return possibleCardSlot;
             }

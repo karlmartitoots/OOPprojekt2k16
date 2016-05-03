@@ -17,11 +17,13 @@ public class Player {
 
     private final int handSize = 3;
     private final int deckSize = 7;
+    private final int maximumMana = 10;
     /**
      * When mana is first initiated it's 0 and initial mana will be loaded by the Game itself, when
      * everything is loaded.
      */
-    private int playerMana = 0;
+    private int playerCurrentMaximumMana = 0;
+    private int usableMana = 0;
     private Hand playerHand = new Hand();
     private Deck playerDeck = new Deck(new ArrayList<>());
     private List<MinionCard> controlledAllies = new ArrayList<>();
@@ -58,10 +60,32 @@ public class Player {
 
     /**
      * Method for adding mana to a Player object.
-     * @param newMana Amount of mana added.
      */
-    public void addMana(int newMana){
-        this.playerMana += newMana;
+    public void addMana() {
+        if (playerCurrentMaximumMana < maximumMana) {
+            playerCurrentMaximumMana++;
+        }
+    }
+
+    /**
+     * Sets players usable mana to the current maximum amount of mana the player can have.
+     */
+    public void resetMana() {
+        usableMana = playerCurrentMaximumMana;
+    }
+
+    /**
+     * Method that tries to use mana, if it is sucessful, the mana is used up. If not then then no mana is used.
+     *
+     * @param manaToUse mana to be used in the given action
+     * @return True if the auction is sucessful, false othewirse
+     */
+    public boolean useMana(int manaToUse) {
+        if (manaToUse > usableMana) {
+            return false;
+        }
+        usableMana -= manaToUse;
+        return true;
     }
 
 }

@@ -9,7 +9,9 @@ import java.util.List;
  * For holding all cards in hand and operating with them through gamelogic.
  */
 class Hand {
-
+    private static final int maximalHandSize = 7;
+    private static final int preferredCardHeight = 250;//pixels
+    private static final int preferredCardWidth = 140;//pixels
     private List<Card> hand = new ArrayList<>();
 
     /**
@@ -18,7 +20,9 @@ class Hand {
      * @param card Card to add to hand
      */
     void addCard(Card card) {
-        hand.add(card);
+        if (hand.size() <= maximalHandSize) {
+            hand.add(card);
+        }
     }
 
     /**
@@ -55,5 +59,28 @@ class Hand {
         return "Hand{" +
                 ", \nhand=" + hand +
                 '}';
+    }
+
+    /**
+     * Returns the maximum possible hand size
+     *
+     * @return maximum maximalHandSize
+     */
+    public static int getMaximalHandSize() {
+        return maximalHandSize;
+    }
+
+    /**
+     * @return preferred height of the card in pixels
+     */
+    public static int getPreferredCardHeight() {
+        return preferredCardHeight;
+    }
+
+    /**
+     * @return preferred width of the card in pixels
+     */
+    public static int getPreferredCardWidth() {
+        return preferredCardWidth;
     }
 }
