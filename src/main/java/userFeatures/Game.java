@@ -1,6 +1,7 @@
 package userFeatures;
 
 import board.CreaturesOnBoard;
+import card.Card;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -24,6 +25,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 class Game extends Scene{
 
     private GameBoard gameBoard = new GameBoard();
+    private Player playerWhite = new Player(Side.WHITE);
+    private Player playerBlack = new Player(Side.BLACK);
     private int timerStartTime = 60;
     private final ScheduledExecutorService timerScheduler =
             Executors.newScheduledThreadPool(1);
@@ -54,7 +57,7 @@ class Game extends Scene{
         //load the generals onto the board
         //TODO: FIX generals loading, some line of code is missing somewhere probably
         placeGenerals(root,settings);
-
+        loadCards(root);
         //load the timer and a label that shows whos turn it is
         Text timerText = createAndPlaceTimer(root);
         Label turnLabel = createAndPlaceTurnLabel(root);
@@ -84,6 +87,20 @@ class Game extends Scene{
         primaryStage.show();
     }
 
+    /**
+     * Method loads the images of cards in the given card slots
+     *
+     * @param root Group that the label will be shown on.
+     */
+    private void loadCards(Group root) {
+        for (int cardSlot = 0; cardSlot < 7; cardSlot++) {
+            ImageView sampleCard = new ImageView(new Image("sampleCard.png"));
+            sampleCard.setX(cardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue());
+            sampleCard.setY(Hand.getTopMostPixelValue());
+            root.getChildren().add(sampleCard);
+        }
+
+    }
     /**
      * Method to initially place both generals on the GUI and in gameboard class.
      * @param settings Settings for getting which GeneralCard's and where they will be placed.
@@ -281,8 +298,8 @@ class Game extends Scene{
      */
     private int getCardSlot(double pixelX, double pixelY) {
         for (int possibleCardSlot = 0; possibleCardSlot < Hand.getMaximalHandSize(); possibleCardSlot++) {
-            double left = possibleCardSlot * Hand.getPreferredCardWidth();
-            double top = 500;
+            double left = possibleCardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue();
+            double top = Hand.getTopMostPixelValue();
             Rectangle rectangle = new Rectangle(left, top, Hand.getPreferredCardWidth(), Hand.getPreferredCardHeight());
             if (rectangle.contains(pixelX, pixelY)) {
                 return possibleCardSlot;

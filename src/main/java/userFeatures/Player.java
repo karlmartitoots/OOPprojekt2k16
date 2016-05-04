@@ -88,5 +88,13 @@ public class Player {
         return true;
     }
 
+    /**
+     * Getter methor for player hand
+     *
+     * @return hand of the player
+     */
+    public Hand getPlayerHand() {
+        return playerHand;
+    }
 }
 

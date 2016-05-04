@@ -12,6 +12,8 @@ class Hand {
     private static final int maximalHandSize = 7;
     private static final int preferredCardHeight = 250;//pixels
     private static final int preferredCardWidth = 140;//pixels
+    private static final int topMostPixelValue = 525;
+    private static final int leftMostPixelValue = 15;
     private List<Card> hand = new ArrayList<>();
 
     /**
@@ -82,5 +84,19 @@ class Hand {
      */
     public static int getPreferredCardWidth() {
         return preferredCardWidth;
+    }
+
+    /**
+     * @return the top most pixel value for Hand location on board
+     */
+    public static int getTopMostPixelValue() {
+        return topMostPixelValue;
+    }
+
+    /**
+     * @return the left most pixel value for Hand location on board.
+     */
+    public static int getLeftMostPixelValue() {
+        return leftMostPixelValue;
     }
 }
