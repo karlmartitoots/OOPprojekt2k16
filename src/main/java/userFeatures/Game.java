@@ -1,7 +1,7 @@
 package userFeatures;
 
 import board.CreaturesOnBoard;
-import card.Card;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -55,14 +55,15 @@ class Game extends Scene{
         loadGameboardForStartOfGame(root);
 
         //load the generals onto the board
-        //TODO: FIX generals loading, some line of code is missing somewhere probably
         placeGenerals(root,settings);
         loadCards(root);
         //load the timer and a label that shows whos turn it is
         Text timerText = createAndPlaceTimer(root);
         Label turnLabel = createAndPlaceTurnLabel(root);
-        ScheduledFuture<?> timerControl = timerScheduler.scheduleAtFixedRate((Runnable) () ->
-                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel),0L, 1L, SECONDS);
+        ScheduledFuture<?> timerControl = timerScheduler.scheduleAtFixedRate(
+                (Runnable) () ->
+                        Platform.runLater(() ->
+                                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel)),1L, 1L, SECONDS);
 
         //load the turn ending button
         Button endTurnButton = createAndPlaceEndTurnButton(root);
@@ -81,7 +82,7 @@ class Game extends Scene{
 
         setPrimaryStageProperties(primaryStage);
         primaryStage.setScene(this);
-        //primaryStage.getIcons().add(gameIcon);//don't know why this doesn't work
+        primaryStage.getIcons().add(new Image("gameIcon.jpg"));
         String gameTitle = "Card Game 1.0";
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
