@@ -93,7 +93,7 @@ class Game extends Scene{
      * @param root Group that the label will be shown on.
      */
     private void loadCards(Group root) {
-        for (int cardSlot = 0; cardSlot < 7; cardSlot++) {
+        for (int cardSlot = 0; cardSlot < Hand.getMaximalHandSize(); cardSlot++) {
             ImageView sampleCard = new ImageView(new Image("sampleCard.png"));
             sampleCard.setX(cardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue());
             sampleCard.setY(Hand.getTopMostPixelValue());
