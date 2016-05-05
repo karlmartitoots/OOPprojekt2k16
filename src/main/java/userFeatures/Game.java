@@ -28,11 +28,13 @@ class Game extends Scene{
     private Player playerWhite = new Player(Side.WHITE);
     private Player playerBlack = new Player(Side.BLACK);
     private int timerStartTime = 60;
+    private InteractionState state = InteractionState.NONE;
     private final ScheduledExecutorService timerScheduler =
             Executors.newScheduledThreadPool(1);
     //white starts
     private Side currentSide = Side.WHITE;
     private int turnCounter = 0;
+    private Label stateLabel;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
@@ -60,6 +62,7 @@ class Game extends Scene{
         //load the timer and a label that shows whos turn it is
         Text timerText = createAndPlaceTimer(root);
         Label turnLabel = createAndPlaceTurnLabel(root);
+        stateLabel = createAndPlaceStateLabel(root);
         ScheduledFuture<?> timerControl = timerScheduler.scheduleAtFixedRate(
                 (Runnable) () ->
                         Platform.runLater(() ->
@@ -67,10 +70,24 @@ class Game extends Scene{
 
         //load the turn ending button
         Button endTurnButton = createAndPlaceEndTurnButton(root);
+        Button moveButton = createAndPlaceButton(root, InteractionState.MOVE, 740, 0, 240, 40);
+        Button attackButton = createAndPlaceButton(root, InteractionState.ATTACK, 740, 40, 240, 40);
+        Button summonButton = createAndPlaceButton(root, InteractionState.SUMMON, 740, 80, 240, 40);
+
+
 
         //event listener for turn ending button
         endTurnButton.setOnAction(event ->
                 switchTurnAndResetToStartOfATurn(timerText, turnLabel));
+        moveButton.setOnAction(event ->
+                updateLabel(stateLabel, InteractionState.MOVE)
+        );
+        attackButton.setOnAction(event ->
+                updateLabel(stateLabel, InteractionState.ATTACK)
+        );
+        summonButton.setOnAction(event ->
+                updateLabel(stateLabel, InteractionState.SUMMON)
+        );
 
         //event listener for handling the clicks on the group.
         root.setOnMouseClicked((event) ->
@@ -87,6 +104,40 @@ class Game extends Scene{
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
     }
+
+    /**
+     * Creates a butten that allows the user to change to given state in his turn
+     *
+     * @param root
+     * @param state     State to switch to
+     * @param xStarting starting x position of the button
+     * @param yStarting starting y position of the button
+     * @param width     width of the button
+     * @param height    height of the button
+     * @return
+     */
+    private Button createAndPlaceButton(Group root, InteractionState state, int xStarting, int yStarting, int width, int height) {
+        Button button = new Button(state.toString());
+        button.relocate(xStarting, yStarting);
+        button.setMinSize(width, height);
+        button.setFont(new Font(20));
+        root.getChildren().add(button);
+        return button;
+    }
+
+    private Label createAndPlaceStateLabel(Group root) {
+        Label turnLabel = new Label(state.toString());
+        turnLabel.relocate(760, 120);
+        turnLabel.setFont(new Font(20));
+        root.getChildren().add(turnLabel);
+        return turnLabel;
+    }
+
+    private void updateLabel(Label label, InteractionState state) {
+        this.state = state;
+        label.setText(state.toString());
+    }
+
 
     /**
      * Method loads the images of cards in the given card slots
@@ -364,7 +415,8 @@ class Game extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void switchTurnAndResetToStartOfATurn(Text timerText, Label sideLabel){
+    private void switchTurnAndResetToStartOfATurn(Text timerText, Label sideLabel) {
+        updateLabel(stateLabel, InteractionState.NONE);
         resetTimer(timerText);
         setAllCreaturesToHaventMoved();
         switchCurrentSide();
