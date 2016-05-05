@@ -145,7 +145,7 @@ class Game extends Scene{
      * @param root Group that the label will be shown on.
      */
     private void loadCards(Group root) {
-        for (int cardSlot = 0; cardSlot < Hand.getMaximalHandSize(); cardSlot++) {
+        for (int cardSlot = 0; cardSlot < Hand.getMaximumHandSize(); cardSlot++) {
             ImageView sampleCard = new ImageView(new Image("sampleCard.png"));
             sampleCard.setX(cardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue());
             sampleCard.setY(Hand.getTopMostPixelValue());
@@ -349,7 +349,7 @@ class Game extends Scene{
      * @return The card slot number that has been currently clicked on, -1 if not a card slot
      */
     private int getCardSlot(double pixelX, double pixelY) {
-        for (int possibleCardSlot = 0; possibleCardSlot < Hand.getMaximalHandSize(); possibleCardSlot++) {
+        for (int possibleCardSlot = 0; possibleCardSlot < Hand.getMaximumHandSize(); possibleCardSlot++) {
             double left = possibleCardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue();
             double top = Hand.getTopMostPixelValue();
             Rectangle rectangle = new Rectangle(left, top, Hand.getPreferredCardWidth(), Hand.getPreferredCardHeight());

@@ -6,70 +6,70 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * For holding all cards in hand and operating with them through gamelogic.
+ * For holding all cards in cardsInHand and operating with them through gamelogic.
  */
 class Hand {
-    private static final int maximalHandSize = 7;
+    private static final int maximumHandSize = 7;
     private static final int preferredCardHeight = 250;//pixels
     private static final int preferredCardWidth = 140;//pixels
     private static final int topMostPixelValue = 525;
     private static final int leftMostPixelValue = 15;
-    private List<Card> hand = new ArrayList<>();
+    private List<Card> cardsInHand = new ArrayList<>();
 
     /**
-     * Adds a specific card to the players hand
+     * Adds a specific card to the players cardsInHand
      *
-     * @param card Card to add to hand
+     * @param card Card to add to cardsInHand
      */
     void addCard(Card card) {
-        if (hand.size() <= maximalHandSize) {
-            hand.add(card);
+        if (cardsInHand.size() <= maximumHandSize) {
+            cardsInHand.add(card);
         }
     }
 
     /**
-     * Discards all the cards in the players hand.
+     * Discards all the cards in the players cardsInHand.
      */
     public void discardHand() {
-        hand.clear();
+        cardsInHand.clear();
     }
 
     /**
-     * Discards a random card from the hand of the player
+     * Discards a random card from the cardsInHand of the player
      */
     public void discardRandomCard() {
-        hand.remove((int) (Math.random() * hand.size()));
+        cardsInHand.remove((int) (Math.random() * cardsInHand.size()));
     }
 
     /**
-     * Discards a specific card from the players hand
+     * Discards a specific card from the players cardsInHand
      *
      * @param i index of the card
      */
     public void discardSpecificCard(int i) {
-        hand.remove(i);
+        cardsInHand.remove(i);
     }
 
     /**
-     * Get cards in ur hand as list
-     * @return Cards in hand
+     * Get cards in ur cardsInHand as list
+     * @return Cards in cardsInHand
      */
-    public List<Card> getHand(){return hand;}
+    public List<Card> getCardsInHand(){return cardsInHand;}
 
     @Override
     public String toString() {
         return "Hand{" +
-                ", \nhand=" + hand +
+                ", \ncardsInHand=" + cardsInHand +
                 '}';
     }
 
     /**
-     * Returns the maximum possible hand size
+     * Returns the maximum possible cardsInHand size
      *
-     * @return maximum maximalHandSize
+     * @return maximum maximumHandSize
      */
-    public static int getMaximalHandSize() {
-        return maximalHandSize;
+    public static int getMaximumHandSize() {
+        return maximumHandSize;
     }
 
     /**
