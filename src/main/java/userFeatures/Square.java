@@ -11,8 +11,12 @@ public class Square {
     private final static int yLeftMostValue = 0;
     private final static int width = 50;
     private final static int height = 50;
+    private int xPixelCoordinate;
+    private int yPixelCoordinate;
     private MinionCard card;
-    private ImageView imageView = new ImageView(new Image("defaultSquare.jpg"));
+    private Image defaultSquare = new Image("defaultSquare.jpg");
+    private Image chosenSquare = new Image("chosenSquare.jpg");
+    private ImageView imageView = new ImageView(defaultSquare);
 
     /**
      * Default constructor
@@ -29,12 +33,13 @@ public class Square {
         this.xCordOnBoard = xCordOnBoard;
         this.yCordOnBoard = yCordOnBoard;
         this.card = card;
-
+        xPixelCoordinate = xCordOnBoard * width + xTopMostValue;
+        yPixelCoordinate = yCordOnBoard * height + yLeftMostValue;
         if (hasMinionOnSquare()) {
-            imageView = new ImageView(card.getSmallImage());
+            imageView.setImage(card.getSmallImage());
         }
-        imageView.setX(xCordOnBoard * width + xTopMostValue);
-        imageView.setY(yCordOnBoard * height + yLeftMostValue);
+        imageView.setX(xPixelCoordinate);
+        imageView.setY(yPixelCoordinate);
     }
 
     /**
@@ -92,21 +97,15 @@ public class Square {
      * a picture of a path square.
      */
     void setOnThePath() {
-        double tempX = imageView.getX(), tempY = imageView.getY();
-        this.imageView = new ImageView(new Image("chosenSquare.jpg"));
-        imageView.setX(tempX);
-        imageView.setY(tempY);
+        createImage(chosenSquare);
     }
 
     /**
      * A method, for when the gameboard shows a path on some action, to change the square back
      * to what it is like by default.
      */
-    void setNotOnThePath(){
-        double tempX = imageView.getX(), tempY = imageView.getY();
-        this.imageView = new ImageView(new Image("defaultSquare.jpg"));
-        imageView.setX(tempX);
-        imageView.setY(tempY);
+    void setNotOnThePath() {
+        createImage(defaultSquare);
     }
 
     /**
@@ -132,24 +131,30 @@ public class Square {
      */
     public void setCard(MinionCard minionCard) {
         this.card = minionCard;
-        imageView = new ImageView(minionCard.getSmallImage());
-        imageView.setX(xCordOnBoard * width + xTopMostValue);
-        imageView.setY(yCordOnBoard * height + yLeftMostValue);
+        createImage(minionCard.getSmallImage());
     }
 
+    /**
+     * Method that sets an image on the imageView
+     *
+     * @param image Image to be placed on board
+     */
+    private void createImage(Image image) {
+        imageView = new ImageView(image);
+        imageView.setX(xPixelCoordinate);
+        imageView.setY(yPixelCoordinate);
+    }
     /**
      * Updates the image of the square when gameboard is changed.
      */
     void updateImage() {
+        Image image;
         if (hasMinionOnSquare()) {
-            imageView = new ImageView(card.getSmallImage());
-            imageView.setX(xCordOnBoard * width + xTopMostValue);
-            imageView.setY(yCordOnBoard * height + yLeftMostValue);
+            image = card.getSmallImage();
         } else {
-            imageView = new ImageView(new Image("defaultSquare.jpg"));
-            imageView.setX(xCordOnBoard * width + xTopMostValue);
-            imageView.setY(yCordOnBoard * height + yLeftMostValue);
+            image = defaultSquare;
         }
+        createImage(image);
     }
 
     /**
