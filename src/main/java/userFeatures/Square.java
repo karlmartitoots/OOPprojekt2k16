@@ -102,7 +102,7 @@ public class Square {
      * a picture of a path square.
      */
     void setOnThePath() {
-        createImage(chosenSquare);
+        updateImage(chosenSquare);
     }
 
     /**
@@ -110,7 +110,7 @@ public class Square {
      * to what it is like by default.
      */
     void setNotOnThePath() {
-        createImage(defaultSquare);
+        updateImage(defaultSquare);
     }
 
     /**
@@ -136,7 +136,7 @@ public class Square {
      */
     public void setCard(MinionCard minionCard) {
         this.card = minionCard;
-        createImage(minionCard.getSmallImage());
+        updateImage(minionCard.getSmallImage());
     }
 
     /**
@@ -144,8 +144,8 @@ public class Square {
      *
      * @param image Image to be placed on board
      */
-    private void createImage(Image image) {
-        imageView = new ImageView(image);
+    private void updateImage(Image image) {
+        imageView.setImage(image);
         imageView.setX(xPixelCoordinate);
         imageView.setY(yPixelCoordinate);
     }
@@ -159,7 +159,7 @@ public class Square {
         } else {
             image = defaultSquare;
         }
-        createImage(image);
+        updateImage(image);
     }
 
     /**
