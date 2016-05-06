@@ -92,7 +92,7 @@ class GameBoard {
      * @param square square to expand from
      * @return Expanded squares
      */
-    private List<Square> expand(Square square) {
+    public List<Square> expand(Square square) {
         List<Square> toGoto = new ArrayList<>();
         Square first = new Square(square.getxCordOnBoard() + 1, square.getyCordOnBoard(), null);
         Square second = new Square(square.getxCordOnBoard(), square.getyCordOnBoard() + 1, null);

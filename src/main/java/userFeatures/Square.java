@@ -1,6 +1,7 @@
 package userFeatures;
 
 import card.MinionCard;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -63,8 +64,12 @@ public class Square {
      * @param xDim The X dimension of the board
      * @return The place the square would be on the line
      */
-    int squares1DPosition(int xDim) {
+    public int squares1DPosition(int xDim) {
         return xDim * xCordOnBoard + yCordOnBoard;
+    }
+
+    int squares1Dposition(int xDim, Point2D point) {
+        return (int) (xDim * point.getX() + point.getY());
     }
 
     /**

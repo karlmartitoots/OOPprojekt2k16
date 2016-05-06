@@ -248,11 +248,27 @@ class Game extends Scene{
      */
     private void processClickOnBoard(Group root, Point2D squareCoordinates) {
         if (squareCoordinates.getX() >= 0) {
-            setSquaresNotOnPath(root);
-            moveMinionOnScene(root, squareCoordinates);
-            gameBoard.clearSquaresPossibleToMove();
-            gameBoard.setSelectedSquare(squareCoordinates);
-            getSquaresPossibleToMove(root);
+            System.out.println(gameBoard.getBoardBySquares().get((int) (gameBoard.getxDimension() * squareCoordinates.getX() + squareCoordinates.getY())));
+            if (state == InteractionState.MOVE) {
+                setSquaresNotOnPath(root);
+                moveMinionOnScene(root, squareCoordinates);
+                gameBoard.clearSquaresPossibleToMove();
+                gameBoard.setSelectedSquare(squareCoordinates);
+                getSquaresPossibleToMove(root);
+            }
+            if (state == InteractionState.SUMMON) {
+                Square summon = gameBoard.getBoardBySquares().get((int) (gameBoard.getxDimension() * squareCoordinates.getX() + squareCoordinates.getY()));
+                if (summon.hasMinionOnSquare() && summon.getCard().getSide() == currentSide) {
+                    List<Square> possibleToSummon = gameBoard.expand(summon);
+                    for (Square square : possibleToSummon) {
+                        System.out.println(square);
+                        if (!square.hasMinionOnSquare()) {
+                            square.setOnThePath();
+                            root.getChildren().add(square.getImageView());
+                        }
+                    }
+                }
+            }
         }
     }
 
