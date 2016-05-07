@@ -13,7 +13,11 @@ GENERAL;General Märt;0;A General named Märt.;2;0;999;5
 MINION;Silverguard Squire;1;The first minion to be ever created.;101;1;4;1
 MINION;Coiledcrawler;1;Earthworm filled with venom.;109;1;3;2
 MINION;Blazehound;1;Dog filled with fury.;107;2;1;3
-MINION;Sandrburrower;1;His venom does not even kill;115;1;2;4
+MINION;Sandburrower;1;His venom does not even kill;115;1;2;4
+MINION;Crystalcloaker;1;Weak, but fast;119;1;2;3
+MINION;Jademonk;1;Heavy fighter;123;1;4;1
+MINION;Kaidoassasin;1;Sneaky ninja;124;3;1;1
+MINION;Starfirescarab;1;Weaker than it looks;127;2;2;1
 /cos 2
 
 MINION;Bluetipscorpion;2;Underground walker.;108;2;4;1
@@ -23,17 +27,34 @@ MINION;Ephermalshroud;2;Mutant from other planet;111;4;1;2
 MINION;Sunseer;2;She uses wisdom to defeat her enemys;117;2;3;2
 MINION;Azurite Lion;2;The second minion to be ever created.;102;2;3;2
 MINION;Lightchaser;2;Chases lights.;103;3;2;2
-MINION;Sunstone Templar;2;The sunstone guy.;104;1;4;2
+MINION;Sunstone Templar;2;The sunstone guy.;104;1;4;3
 MINION;Windblade Adept;2;Uses a blade of wind.;105;2;3;1
-/cost 3
+MINION;Darkspineelemental;2;From the darkness he has come;120;4;2;1
+MINION;Fourwindsmagi;2;Created from the four winds;121;2;4;2
+MINION;Kesharifanblade;2;Throws deadly fans;125;5;1;1
 
+/cost 3
 MINION;Golemmetallurgist;3;Warlock from the Sun;113;2;6;2
 MINION;Ironcliffeguardian;3;His armor is made by Gods;113;2;8;1
-MINION;Stormartha;3;Fast and furious beetle;116;2;2;8
+MINION;Stormaratha;3;Fast and furious beetle;116;2;2;8
 MINION;Arclyte Sentinel;3;Dis guy huuuge.;106;2;4;3
-MINION;Silverguard Knight;3;Don't challenge him to a duel.;107;1;5;1
+MINION;Silverguard Knight;3;Don't challenge him to a duel.;107;3;5;1
+MINION;Hamonbladeseeker;3;Deadly assasin;122;5;2;3
+MINION;Kolossus;3;Man who turned to stone;126;3;6;1
 /cost 4
 MINION;Flamebloodwarlock;4;Warlock from the Sun;112;4;4;4
+MINION;Argeonhighmayne;4;Strongest man alive;118;5;5;2
+MINION;Suntidemaiden;4;Flying knight;128;3;3;6
+
+
+
+
+
+
+
+
+
+
 
 
 
