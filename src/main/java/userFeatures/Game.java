@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -66,7 +67,7 @@ class Game extends Scene{
         ScheduledFuture<?> timerControl = timerScheduler.scheduleAtFixedRate(
                 (Runnable) () ->
                         Platform.runLater(() ->
-                                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel)),1L, 1L, SECONDS);
+                                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel, root)), 1L, 1L, SECONDS);
 
         //load the turn ending button
         Button endTurnButton = createAndPlaceEndTurnButton(root);
@@ -78,7 +79,7 @@ class Game extends Scene{
 
         //event listener for turn ending button
         endTurnButton.setOnAction(event ->
-                switchTurnAndResetToStartOfATurn(timerText, turnLabel));
+                switchTurnAndResetToStartOfATurn(timerText, turnLabel, root));
         moveButton.setOnAction(event ->
                 updateLabel(stateLabel, InteractionState.MOVE)
         );
@@ -248,27 +249,46 @@ class Game extends Scene{
      */
     private void processClickOnBoard(Group root, Point2D squareCoordinates) {
         if (squareCoordinates.getX() >= 0) {
-            System.out.println(gameBoard.getBoardBySquares().get((int) (gameBoard.getxDimension() * squareCoordinates.getX() + squareCoordinates.getY())));
             if (state == InteractionState.MOVE) {
                 setSquaresNotOnPath(root);
                 moveMinionOnScene(root, squareCoordinates);
-                gameBoard.clearSquaresPossibleToMove();
+                gameBoard.clearSquaresPossibleToInteractWith();
                 gameBoard.setSelectedSquare(squareCoordinates);
                 getSquaresPossibleToMove(root);
             }
             if (state == InteractionState.SUMMON) {
-                Square summon = gameBoard.getBoardBySquares().get((int) (gameBoard.getxDimension() * squareCoordinates.getX() + squareCoordinates.getY()));
-                if (summon.hasMinionOnSquare() && summon.getCard().getSide() == currentSide) {
-                    List<Square> possibleToSummon = gameBoard.expand(summon);
-                    for (Square square : possibleToSummon) {
-                        System.out.println(square);
-                        if (!square.hasMinionOnSquare()) {
-                            square.setOnThePath();
-                            root.getChildren().add(square.getImageView());
-                        }
-                    }
+                interactionWithNeighboorSquares(root, squareCoordinates, false);
+            }
+            if (state == InteractionState.ATTACK) {
+                interactionWithNeighboorSquares(root, squareCoordinates, true);
+            }
+        }
+    }
+
+    /**
+     * Handles events that are related to interactions only with squares next to the given minion.
+     *
+     * @param root              Group that shows the scene, where events are listened.
+     * @param squareCoordinates coordinates of the square clicked on
+     * @param offensive         interaction with enemy units
+     */
+    private void interactionWithNeighboorSquares(Group root, Point2D squareCoordinates, boolean offensive) {
+        gameBoard.setSelectedSquare(squareCoordinates);
+        setSquaresNotOnPath(root);
+        gameBoard.clearSquaresPossibleToInteractWith();
+        Square summon = gameBoard.getSelectedSquare();
+        if (summon.hasMinionOnSquare() && summon.getCard().getSide() == currentSide) {
+            List<Square> possibleToSummon = gameBoard.expand(summon);
+            List<Square> summoned = new ArrayList<>();
+            for (Square square : possibleToSummon) {
+                //TODO: if it is a summon action, only possible to summon next to a general, if it is an attack action only react to minions that belong to the enemy side
+                if (square.hasMinionOnSquare() == offensive) {
+                    square.setOnThePath();
+                    root.getChildren().add(square.getImageView());
+                    summoned.add(square);
                 }
             }
+            gameBoard.setSquaresPossibleToInteractWith(summoned);
         }
     }
 
@@ -279,7 +299,7 @@ class Game extends Scene{
     private void getSquaresPossibleToMove(Group root) {
         if (gameBoard.getSelectedSquare().hasMinionOnSquare() && !gameBoard.getSelectedSquare().getCard().hasMoved() && gameBoard.getSelectedSquare().getCard().getSide() == currentSide) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
-            gameBoard.setSquaresPossibleToMove(possibleSquares);
+            gameBoard.setSquaresPossibleToInteractWith(possibleSquares);
             for (Square possibleSquare : possibleSquares) {
                 possibleSquare.setOnThePath();
                 root.getChildren().add(possibleSquare.getImageView());
@@ -309,7 +329,7 @@ class Game extends Scene{
      * @param root Group that shows the scene, where events are listned
      */
     private void setSquaresNotOnPath(Group root) {
-        for (Square square : gameBoard.getSquaresPossibleToMove()) {
+        for (Square square : gameBoard.getSquaresPossibleToInteractWith()) {
             square.setNotOnThePath();
             root.getChildren().add(square.getImageView());
         }
@@ -410,9 +430,9 @@ class Game extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel){
-        if(timerText.getText().equals("1")){
-            switchTurnAndResetToStartOfATurn(timerText, sideLabel);
+    private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel, Group root){
+        if(timerText.getText().equals("1")) {
+            switchTurnAndResetToStartOfATurn(timerText, sideLabel, root);
         }else {
             timerText.setText(String.valueOf(Integer.parseInt(timerText.getText()) - 1));
         }
@@ -431,10 +451,10 @@ class Game extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void switchTurnAndResetToStartOfATurn(Text timerText, Label sideLabel) {
+    private void switchTurnAndResetToStartOfATurn(Text timerText, Label sideLabel, Group root) {
         updateLabel(stateLabel, InteractionState.NONE);
         resetTimer(timerText);
-        setAllCreaturesToHaventMoved();
+        setAllCreaturesToHaventMoved(root);
         switchCurrentSide();
         sideLabel.setText(currentSide.toString());
         incrementTurnCounter();
@@ -450,7 +470,9 @@ class Game extends Scene{
     /**
      * Finds all the creatures on the gameboard and sets their hasMoved state to false.
      */
-    private void setAllCreaturesToHaventMoved(){
+    private void setAllCreaturesToHaventMoved(Group root) {
+        setSquaresNotOnPath(root);
+        gameBoard.clearSquaresPossibleToInteractWith();
         for (Square square : gameBoard.getBoardBySquares()) {
             if(square.hasMinionOnSquare()){
                 square.getCard().setMoved(false);

@@ -6,11 +6,11 @@ import javafx.geometry.Point2D;
 import java.util.*;
 
 class GameBoard {
-    private final int xDimension = 10;
-    private final int yDimension = 10;
+    private final static int xDimension = 10;
+    private final static int yDimension = 10;
     private List<Square> boardBySquares = new ArrayList<>();
     private Square selectedSquare = new Square();
-    private List<Square> squaresPossibleToMove = new ArrayList<>();
+    private List<Square> squaresPossibleToInteractWith = new ArrayList<>();
 
     /*Every minion can be stored as an integer on the boardBySquares - negative value for player a, positive for b. Possible to put unique id for every card.
     Although keeping the data of the boardBySquares can be subject to change if there is a better data structure
@@ -20,7 +20,7 @@ class GameBoard {
      * Gets the length of the boardBySquares on the X axis
      * @return x Dimension length
      */
-    int getxDimension() {
+    static int getxDimension() {
         return xDimension;
     }
 
@@ -28,7 +28,7 @@ class GameBoard {
      * Gets the length of the boardBySquares on the Y axis
      * @return y Dimension length
      */
-    int getyDimension() {
+    static int getyDimension() {
         return yDimension;
     }
 
@@ -39,16 +39,16 @@ class GameBoard {
      */
     void moveCard(Square previousSquare, Square nextSquare) {
         boolean squaresPossibleToMoveContainsSquareToMoveTo = false;
-        for (Square square : squaresPossibleToMove) {
+        for (Square square : squaresPossibleToInteractWith) {
             if (nextSquare.getxCordOnBoard() == square.getxCordOnBoard() && nextSquare.getyCordOnBoard() == square.getyCordOnBoard())
                 squaresPossibleToMoveContainsSquareToMoveTo = true;
         }
         if (!nextSquare.hasMinionOnSquare() && squaresPossibleToMoveContainsSquareToMoveTo) {
             MinionCard minion = previousSquare.getCard();
             previousSquare.removeCard();
-            boardBySquares.set(previousSquare.squares1DPosition(xDimension), previousSquare);
+            boardBySquares.set(previousSquare.squares1DPosition(), previousSquare);
             nextSquare.setCard(minion);
-            boardBySquares.set(nextSquare.squares1DPosition(xDimension), nextSquare);
+            boardBySquares.set(nextSquare.squares1DPosition(), nextSquare);
             nextSquare.getCard().setMoved(true);
         }
     }
@@ -64,10 +64,10 @@ class GameBoard {
         List<Square> squaresPossibleToMoveTo = new ArrayList<>();
         queueOfSquaresToCheck.add(getSelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[getSelectedSquare().squares1DPosition(xDimension)] = true;
+        hasBeenVisited[getSelectedSquare().squares1DPosition()] = true;
         //TODO: see if what intellij suggests: boardBySquares.stream().filter(square -> square.hasMinionOnSquare()).forEach(square -> hasBeenVisited[square.squares1DPosition(xDimension)] = true); might work better
         for (Square square : boardBySquares) {
-            if (square.hasMinionOnSquare()) hasBeenVisited[square.squares1DPosition(xDimension)] = true;
+            if (square.hasMinionOnSquare()) hasBeenVisited[square.squares1DPosition()] = true;
         }
         while (!queueOfSquaresToCheck.isEmpty()) {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
@@ -76,8 +76,8 @@ class GameBoard {
             //TODO: see if foreach lambda works better
             for (Square currentSquare : toExplore) {
 
-                if (!hasBeenVisited[currentSquare.squares1DPosition(xDimension)] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
-                    hasBeenVisited[currentSquare.squares1DPosition(xDimension)] = true;
+                if (!hasBeenVisited[currentSquare.squares1DPosition()] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
+                    hasBeenVisited[currentSquare.squares1DPosition()] = true;
                     squaresPossibleToMoveTo.add(currentSquare);
                     queueOfSquaresToCheck.add(currentSquare);
                     movesUsedToGo.put(currentSquare, movesUsedToGo.get(nextSquareToCheck) + 1);
@@ -94,24 +94,19 @@ class GameBoard {
      */
     public List<Square> expand(Square square) {
         List<Square> toGoto = new ArrayList<>();
-        Square first = new Square(square.getxCordOnBoard() + 1, square.getyCordOnBoard(), null);
-        Square second = new Square(square.getxCordOnBoard(), square.getyCordOnBoard() + 1, null);
-        Square third = new Square(square.getxCordOnBoard() - 1, square.getyCordOnBoard(), null);
-        Square forth = new Square(square.getxCordOnBoard(), square.getyCordOnBoard() - 1, null);
-        if (belongsToBoard(first)) toGoto.add(first);
-        if (belongsToBoard(second)) toGoto.add(second);
-        if (belongsToBoard(third)) toGoto.add(third);
-        if (belongsToBoard(forth)) toGoto.add(forth);
+        if (square.squares1DPosition() + yDimension < xDimension * yDimension) {
+            toGoto.add(boardBySquares.get(square.squares1DPosition() + yDimension));
+        }
+        if (square.squares1DPosition() - yDimension >= 0) {
+            toGoto.add(boardBySquares.get(square.squares1DPosition() - yDimension));
+        }
+        if (square.squares1DPosition() % xDimension < (square.squares1DPosition() + 1) % xDimension) {
+            toGoto.add(boardBySquares.get(square.squares1DPosition() + 1));
+        }
+        if (square.squares1DPosition() % xDimension > ((square.squares1DPosition() - 1)) % xDimension && square.squares1DPosition() - 1 >= 0) {
+            toGoto.add(boardBySquares.get(square.squares1DPosition() - 1));
+        }
         return toGoto;
-    }
-
-    /**
-     * Checks if the square with the given coordinates belongs to the boardBySquares
-     * @param square square to check if it belongs to the boardBySquares
-     * @return True if belongs, false otherwise
-     */
-    private boolean belongsToBoard(Square square) {
-        return square.getxCordOnBoard() >= 0 && square.getyCordOnBoard() >= 0 && square.getxCordOnBoard() < xDimension && square.getyCordOnBoard() < yDimension;
     }
 
     /**
@@ -160,26 +155,26 @@ class GameBoard {
     }
 
     /**
-     * Getter method for the squaresPossibleToMove field.
+     * Getter method for the squaresPossibleToInteractWith field.
      * @return Returns a previously saved list of squares that a minion could have moved to.
      */
-    List<Square> getSquaresPossibleToMove() {
-        return squaresPossibleToMove;
+    List<Square> getSquaresPossibleToInteractWith() {
+        return squaresPossibleToInteractWith;
     }
 
     /**
-     * Setter method for the squaresPossibleToMove field.
-     * @param squaresPossibleToMove The list given as a parameter for the method is set as the objects squarePossibleToMove.
+     * Setter method for the squaresPossibleToInteractWith field.
+     * @param squaresPossibleToInteractWith The list given as a parameter for the method is set as the objects squarePossibleToMove.
      */
-    void setSquaresPossibleToMove(List<Square> squaresPossibleToMove) {
-        this.squaresPossibleToMove = squaresPossibleToMove;
+    void setSquaresPossibleToInteractWith(List<Square> squaresPossibleToInteractWith) {
+        this.squaresPossibleToInteractWith = squaresPossibleToInteractWith;
     }
 
     /**
-     * Removes all squares from squaresPossibleToMove .
+     * Removes all squares from squaresPossibleToInteractWith .
      */
-    void clearSquaresPossibleToMove() {
-        squaresPossibleToMove.clear();
+    void clearSquaresPossibleToInteractWith() {
+        squaresPossibleToInteractWith.clear();
     }
 
     @Override
@@ -189,7 +184,7 @@ class GameBoard {
                 ", \nyDimension=" + yDimension +
                 ", \nboardBySquares=" + boardBySquares +
                 ", \nselectedSquare=" + selectedSquare +
-                ", \nsquaresPossibleToMove=" + squaresPossibleToMove +
+                ", \nsquaresPossibleToInteractWith=" + squaresPossibleToInteractWith +
                 '}';
     }
 }

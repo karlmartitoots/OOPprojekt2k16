@@ -61,15 +61,10 @@ public class Square {
 
     /**
      * Calculates the value of the square as if all the squares on the board would be in straight line. This is done using the formula xDim*xCordOnBoard+yCordOnBoard
-     * @param xDim The X dimension of the board
      * @return The place the square would be on the line
      */
-    public int squares1DPosition(int xDim) {
-        return xDim * xCordOnBoard + yCordOnBoard;
-    }
-
-    int squares1Dposition(int xDim, Point2D point) {
-        return (int) (xDim * point.getX() + point.getY());
+    public int squares1DPosition() {
+        return GameBoard.getxDimension() * xCordOnBoard + yCordOnBoard;
     }
 
     /**
@@ -110,7 +105,9 @@ public class Square {
      * to what it is like by default.
      */
     void setNotOnThePath() {
-        updateImage(defaultSquare);
+        if (card == null) {
+            updateImage(defaultSquare);
+        } else updateImage(card.getSmallImage());
     }
 
     /**
@@ -145,7 +142,8 @@ public class Square {
      * @param image Image to be placed on board
      */
     private void updateImage(Image image) {
-        imageView.setImage(image);
+        //For future reference: imageView.setImage(image) breaks the code so make the change only when it does not brake it!!!
+        imageView = new ImageView(image);
         imageView.setX(xPixelCoordinate);
         imageView.setY(yPixelCoordinate);
     }
