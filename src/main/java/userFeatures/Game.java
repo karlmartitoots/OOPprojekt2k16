@@ -71,9 +71,9 @@ class Game extends Scene{
 
         //load the turn ending button
         Button endTurnButton = createAndPlaceEndTurnButton(root);
-        Button moveButton = createAndPlaceButton(root, InteractionState.MOVE, 740, 0, 240, 40);
-        Button attackButton = createAndPlaceButton(root, InteractionState.ATTACK, 740, 40, 240, 40);
-        Button summonButton = createAndPlaceButton(root, InteractionState.SUMMON, 740, 80, 240, 40);
+        Button moveButton = createAndPlaceButton(root, InteractionState.MOVE, 760, 380, 230, 40);
+        Button attackButton = createAndPlaceButton(root, InteractionState.ATTACK, 760, 420, 230, 40);
+        Button summonButton = createAndPlaceButton(root, InteractionState.SUMMON, 760, 460, 230, 40);
 
 
 
@@ -100,6 +100,7 @@ class Game extends Scene{
 
         setPrimaryStageProperties(primaryStage);
         primaryStage.setScene(this);
+        primaryStage.getIcons().clear();
         primaryStage.getIcons().add(new Image("gameIcon.jpg"));
         String gameTitle = "Card Game 1.0";
         primaryStage.setTitle(gameTitle);
@@ -107,15 +108,15 @@ class Game extends Scene{
     }
 
     /**
-     * Creates a butten that allows the user to change to given state in his turn
+     * Creates a button that allows the user to change to given state in his turn
      *
-     * @param root
+     * @param root      Parent of the button
      * @param state     State to switch to
      * @param xStarting starting x position of the button
      * @param yStarting starting y position of the button
      * @param width     width of the button
      * @param height    height of the button
-     * @return
+     * @return          Returns the button that was created.
      */
     private Button createAndPlaceButton(Group root, InteractionState state, int xStarting, int yStarting, int width, int height) {
         Button button = new Button(state.toString());
@@ -156,23 +157,25 @@ class Game extends Scene{
     }
     /**
      * Method to initially place both generals on the GUI and in gameboard class.
-     * @param settings Settings for getting which GeneralCard's and where they will be placed.
+     * @param settings Settings for getting, which GeneralCard's have been chosen and where they will be placed.
      */
     private void placeGenerals(Group root, Settings settings){
         Point2D whiteGeneralStartingCoordinates = settings.getWhiteStartingSquare();
         Point2D blackGeneralStartingCoordinates = settings.getBlackStartingSquare();
         //get the squares for generals
         Square whiteGeneralSquare = gameBoard.getBoardBySquares().get(
-                (int) (whiteGeneralStartingCoordinates.getX()*gameBoard.getxDimension() + whiteGeneralStartingCoordinates.getY())),
+                (int) (whiteGeneralStartingCoordinates.getX()* GameBoard.getxDimension() + whiteGeneralStartingCoordinates.getY())),
                 blackGeneralSquare = gameBoard.getBoardBySquares().get(
-                (int) (blackGeneralStartingCoordinates.getX()*gameBoard.getxDimension() + blackGeneralStartingCoordinates.getY()));
+                (int) (blackGeneralStartingCoordinates.getX()* GameBoard.getxDimension() + blackGeneralStartingCoordinates.getY()));
         //add in the generals and set their sides
         whiteGeneralSquare.setCard(settings.getWhiteGeneral());
-        whiteGeneralSquare.getCard().setSide(Side.WHITE);
         blackGeneralSquare.setCard(settings.getBlackGeneral());
-        blackGeneralSquare.getCard().setSide(Side.BLACK);
+        whiteGeneralSquare.updateImage();
         root.getChildren().add(whiteGeneralSquare.getImageView());
+        blackGeneralSquare.updateImage();
         root.getChildren().add(blackGeneralSquare.getImageView());
+        //root.getChildren().add(whiteGeneralSquare.getImageView());
+        //root.getChildren().add(blackGeneralSquare.getImageView());
     }
 
     /**
@@ -207,8 +210,8 @@ class Game extends Scene{
      * @param root Group that the squares will be loaded in on.
      */
     private void loadGameboardForStartOfGame(Group root) {
-        for (int x = 0; x < gameBoard.getxDimension(); x++) {
-            for (int y = 0; y < gameBoard.getyDimension(); y++) {
+        for (int x = 0; x < GameBoard.getxDimension(); x++) {
+            for (int y = 0; y < GameBoard.getyDimension(); y++) {
                 Square initialSquare;
                 gameBoard.addSquareToBoardBySquares(initialSquare = new Square(x, y, null));
                 root.getChildren().add(initialSquare.getImageView());
@@ -314,7 +317,7 @@ class Game extends Scene{
      */
     private void moveMinionOnScene(Group root, Point2D squareCoordinates) {
         if (gameBoard.getSelectedSquare().hasMinionOnSquare()) {
-            Square target = gameBoard.getBoardBySquares().get((int) (squareCoordinates.getX() * gameBoard.getxDimension() + squareCoordinates.getY()));
+            Square target = gameBoard.getBoardBySquares().get((int) (squareCoordinates.getX() * GameBoard.getxDimension() + squareCoordinates.getY()));
             gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
             for (Square square : gameBoard.getBoardBySquares()) {
                 square.updateImage();
@@ -363,8 +366,8 @@ class Game extends Scene{
      */
 
     private Point2D getSquare(double pixelX, double pixelY) {
-        for (int x = 0; x < gameBoard.getxDimension(); x++) {
-            for (int y = 0; y < gameBoard.getyDimension(); y++) {
+        for (int x = 0; x < GameBoard.getxDimension(); x++) {
+            for (int y = 0; y < GameBoard.getyDimension(); y++) {
                 double left = getSquaresXCoordinatesInPixels(x);
                 double top = getSquaresYCoordinatesInPixels(y);
                 Rectangle rectangle = new Rectangle(left, top, Square.getWidth(), Square.getHeight());

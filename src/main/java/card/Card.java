@@ -49,6 +49,14 @@ public abstract class Card {
         return name;
     }
 
+    public int getCost() {
+        return cost;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return "Card{" +

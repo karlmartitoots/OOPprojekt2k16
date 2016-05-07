@@ -1,7 +1,6 @@
 package userFeatures;
 
 import card.MinionCard;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -97,7 +96,7 @@ public class Square {
      * a picture of a path square.
      */
     void setOnThePath() {
-        updateImage(chosenSquare);
+        setImage(chosenSquare);
     }
 
     /**
@@ -106,8 +105,8 @@ public class Square {
      */
     void setNotOnThePath() {
         if (card == null) {
-            updateImage(defaultSquare);
-        } else updateImage(card.getSmallImage());
+            setImage(defaultSquare);
+        } else setImage(card.getSmallImage());
     }
 
     /**
@@ -133,16 +132,15 @@ public class Square {
      */
     public void setCard(MinionCard minionCard) {
         this.card = minionCard;
-        updateImage(minionCard.getSmallImage());
+        setImage(minionCard.getSmallImage());
     }
 
     /**
      * Method that sets an image on the imageView
-     *
      * @param image Image to be placed on board
      */
-    private void updateImage(Image image) {
-        //For future reference: imageView.setImage(image) breaks the code so make the change only when it does not brake it!!!
+    private void setImage(Image image) {
+        //For future reference: imageView.updateImage(image) breaks the code so make the change only when it does not brake it!!!
         imageView = new ImageView(image);
         imageView.setX(xPixelCoordinate);
         imageView.setY(yPixelCoordinate);
@@ -157,7 +155,7 @@ public class Square {
         } else {
             image = defaultSquare;
         }
-        updateImage(image);
+        setImage(image);
     }
 
     /**

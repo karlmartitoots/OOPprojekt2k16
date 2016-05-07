@@ -23,8 +23,39 @@ public class GeneralCard extends MinionCard {
         super(name, cost, description, ID, attack, health, speed);
     }
 
+    private GeneralCard(String name, int cost, String description, int ID, int attack, int health, int speed, Side side) {
+        super(name, cost, description, ID, attack, health, speed);
+        this.setSide(side);
+    }
+
     public void summonMinion(Square squareToSummon){
         //TODO: implement
     }
 
+    public static GeneralCard createWhiteGeneral(GeneralCard generalCard){
+        return new GeneralCard(generalCard.getName(),
+                generalCard.getCost(),
+                generalCard.getDescription(),
+                generalCard.getID(),
+                generalCard.getAttack(),
+                generalCard.getMaxHp(),
+                generalCard.getSpeed(),
+                Side.WHITE);
+    }
+
+    public static GeneralCard createBlackGeneral(GeneralCard generalCard){
+        return new GeneralCard(generalCard.getName(),
+                generalCard.getCost(),
+                generalCard.getDescription(),
+                generalCard.getID(),
+                generalCard.getAttack(),
+                generalCard.getMaxHp(),
+                generalCard.getSpeed(),
+                Side.BLACK);
+    }
+
+    @Override
+    public String toString() {
+        return "GeneralCard{} " + super.toString();
+    }
 }

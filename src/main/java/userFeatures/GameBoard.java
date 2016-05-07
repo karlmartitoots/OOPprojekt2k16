@@ -126,6 +126,7 @@ class GameBoard {
     void setSelectedSquare(Point2D point) {
         if (point.getX() >= 0) {
             selectedSquare = boardBySquares.get((int) (point.getX() * xDimension + point.getY()));
+            System.out.println(selectedSquare);
         } else selectedSquare = new Square();
     }
 

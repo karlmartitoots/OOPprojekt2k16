@@ -76,8 +76,8 @@ class Setup extends Scene {
         });
 
         enterButton.setOnAction(event -> {
-            whiteGeneral = allGeneralCards.get(whiteGeneralNamesChoiceBox.getValue());
-            blackGeneral = allGeneralCards.get(blackGeneralNamesChoiceBox.getValue());
+            whiteGeneral = GeneralCard.createWhiteGeneral(allGeneralCards.get(whiteGeneralNamesChoiceBox.getValue()));
+            blackGeneral = GeneralCard.createBlackGeneral(allGeneralCards.get(blackGeneralNamesChoiceBox.getValue()));
             startingPositionName = positionNamesChoiceBox.getValue();
             if(!(generalIsChosen[0] && generalIsChosen[1] && positionIsChosen[0])){
                 showPopupDialog(primaryStage);
@@ -89,7 +89,7 @@ class Setup extends Scene {
 
         primaryStage.setMinWidth(300);
         primaryStage.setMinHeight(350);
-        Image gameIcon = new Image("gameIcon.jpg");
+        Image gameIcon = new Image("settingsIcon.png");
         primaryStage.getIcons().add(gameIcon);
         primaryStage.setTitle("Setup");
         primaryStage.setScene(this);
