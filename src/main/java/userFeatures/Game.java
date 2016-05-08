@@ -1,6 +1,8 @@
 package userFeatures;
 
 import board.CreaturesOnBoard;
+import card.GeneralCard;
+import card.MinionCard;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -164,9 +166,9 @@ class Game extends Scene{
         Point2D blackGeneralStartingCoordinates = settings.getBlackStartingSquare();
         //get the squares for generals
         Square whiteGeneralSquare = gameBoard.getBoardBySquares().get(
-                (int) (whiteGeneralStartingCoordinates.getX()* GameBoard.getxDimension() + whiteGeneralStartingCoordinates.getY())),
+                Square.pointToSquare1DPoistion(whiteGeneralStartingCoordinates)),
                 blackGeneralSquare = gameBoard.getBoardBySquares().get(
-                (int) (blackGeneralStartingCoordinates.getX()* GameBoard.getxDimension() + blackGeneralStartingCoordinates.getY()));
+                        Square.pointToSquare1DPoistion(blackGeneralStartingCoordinates));
         //add in the generals and set their sides
         whiteGeneralSquare.setCard(settings.getWhiteGeneral());
         blackGeneralSquare.setCard(settings.getBlackGeneral());
@@ -174,8 +176,7 @@ class Game extends Scene{
         root.getChildren().add(whiteGeneralSquare.getImageView());
         blackGeneralSquare.updateImage();
         root.getChildren().add(blackGeneralSquare.getImageView());
-        //root.getChildren().add(whiteGeneralSquare.getImageView());
-        //root.getChildren().add(blackGeneralSquare.getImageView());
+
     }
 
     /**
@@ -252,18 +253,20 @@ class Game extends Scene{
      */
     private void processClickOnBoard(Group root, Point2D squareCoordinates) {
         if (squareCoordinates.getX() >= 0) {
-            if (state == InteractionState.MOVE) {
-                setSquaresNotOnPath(root);
-                moveMinionOnScene(root, squareCoordinates);
-                gameBoard.clearSquaresPossibleToInteractWith();
-                gameBoard.setSelectedSquare(squareCoordinates);
-                getSquaresPossibleToMove(root);
-            }
-            if (state == InteractionState.SUMMON) {
-                interactionWithNeighboorSquares(root, squareCoordinates, false);
-            }
-            if (state == InteractionState.ATTACK) {
-                interactionWithNeighboorSquares(root, squareCoordinates, true);
+            switch (state) {
+                case MOVE:
+                    setSquaresNotOnPath(root);
+                    moveMinionOnScene(root, squareCoordinates);
+                    gameBoard.clearSquaresPossibleToInteractWith();
+                    gameBoard.setSelectedSquare(squareCoordinates);
+                    getSquaresPossibleToMove(root);
+                    break;
+                case SUMMON:
+                    interactionWithNeighboorSquares(root, squareCoordinates, false);
+                    break;
+                case ATTACK:
+                    interactionWithNeighboorSquares(root, squareCoordinates, true);
+                    break;
             }
         }
     }
@@ -276,23 +279,53 @@ class Game extends Scene{
      * @param offensive         interaction with enemy units
      */
     private void interactionWithNeighboorSquares(Group root, Point2D squareCoordinates, boolean offensive) {
+        processAttackAction(squareCoordinates, offensive);
         gameBoard.setSelectedSquare(squareCoordinates);
         setSquaresNotOnPath(root);
         gameBoard.clearSquaresPossibleToInteractWith();
-        Square summon = gameBoard.getSelectedSquare();
-        if (summon.hasMinionOnSquare() && summon.getCard().getSide() == currentSide) {
-            List<Square> possibleToSummon = gameBoard.expand(summon);
-            List<Square> summoned = new ArrayList<>();
-            for (Square square : possibleToSummon) {
-                //TODO: if it is a summon action, only possible to summon next to a general, if it is an attack action only react to minions that belong to the enemy side
-                if (square.hasMinionOnSquare() == offensive) {
-                    square.setOnThePath();
-                    root.getChildren().add(square.getImageView());
-                    summoned.add(square);
+        Square currentSquare = gameBoard.getSelectedSquare();
+        if (currentSquare.hasMinionOnSquare() && currentSquare.getCard().getSide() == currentSide) {
+            List<Square> possibleSquaresToUse = gameBoard.expand(currentSquare);
+            List<Square> squaresUsed = new ArrayList<>();
+            for (Square surroundingSquare : possibleSquaresToUse) {
+                // the second part of the and checks if the current square contains a general, or if the adjecent square contains an enemy minion
+                if (surroundingSquare.hasMinionOnSquare() == offensive && (isConditionForEventMet(offensive, currentSquare) || isConditionForEventMet(offensive, surroundingSquare))) {
+                    surroundingSquare.setOnThePath();
+                    root.getChildren().add(surroundingSquare.getImageView());
+                    squaresUsed.add(surroundingSquare);
                 }
             }
-            gameBoard.setSquaresPossibleToInteractWith(summoned);
+            gameBoard.setSquaresPossibleToInteractWith(squaresUsed);
         }
+    }
+
+    private void processAttackAction(Point2D squareCoordinates, boolean offensive) {
+        if (offensive && gameBoard.getSquaresPossibleToInteractWith().size() > 0) {
+            MinionCard firstMinion = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPoistion(squareCoordinates)).getCard();
+            MinionCard secondMinion = gameBoard.getSelectedSquare().getCard();
+            damageAction(firstMinion, secondMinion);
+            damageAction(secondMinion, firstMinion);
+        }
+    }
+
+    private void damageAction(MinionCard firstMinion, MinionCard secondMinion) {
+        secondMinion.setCurrentHp(secondMinion.getCurrentHp() - firstMinion.getAttack());
+    }
+
+    /**
+     * Chekcs if the specific condition to use Summon or Attack action is met.
+     *
+     * @param offensive Parameter that shows if it affects squares with minions or not
+     * @param square    Current square clicked on
+     * @return True if the conditions for the SUMMON/ATTACK are met, false if otherwise
+     */
+    private boolean isConditionForEventMet(boolean offensive, Square square) {
+        if (offensive) {
+            if (square.getCard().getSide() != currentSide) return true;
+        } else {
+            if (square.getCard() instanceof GeneralCard) return true;
+        }
+        return false;
     }
 
     /**
@@ -317,7 +350,7 @@ class Game extends Scene{
      */
     private void moveMinionOnScene(Group root, Point2D squareCoordinates) {
         if (gameBoard.getSelectedSquare().hasMinionOnSquare()) {
-            Square target = gameBoard.getBoardBySquares().get((int) (squareCoordinates.getX() * GameBoard.getxDimension() + squareCoordinates.getY()));
+            Square target = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPoistion(squareCoordinates));
             gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
             for (Square square : gameBoard.getBoardBySquares()) {
                 square.updateImage();

@@ -12,10 +12,6 @@ class GameBoard {
     private Square selectedSquare = new Square();
     private List<Square> squaresPossibleToInteractWith = new ArrayList<>();
 
-    /*Every minion can be stored as an integer on the boardBySquares - negative value for player a, positive for b. Possible to put unique id for every card.
-    Although keeping the data of the boardBySquares can be subject to change if there is a better data structure
-    */
-
     /**
      * Gets the length of the boardBySquares on the X axis
      * @return x Dimension length
@@ -65,24 +61,20 @@ class GameBoard {
         queueOfSquaresToCheck.add(getSelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
         hasBeenVisited[getSelectedSquare().squares1DPosition()] = true;
-        //TODO: see if what intellij suggests: boardBySquares.stream().filter(square -> square.hasMinionOnSquare()).forEach(square -> hasBeenVisited[square.squares1DPosition(xDimension)] = true); might work better
-        for (Square square : boardBySquares) {
+        boardBySquares.forEach(square -> {
             if (square.hasMinionOnSquare()) hasBeenVisited[square.squares1DPosition()] = true;
-        }
+        });
         while (!queueOfSquaresToCheck.isEmpty()) {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
             List<Square> toExplore = expand(nextSquareToCheck);
-
-            //TODO: see if foreach lambda works better
-            for (Square currentSquare : toExplore) {
-
+            toExplore.forEach(currentSquare -> {
                 if (!hasBeenVisited[currentSquare.squares1DPosition()] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
                     hasBeenVisited[currentSquare.squares1DPosition()] = true;
                     squaresPossibleToMoveTo.add(currentSquare);
                     queueOfSquaresToCheck.add(currentSquare);
                     movesUsedToGo.put(currentSquare, movesUsedToGo.get(nextSquareToCheck) + 1);
                 }
-            }
+            });
         }
         return squaresPossibleToMoveTo;
     }
@@ -125,7 +117,7 @@ class GameBoard {
      */
     void setSelectedSquare(Point2D point) {
         if (point.getX() >= 0) {
-            selectedSquare = boardBySquares.get((int) (point.getX() * xDimension + point.getY()));
+            selectedSquare = boardBySquares.get(Square.pointToSquare1DPoistion(point));
             System.out.println(selectedSquare);
         } else selectedSquare = new Square();
     }

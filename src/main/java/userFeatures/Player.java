@@ -66,7 +66,6 @@ public class Player {
             playerCurrentMaximumMana++;
         }
     }
-
     /**
      * Sets players usable mana to the current maximum amount of mana the player can have.
      */
