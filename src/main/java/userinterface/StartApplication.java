@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class StartApplication extends Application {
     /*
     At the start of the game, Main will load the board with generals on the board and cards in the players hands.
     Then a clock will start ticking down. While its one players turn, the other can not alter the board in any way.
@@ -21,6 +21,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setScene(new Setup(new Group(), primaryStage));
+        primaryStage.setScene(new SetupScene(new Group(), primaryStage));
     }
 }

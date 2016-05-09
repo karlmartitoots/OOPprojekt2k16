@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -24,33 +25,34 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-class Game extends Scene{
+class GameScene extends Scene{
 
     private GameBoard gameBoard = new GameBoard();
-    private Player playerWhite = new Player(Side.WHITE);
-    private Player playerBlack = new Player(Side.BLACK);
+    private Player playerWhite = new Player(Side.WHITE), playerBlack = new Player(Side.BLACK);
     private int timerStartTime = 60;
+    private double timerNodeWidthInPixels = 250;
     private InteractionState state = InteractionState.NONE;
     private final ScheduledExecutorService timerScheduler =
             Executors.newScheduledThreadPool(1);
     //white starts
-    private Side currentSide = Side.WHITE;
     private Player currentPlayer = playerWhite;
     private int turnCounter = 0;
-    private Label currentStateLabel;
+    private Label currentStateLabel, generalHealthLabel, currentManaLabel;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
      * @param root  Group, that everything is set on.
      * @param primaryStage Stage for the scene.
-     * @param settings Initial settings that are loaded, when the game begins.
+     * @param setupSettings Initial settings that are loaded, when the game begins.
      */
-    Game(Group root, Stage primaryStage, Settings settings) {
+    GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
         super(root);
 
         //set generals in  creaturesOnBoard
         CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
-        creaturesOnBoard.setAllGeneralsOnBoard(settings.getWhiteGeneral(), settings.getBlackGeneral());
+        creaturesOnBoard.setAllGeneralsOnBoard(setupSettings.getWhiteGeneral(), setupSettings.getBlackGeneral());
+        playerWhite.setGeneral(setupSettings.getWhiteGeneral());
+        playerBlack.setGeneral(setupSettings.getBlackGeneral());
 
         //load the gameframe onto the gui
         ImageView gameFrame = new ImageView(new Image("GUI frame.jpg"));
@@ -60,18 +62,33 @@ class Game extends Scene{
         loadGameboardForStartOfGame(root);
 
         //load the generals onto the board
-        setGeneralsOnGameboardAndShowImages(root,settings);
+        setGeneralsOnGameboardAndShowImages(root, setupSettings);
         setDefaultCardImagesAllOnCardSlots(root);
 
-        //load the timer and a label that shows whos turn it is
         Text timerText = createAndPlaceTimer(root);
-        Label turnLabel = createAndPlaceTurnLabel(root);
-        currentStateLabel = createAndPlaceStateLabel(root);
+        Label turnLabel = createAndPlaceLabel(root, (timerNodeWidthInPixels - 50)/2, 10, currentPlayer.getSide().toString());
+        currentStateLabel = createAndPlaceLabel(root, 770, 350, "Current state: " + state.toString());
+        generalHealthLabel = createLabel("General health: " + currentPlayer.getGeneral().getCurrentHp());
+        currentManaLabel = createLabel("Current mana: " + currentPlayer.getUsableMana());
+
+        createAndPlaceInfoboxNode(root);
+
         timerScheduler.scheduleAtFixedRate(
                 (Runnable) () ->
                         Platform.runLater(() ->{
                             if(primaryStage.isFocused()) {
-                                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel, root);
+                                if(!gameIsOver()) {
+                                    reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel, root);
+                                }else{
+                                    primaryStage.close();
+                                    timerScheduler.shutdown();
+                                    primaryStage.setScene(new GameOverScene(
+                                                    new Group(),
+                                                    primaryStage,
+                                                    getWinner()
+                                            )
+                                    );
+                                }
                             }
                         }), 1L, 1L, SECONDS);
 
@@ -81,13 +98,9 @@ class Game extends Scene{
         Button attackButton = createAndPlaceButton(root, InteractionState.ATTACK, 760, 420, 230, 40);
         Button summonButton = createAndPlaceButton(root, InteractionState.SUMMON, 760, 460, 230, 40);
 
-
-
-
         //event listener for turn ending button
-        endTurnButton.setOnAction(event -> {
-            switchTurnAndResetToStartOfATurn(timerText, turnLabel, root);
-        });
+        endTurnButton.setOnAction(event ->
+                switchTurnAndResetToStartOfTurn(timerText, turnLabel, root));
         moveButton.setOnAction(event ->
                 updateLabel(currentStateLabel, InteractionState.MOVE)
         );
@@ -115,6 +128,13 @@ class Game extends Scene{
         primaryStage.show();
     }
 
+    private void createAndPlaceInfoboxNode(Group root) {
+        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel);
+        infoBox.setLayoutX(770);
+        infoBox.setLayoutY(30);
+        root.getChildren().add(infoBox);
+    }
+
     /**
      * Creates a button that allows the user to change to given state in his turn
      *
@@ -135,17 +155,23 @@ class Game extends Scene{
         return button;
     }
 
-    private Label createAndPlaceStateLabel(Group root) {
-        Label turnLabel = new Label(state.toString());
-        turnLabel.relocate(760, 120);
-        turnLabel.setFont(new Font(20));
-        root.getChildren().add(turnLabel);
-        return turnLabel;
+    private Label createAndPlaceLabel(Group root, double xOnGui, double yOnGui, String message) {
+        Label label = new Label(message);
+        label.relocate(xOnGui, yOnGui);
+        label.setFont(new Font(20));
+        root.getChildren().add(label);
+        return label;
+    }
+
+    private Label createLabel(String message){
+        Label label = new Label(message);
+        label.setFont(new Font(20));
+        return label;
     }
 
     private void updateLabel(Label label, InteractionState state) {
         this.state = state;
-        label.setText(state.toString());
+        label.setText("Current state: " + state.toString());
     }
 
 
@@ -155,47 +181,34 @@ class Game extends Scene{
      * @param root Group that the label will be shown on.
      */
     private void setDefaultCardImagesAllOnCardSlots(Group root) {
-        for (int cardSlot = 0; cardSlot < Hand.getMaximumHandSize(); cardSlot++) {
+        for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
             ImageView defaultCard = new ImageView(new Image("sampleCard.png"));
-            defaultCard.setX(cardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue());
-            defaultCard.setY(Hand.getTopMostPixelValue());
+            defaultCard.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
+            defaultCard.setY(PlayerHand.getTopMostPixelValue());
             root.getChildren().add(defaultCard);
         }
 
     }
     /**
      * Method to initially place both generals on the GUI and in gameboard class.
-     * @param settings Settings for getting, which GeneralCard's have been chosen and where they will be placed.
+     * @param setupSettings Settings for getting, which GeneralCard's have been chosen and where they will be placed.
      */
-    private void setGeneralsOnGameboardAndShowImages(Group root, Settings settings){
-        Point2D whiteGeneralStartingCoordinates = settings.getWhiteStartingSquare();
-        Point2D blackGeneralStartingCoordinates = settings.getBlackStartingSquare();
+    private void setGeneralsOnGameboardAndShowImages(Group root, SetupSettings setupSettings){
+        Point2D whiteGeneralStartingCoordinates = setupSettings.getWhiteStartingSquare();
+        Point2D blackGeneralStartingCoordinates = setupSettings.getBlackStartingSquare();
         //get the squares for generals
         Square whiteGeneralSquare = gameBoard.getBoardBySquares().get(
                 Square.pointToSquare1DPosition(whiteGeneralStartingCoordinates)),
                 blackGeneralSquare = gameBoard.getBoardBySquares().get(
                         Square.pointToSquare1DPosition(blackGeneralStartingCoordinates));
         //add in the generals and set their sides
-        whiteGeneralSquare.setSquaresCard(settings.getWhiteGeneral());
-        blackGeneralSquare.setSquaresCard(settings.getBlackGeneral());
+        whiteGeneralSquare.setSquaresCard(setupSettings.getWhiteGeneral());
+        blackGeneralSquare.setSquaresCard(setupSettings.getBlackGeneral());
         whiteGeneralSquare.updateImage();
         root.getChildren().add(whiteGeneralSquare.getImageView());
         blackGeneralSquare.updateImage();
         root.getChildren().add(blackGeneralSquare.getImageView());
 
-    }
-
-    /**
-     * Creates a label that shows, who's turn it is currently.
-     * @param root Group that the label will be shown on.
-     * @return Returns the created label
-     */
-    private Label createAndPlaceTurnLabel(Group root) {
-        Label turnLabel = new Label(currentSide.toString());
-        turnLabel.relocate(80, 10);
-        turnLabel.setFont(new Font(30));
-        root.getChildren().add(turnLabel);
-        return turnLabel;
     }
 
     /**
@@ -293,12 +306,14 @@ class Game extends Scene{
         setSquareImagesToCardImagesOrDefaults(root);
         gameBoard.clearSquaresPossibleToMoveTo();
         Square currentSquare = gameBoard.getCurrentlySelectedSquare();
-        if (currentSquare.hasMinionOnSquare() && currentSquare.getCard().getSide() == currentSide) {
+        if (currentSquare.hasMinionOnSquare() && cardBelongsToCurrentSide(currentSquare.getCard())) {
             List<Square> possibleSquaresToUse = gameBoard.expand(currentSquare);
             List<Square> squaresUsed = new ArrayList<>();
             for (Square surroundingSquare : possibleSquaresToUse) {
                 // the second part of the and checks if the current square contains a general, or if the adjecent square contains an enemy minion
-                if (surroundingSquare.hasMinionOnSquare() == offensive && (isConditionForEventMet(offensive, currentSquare) || isConditionForEventMet(offensive, surroundingSquare))) {
+                if (surroundingSquare.hasMinionOnSquare() == offensive &&
+                        (isConditionForSummonOrAttackMet(offensive, currentSquare) ||
+                        isConditionForSummonOrAttackMet(offensive, surroundingSquare))) {
                     surroundingSquare.setImageAsMoveableSquare();
                     root.getChildren().add(surroundingSquare.getImageView());
                     squaresUsed.add(surroundingSquare);
@@ -317,6 +332,10 @@ class Game extends Scene{
         }
     }
 
+    private boolean cardBelongsToCurrentSide(MinionCard minionCard){
+        return minionCard.getSide().equals(currentPlayer.getSide());
+    }
+
     private void attackAndRetaliate(MinionCard firstMinion, MinionCard secondMinion) {
         secondMinion.setCurrentHp(secondMinion.getCurrentHp() - firstMinion.getAttack());
     }
@@ -328,13 +347,10 @@ class Game extends Scene{
      * @param square    Current square clicked on
      * @return True if the conditions for the SUMMON/ATTACK are met, false if otherwise
      */
-    private boolean isConditionForEventMet(boolean offensive, Square square) {
-        if (offensive) {
-            if (square.getCard().getSide() != currentSide) return true;
-        } else {
-            if (square.getCard() instanceof GeneralCard) return true;
-        }
-        return false;
+    private boolean isConditionForSummonOrAttackMet(boolean offensive, Square square) {
+        return offensive &&
+                !cardBelongsToCurrentSide(square.getCard()) ||
+                square.getCard() instanceof GeneralCard;
     }
 
     /**
@@ -342,7 +358,9 @@ class Game extends Scene{
      * @param root Group that shows the scene, where events are listned
      */
     private void getSquaresPossibleToMove(Group root) {
-        if (gameBoard.getCurrentlySelectedSquare().hasMinionOnSquare() && gameBoard.getCurrentlySelectedSquare().getCard().hasNotMoved() && gameBoard.getCurrentlySelectedSquare().getCard().getSide() == currentSide) {
+        if (gameBoard.getCurrentlySelectedSquare().hasMinionOnSquare() &&
+                gameBoard.getCurrentlySelectedSquare().getCard().hasNotMoved() &&
+                gameBoard.getCurrentlySelectedSquare().getCard().getSide().equals(currentPlayer.getSide())) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setSquaresPossibleToMoveTo(possibleSquares);
             setSquaresImagesAsMoveableSquares(root, possibleSquares);
@@ -438,32 +456,15 @@ class Game extends Scene{
      * @return The card slot number that has been currently clicked on, -1 if not a card slot
      */
     private int getCardSlotNumber(double pixelX, double pixelY) {
-        for (int possibleCardSlot = 0; possibleCardSlot < Hand.getMaximumHandSize(); possibleCardSlot++) {
-            double left = possibleCardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue();
-            double top = Hand.getTopMostPixelValue();
-            Rectangle rectangle = new Rectangle(left, top, Hand.getPreferredCardWidth(), Hand.getPreferredCardHeight());
+        for (int possibleCardSlot = 0; possibleCardSlot < PlayerHand.getMaximumHandSize(); possibleCardSlot++) {
+            double left = possibleCardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue();
+            double top = PlayerHand.getTopMostPixelValue();
+            Rectangle rectangle = new Rectangle(left, top, PlayerHand.getPreferredCardWidth(), PlayerHand.getPreferredCardHeight());
             if (rectangle.contains(pixelX, pixelY)) {
                 return possibleCardSlot;
             }
         }
         return -1;
-    }
-
-    /**
-     * Changes the currentSide variable into the opposite side.
-     */
-    private void switchCurrentSide(){
-        if(this.currentSide == Side.WHITE)
-            this.currentSide = Side.BLACK;
-        else this.currentSide = Side.WHITE;
-    }
-
-    /**
-     * Getter method for getting the side who is currently playing.
-     * @return Returns the side who's turn it is currently.
-     */
-    private Side getCurrentSide(){
-        return this.currentSide;
     }
 
     /**
@@ -485,7 +486,7 @@ class Game extends Scene{
      */
     private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel, Group root){
         if(timerText.getText().equals("1")) {
-            switchTurnAndResetToStartOfATurn(timerText, sideLabel, root);
+            switchTurnAndResetToStartOfTurn(timerText, sideLabel, root);
         }else {
             timerText.setText(String.valueOf(Integer.parseInt(timerText.getText()) - 1));
         }
@@ -504,13 +505,24 @@ class Game extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void switchTurnAndResetToStartOfATurn(Text timerText, Label sideLabel, Group root) {
+    private void switchTurnAndResetToStartOfTurn(Text timerText, Label sideLabel, Group root) {
+        resetGameLogicToStartOfTurn(root);
+        resetAllNodesToStartOfTurn(timerText, sideLabel);
+    }
+
+    private void resetGameLogicToStartOfTurn(Group root) {
+        switchCurrentPlayer();
+        currentPlayer.incrementMana();
+        setAllCreaturesToHaventMoved(root);
+        incrementTurnCounter();
+    }
+
+    private void resetAllNodesToStartOfTurn(Text timerText, Label sideLabel) {
         updateLabel(currentStateLabel, InteractionState.NONE);
         resetTimer(timerText);
-        setAllCreaturesToHaventMoved(root);
-        switchCurrentSide();
-        sideLabel.setText(currentSide.toString());
-        incrementTurnCounter();
+        sideLabel.setText(currentPlayer.getSide().toString());
+        generalHealthLabel.setText(String.valueOf("General health: " + currentPlayer.getGeneral().getCurrentHp()));
+        currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getUsableMana()));
     }
 
     /**
@@ -526,10 +538,36 @@ class Game extends Scene{
     private void setAllCreaturesToHaventMoved(Group root) {
         setSquareImagesToCardImagesOrDefaults(root);
         gameBoard.clearSquaresPossibleToMoveTo();
+        allowMovementForAllCreatures();
+    }
+
+    private void allowMovementForAllCreatures() {
         for (Square square : gameBoard.getBoardBySquares()) {
             if(square.hasMinionOnSquare()){
                 square.getCard().allowMovement();
             }
+        }
+    }
+
+    private void switchCurrentPlayer(){
+        if(currentPlayer.getSide().equals(Side.WHITE)){
+            this.currentPlayer = playerBlack;
+        }else{
+            this.currentPlayer = playerWhite;
+        }
+    }
+
+    private boolean gameIsOver(){
+        return !(playerBlack.isAlive() && playerWhite.isAlive());
+    }
+
+    private Player getWinner(){
+        if(playerWhite.getGeneral().getCurrentHp() <= 0 && playerBlack.getGeneral().getCurrentHp() <= 0){
+            return null;
+        }else if(playerWhite.getGeneral().getCurrentHp() < 0){
+            return playerBlack;
+        }else{
+            return playerWhite;
         }
     }
 

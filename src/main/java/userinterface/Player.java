@@ -1,6 +1,7 @@
 package userinterface;
 
 import card.Card;
+import card.GeneralCard;
 import card.MinionCard;
 import collection.Collection;
 
@@ -22,11 +23,12 @@ public class Player {
      * When mana is first initiated it's 0 and initial mana will be loaded by the Game itself, when
      * everything is loaded.
      */
-    private int playerCurrentMaximumMana = 0;
+    private int playerCurrentMana = 0;
     private int usableMana = 0;
-    private Hand playerHand = new Hand();
-    private Deck playerDeck = new Deck(new ArrayList<>());
+    private PlayerHand playerPlayerHand = new PlayerHand();
+    private PlayerDeck playerPlayerDeck = new PlayerDeck(new ArrayList<>());
     private List<MinionCard> controlledAllies = new ArrayList<>();
+    private GeneralCard general;
     private Side side;
 
     /**
@@ -45,7 +47,7 @@ public class Player {
     private void initiateDeck() {
         Map<Integer, Card> allCards = new Collection().getAllCards();
         for (int i = 0; i < deckSize; i++) {
-            playerDeck.addCard(allCards.get((int) Math.round(Math.random() * allCards.size())));
+            playerPlayerDeck.addCard(allCards.get((int) Math.round(Math.random() * allCards.size())));
         }
     }
 
@@ -54,23 +56,30 @@ public class Player {
      */
     private void initiateHand() {
         for (int i = 0; i < handSize; i++) {
-            playerHand.addCard(playerDeck.draw());
+            playerPlayerHand.addCard(playerPlayerDeck.draw());
         }
     }
 
     /**
-     * Method for adding mana to a Player object.
+     * Method for adding 1 mana to a Player object.
      */
-    public void addMana() {
-        if (playerCurrentMaximumMana < maximumMana) {
-            playerCurrentMaximumMana++;
+    public void incrementMana() {
+        if (playerCurrentMana < maximumMana) {
+            playerCurrentMana++;
         }
     }
+
+    public void addMana(int amount){
+        if ((playerCurrentMana + amount) <= maximumMana) {
+            playerCurrentMana += amount;
+        }
+    }
+
     /**
      * Sets players usable mana to the current maximum amount of mana the player can have.
      */
     public void resetMana() {
-        usableMana = playerCurrentMaximumMana;
+        usableMana = playerCurrentMana;
     }
 
     /**
@@ -92,8 +101,32 @@ public class Player {
      *
      * @return hand of the player
      */
-    public Hand getPlayerHand() {
-        return playerHand;
+    public PlayerHand getPlayerPlayerHand() {
+        return playerPlayerHand;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public List<MinionCard> getControlledAllies() {
+        return controlledAllies;
+    }
+
+    public boolean isAlive(){
+        return general.getCurrentHp() > 0;
+    }
+
+    public void setGeneral(GeneralCard general) {
+        this.general = general;
+    }
+
+    public GeneralCard getGeneral() {
+        return general;
+    }
+
+    public int getUsableMana(){
+        return usableMana;
     }
 }
 

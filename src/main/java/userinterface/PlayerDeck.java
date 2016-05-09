@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class Deck {
+class PlayerDeck {
     /**
      * Field for holding all cards in a deck.
      */
@@ -16,7 +16,7 @@ class Deck {
      *
      * @param deckOfCards the Deck of cards
      */
-    Deck(List<Card> deckOfCards) {
+    PlayerDeck(List<Card> deckOfCards) {
         this.deckOfCards = deckOfCards;
     }
 

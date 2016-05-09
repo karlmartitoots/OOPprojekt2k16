@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * For holding all cards in cardsInHand and operating with them through gamelogic.
  */
-class Hand {
+class PlayerHand {
     private static final int maximumHandSize = 7;
     private static final int preferredCardHeight = 250;//pixels
     private static final int preferredCardWidth = 140;//pixels

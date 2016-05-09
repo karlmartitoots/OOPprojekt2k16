@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //basically a "struct" to pass along to the game's GUI
-class Settings {
+class SetupSettings {
     private GeneralCard whiteGeneral, blackGeneral;
     private Point2D whiteStartingSquare, blackStartingSquare;
     private static Map<String, ArrayList<Point2D>> allStartingPositions;
@@ -40,7 +40,7 @@ class Settings {
      * @param blackGeneral Holds the black sides GeneralCard
      * @param startingPositionName Holds the name of the starting position, passed to the Settings class.
      */
-    Settings(GeneralCard whiteGeneral, GeneralCard blackGeneral, String startingPositionName) {
+    SetupSettings(GeneralCard whiteGeneral, GeneralCard blackGeneral, String startingPositionName) {
         this.whiteGeneral = whiteGeneral;
         this.blackGeneral = blackGeneral;
         this.whiteStartingSquare = allStartingPositions.get(startingPositionName).get(0);

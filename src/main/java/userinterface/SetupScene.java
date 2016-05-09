@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-class Setup extends Scene {
+class SetupScene extends Scene {
 
     private Collection collection = new Collection();
     private Map<String, GeneralCard> allGeneralCards = collection.getAllGeneralCardsByName();
@@ -29,7 +29,7 @@ class Setup extends Scene {
      * @param root  Main class passes Setup a Group to place everything onto.
      * @param primaryStage The stage that everything happens in.
      */
-    Setup(Group root, Stage primaryStage) {
+    SetupScene(Group root, Stage primaryStage) {
         super(root);
 
         Label chooseGeneralLabel = createLabel("Choose your general", 20, 50, 0);
@@ -83,7 +83,7 @@ class Setup extends Scene {
                 showPopupDialog(primaryStage);
             }else{
                 primaryStage.close();
-                primaryStage.setScene(new Game(new Group(), primaryStage, new Settings(whiteGeneral, blackGeneral, startingPositionName)));
+                primaryStage.setScene(new GameScene(new Group(), primaryStage, new SetupSettings(whiteGeneral, blackGeneral, startingPositionName)));
             }
         });
 
