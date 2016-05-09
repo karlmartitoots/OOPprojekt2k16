@@ -1,7 +1,7 @@
 package card;
 
-import userFeatures.Side;
-import userFeatures.Square;
+import userinterface.Side;
+import userinterface.Square;
 
 /**
  * GeneralCard is subclass of the MinionCard class. It is a minion that represents the main leader of the army in the game.
@@ -39,7 +39,7 @@ public class GeneralCard extends MinionCard {
                 generalCard.getID(),
                 generalCard.getAttack(),
                 generalCard.getMaxHp(),
-                generalCard.getSpeed(),
+                generalCard.getMovementReach(),
                 Side.WHITE);
     }
 
@@ -50,7 +50,7 @@ public class GeneralCard extends MinionCard {
                 generalCard.getID(),
                 generalCard.getAttack(),
                 generalCard.getMaxHp(),
-                generalCard.getSpeed(),
+                generalCard.getMovementReach(),
                 Side.BLACK);
     }
 

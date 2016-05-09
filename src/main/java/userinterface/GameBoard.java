@@ -1,4 +1,4 @@
-package userFeatures;
+package userinterface;
 
 import card.MinionCard;
 import javafx.geometry.Point2D;
@@ -9,8 +9,11 @@ class GameBoard {
     private final static int xDimension = 10;
     private final static int yDimension = 10;
     private List<Square> boardBySquares = new ArrayList<>();
-    private Square selectedSquare = new Square();
-    private List<Square> squaresPossibleToInteractWith = new ArrayList<>();
+    //should make a few things easier to implement
+    //!!should only be changed when currentlySelectedSquare is updated - then the previouslySelectedSquare is set as the previous current (obviously)
+    private Square previouslySelectedSquare = new Square();
+    private Square currentlySelectedSquare = new Square();
+    private List<Square> squaresPossibleToMoveTo = new ArrayList<>();
 
     /**
      * Gets the length of the boardBySquares on the X axis
@@ -33,19 +36,19 @@ class GameBoard {
      * @param previousSquare The previous square the minion was on (or is on before moving).
      * @param nextSquare The next square the minion will be on.
      */
-    void moveCard(Square previousSquare, Square nextSquare) {
+    void moveCardIfPossible(Square previousSquare, Square nextSquare) {
         boolean squaresPossibleToMoveContainsSquareToMoveTo = false;
-        for (Square square : squaresPossibleToInteractWith) {
+        for (Square square : squaresPossibleToMoveTo) {
             if (nextSquare.getxCordOnBoard() == square.getxCordOnBoard() && nextSquare.getyCordOnBoard() == square.getyCordOnBoard())
                 squaresPossibleToMoveContainsSquareToMoveTo = true;
         }
         if (!nextSquare.hasMinionOnSquare() && squaresPossibleToMoveContainsSquareToMoveTo) {
             MinionCard minion = previousSquare.getCard();
-            previousSquare.removeCard();
+            previousSquare.removeCardIfHas();
             boardBySquares.set(previousSquare.squares1DPosition(), previousSquare);
-            nextSquare.setCard(minion);
+            nextSquare.setSquaresCard(minion);
             boardBySquares.set(nextSquare.squares1DPosition(), nextSquare);
-            nextSquare.getCard().setMoved(true);
+            nextSquare.getCard().blockMovement();
         }
     }
 
@@ -55,12 +58,12 @@ class GameBoard {
      */
     List<Square> getAllPossibleSquares() {
         Map<Square, Integer> movesUsedToGo = new HashMap<>();
-        movesUsedToGo.put(getSelectedSquare(), 0);
+        movesUsedToGo.put(getCurrentlySelectedSquare(), 0);
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
         List<Square> squaresPossibleToMoveTo = new ArrayList<>();
-        queueOfSquaresToCheck.add(getSelectedSquare());
+        queueOfSquaresToCheck.add(getCurrentlySelectedSquare());
         boolean[] hasBeenVisited = new boolean[xDimension * yDimension];
-        hasBeenVisited[getSelectedSquare().squares1DPosition()] = true;
+        hasBeenVisited[getCurrentlySelectedSquare().squares1DPosition()] = true;
         boardBySquares.forEach(square -> {
             if (square.hasMinionOnSquare()) hasBeenVisited[square.squares1DPosition()] = true;
         });
@@ -68,7 +71,7 @@ class GameBoard {
             Square nextSquareToCheck = queueOfSquaresToCheck.poll();
             List<Square> toExplore = expand(nextSquareToCheck);
             toExplore.forEach(currentSquare -> {
-                if (!hasBeenVisited[currentSquare.squares1DPosition()] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getSelectedSquare().getCard().getSpeed())) {
+                if (!hasBeenVisited[currentSquare.squares1DPosition()] && squareIsEmpty(currentSquare) && (movesUsedToGo.get(nextSquareToCheck) < getCurrentlySelectedSquare().getCard().getMovementReach())) {
                     hasBeenVisited[currentSquare.squares1DPosition()] = true;
                     squaresPossibleToMoveTo.add(currentSquare);
                     queueOfSquaresToCheck.add(currentSquare);
@@ -115,19 +118,20 @@ class GameBoard {
      * sets that square as the current previously selected square.
      * @param point Point on the GUI that will be translated to gameboard coordinates.
      */
-    void setSelectedSquare(Point2D point) {
+    void setCurrentlySelectedSquare(Point2D point) {
+        previouslySelectedSquare = currentlySelectedSquare;
         if (point.getX() >= 0) {
-            selectedSquare = boardBySquares.get(Square.pointToSquare1DPoistion(point));
-            System.out.println(selectedSquare);
-        } else selectedSquare = new Square();
+            currentlySelectedSquare = boardBySquares.get(Square.pointToSquare1DPosition(point));
+            System.out.println(currentlySelectedSquare);
+        } else currentlySelectedSquare = new Square();
     }
 
     /**
      * Getter method for the gameboard square, previously clicked on.
      * @return Returns the previously selected square.
      */
-    Square getSelectedSquare() {
-        return selectedSquare;
+    Square getCurrentlySelectedSquare() {
+        return currentlySelectedSquare;
     }
 
     /**
@@ -148,26 +152,26 @@ class GameBoard {
     }
 
     /**
-     * Getter method for the squaresPossibleToInteractWith field.
+     * Getter method for the squaresPossibleToMoveTo field.
      * @return Returns a previously saved list of squares that a minion could have moved to.
      */
-    List<Square> getSquaresPossibleToInteractWith() {
-        return squaresPossibleToInteractWith;
+    List<Square> getSquaresPossibleToMoveTo() {
+        return squaresPossibleToMoveTo;
     }
 
     /**
-     * Setter method for the squaresPossibleToInteractWith field.
-     * @param squaresPossibleToInteractWith The list given as a parameter for the method is set as the objects squarePossibleToMove.
+     * Setter method for the squaresPossibleToMoveTo field.
+     * @param squaresPossibleToMoveTo The list given as a parameter for the method is set as the objects squarePossibleToMove.
      */
-    void setSquaresPossibleToInteractWith(List<Square> squaresPossibleToInteractWith) {
-        this.squaresPossibleToInteractWith = squaresPossibleToInteractWith;
+    void setSquaresPossibleToMoveTo(List<Square> squaresPossibleToMoveTo) {
+        this.squaresPossibleToMoveTo = squaresPossibleToMoveTo;
     }
 
     /**
-     * Removes all squares from squaresPossibleToInteractWith .
+     * Removes all squares from squaresPossibleToMoveTo .
      */
-    void clearSquaresPossibleToInteractWith() {
-        squaresPossibleToInteractWith.clear();
+    void clearSquaresPossibleToMoveTo() {
+        squaresPossibleToMoveTo.clear();
     }
 
     @Override
@@ -176,8 +180,8 @@ class GameBoard {
                 "\nxDimension=" + xDimension +
                 ", \nyDimension=" + yDimension +
                 ", \nboardBySquares=" + boardBySquares +
-                ", \nselectedSquare=" + selectedSquare +
-                ", \nsquaresPossibleToInteractWith=" + squaresPossibleToInteractWith +
+                ", \ncurrentlySelectedSquare=" + currentlySelectedSquare +
+                ", \nsquaresPossibleToMoveTo=" + squaresPossibleToMoveTo +
                 '}';
     }
 }

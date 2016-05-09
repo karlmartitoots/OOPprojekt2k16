@@ -1,7 +1,7 @@
 /This text file holds every card
 /Templates:
-/GENERAL;name;0(cost for summoning);descriptionOnTheCard;ID;attack;health;speed
-/MINION;name;cost;description;ID;attack;health;speed
+/GENERAL;name;0(cost for summoning);descriptionOnTheCard;ID;attack;health;movementReach
+/MINION;name;cost;description;ID;attack;health;movementReach
 /SPELL;name;cost;description;ID;effect (dont create any spell cards yet until implemented)
 /EQUIPMENT;name;cost;description;ID;addAttack;addHealth;addSpeed;effect
 

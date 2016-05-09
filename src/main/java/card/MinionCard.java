@@ -1,8 +1,8 @@
 
 package card;
 
-import userFeatures.Side;
-import userFeatures.Square;
+import userinterface.Side;
+import userinterface.Square;
 
 import java.util.Objects;
 
@@ -14,9 +14,10 @@ public class MinionCard extends Card {
     private final int ID;
     private final int attack;
     private final int maxHp;
-    private final int speed;
+    private final int movementReach;
     private int currentHp;
     private boolean hasMoved;
+    private boolean canMove;
     private Side side;
 
     /**
@@ -28,23 +29,23 @@ public class MinionCard extends Card {
      * @param ID     ID of the minion
      * @param attack Attack value of the minion
      * @param maxHp  HP value of the minion
-     * @param speed  Speed of the minion
+     * @param movementReach  Speed of the minion
      */
-    public MinionCard(String name, int cost, String description, int ID, int attack, int maxHp, int speed) {
+    public MinionCard(String name, int cost, String description, int ID, int attack, int maxHp, int movementReach) {
         super(name, cost, description);
         this.ID = ID;
         this.attack = attack;
         this.maxHp = maxHp;
-        this.speed = speed;
+        this.movementReach = movementReach;
         this.currentHp = maxHp;
     }
 
-    private MinionCard(String name, int cost, String description, int ID, int attack, int maxHp, int speed, Side side) {
+    private MinionCard(String name, int cost, String description, int ID, int attack, int maxHp, int movementReach, Side side) {
         super(name, cost, description);
         this.ID = ID;
         this.attack = attack;
         this.maxHp = maxHp;
-        this.speed = speed;
+        this.movementReach = movementReach;
         this.currentHp = maxHp;
         this.side = side;
     }
@@ -81,6 +82,15 @@ public class MinionCard extends Card {
 
     public Side getSide(){
         return side;
+    }
+
+    //convenience method
+    public boolean isWhite(){
+        return (this.side == Side.WHITE);
+    }
+
+    public boolean isBlack(){
+        return (this.side == Side.BLACK);
     }
 
     public void setSide(Side side){
@@ -128,11 +138,11 @@ public class MinionCard extends Card {
     }
 
     /**
-     * Gets the speed of the minion
+     * Gets the movementReach of the minion
      * @return Speed of the minion
      */
-    public int getSpeed() {
-        return speed;
+    public int getMovementReach() {
+        return movementReach;
     }
 
     /**
@@ -144,6 +154,11 @@ public class MinionCard extends Card {
         return hasMoved;
     }
 
+    //For readablity
+    public boolean hasNotMoved(){
+        return !hasMoved;
+    }
+
     /**
      * Sets the value for the minion if it has moved this turn or not.
      *
@@ -151,6 +166,20 @@ public class MinionCard extends Card {
      */
     public void setMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
+    }
+
+    public void blockMovement(){
+        this.hasMoved = true;
+        this.canMove = false;
+    }
+
+    public void allowMovement(){
+        this.hasMoved = false;
+        this.canMove = true;
+    }
+
+    public boolean canMove(){
+        return this.canMove;
     }
 
     @Override
@@ -161,7 +190,7 @@ public class MinionCard extends Card {
         return getID() == that.getID() &&
                 getAttack() == that.getAttack() &&
                 getMaxHp() == that.getMaxHp() &&
-                getSpeed() == that.getSpeed() &&
+                getMovementReach() == that.getMovementReach() &&
                 getCurrentHp() == that.getCurrentHp() &&
                 hasMoved == that.hasMoved &&
                 Objects.equals(getCurrentPosition(), that.getCurrentPosition()) &&
@@ -170,7 +199,7 @@ public class MinionCard extends Card {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCurrentPosition(), getID(), getAttack(), getMaxHp(), getSpeed(), getCurrentHp(), hasMoved, getSide());
+        return Objects.hash(getCurrentPosition(), getID(), getAttack(), getMaxHp(), getMovementReach(), getCurrentHp(), hasMoved, getSide());
     }
 
     @Override
@@ -180,7 +209,7 @@ public class MinionCard extends Card {
                 ", ID=" + ID +
                 ", attack=" + attack +
                 ", maxHp=" + maxHp +
-                ", speed=" + speed +
+                ", movementReach=" + movementReach +
                 ", currentHp=" + currentHp +
                 ", hasMoved=" + hasMoved +
                 ", side=" + side +

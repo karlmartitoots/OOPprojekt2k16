@@ -1,4 +1,4 @@
-package userFeatures;
+package userinterface;
 
 import javafx.application.Application;
 import javafx.scene.Group;

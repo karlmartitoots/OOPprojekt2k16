@@ -1,4 +1,4 @@
-package userFeatures;
+package userinterface;
 
 import card.MinionCard;
 import javafx.geometry.Point2D;
@@ -16,7 +16,7 @@ public class Square {
     private int yPixelCoordinate;
     private MinionCard card;
     private Image defaultSquare = new Image("defaultSquare.jpg");
-    private Image chosenSquare = new Image("chosenSquare.jpg");
+    private Image squareInMovementReach = new Image("chosenSquare.jpg");
     private ImageView imageView = new ImageView(defaultSquare);
 
     /**
@@ -74,7 +74,7 @@ public class Square {
      * @return 1 dimension coordinate of the squaare
      */
 
-    public static int pointToSquare1DPoistion(Point2D point2D) {
+    public static int pointToSquare1DPosition(Point2D point2D) {
         return (int) (GameBoard.getxDimension() * point2D.getX() + point2D.getY());
     }
 
@@ -107,25 +107,25 @@ public class Square {
      * A method, for when the gameboard shows a path on some action, to change the square to
      * a picture of a path square.
      */
-    void setOnThePath() {
-        setImage(chosenSquare);
+    void setImageAsMoveableSquare() {
+        setSquaresImageView(squareInMovementReach);
     }
 
     /**
      * A method, for when the gameboard shows a path on some action, to change the square back
      * to what it is like by default.
      */
-    void setNotOnThePath() {
+    void setImageToCardImageOrDefault() {
         if (card == null) {
-            setImage(defaultSquare);
-        } else setImage(card.getSmallImage());
+            setSquaresImageView(defaultSquare);
+        } else setSquaresImageView(card.getSmallImage());
     }
 
     /**
      * Getter for the width of the square.
      * @return Returns the width of the square in pixels.
      */
-    static int getWidth() {
+    static int getSquareWidth() {
         return width;
     }
 
@@ -133,7 +133,7 @@ public class Square {
      * Getter method for square height in pixels.
      * @return Returns the height of the square in pixels.
      */
-    static int getHeight() {
+    static int getSquareHeight() {
         return height;
     }
 
@@ -142,16 +142,16 @@ public class Square {
      * Places the card on the board.
      * @param minionCard card to place on square
      */
-    public void setCard(MinionCard minionCard) {
+    public void setSquaresCard(MinionCard minionCard) {
         this.card = minionCard;
-        setImage(minionCard.getSmallImage());
+        setSquaresImageView(minionCard.getSmallImage());
     }
 
     /**
      * Method that sets an image on the imageView
      * @param image Image to be placed on board
      */
-    private void setImage(Image image) {
+    private void setSquaresImageView(Image image) {
         //For future reference: imageView.updateImage(image) breaks the code so make the change only when it does not brake it!!!
         imageView = new ImageView(image);
         imageView.setX(xPixelCoordinate);
@@ -167,13 +167,13 @@ public class Square {
         } else {
             image = defaultSquare;
         }
-        setImage(image);
+        setSquaresImageView(image);
     }
 
     /**
      * Removes a card from the current square
      */
-    void removeCard() {
+    void removeCardIfHas() {
         card = null;
     }
 
@@ -184,6 +184,10 @@ public class Square {
      */
     boolean hasMinionOnSquare() {
         return card != null;
+    }
+
+    boolean doesNotHaveMinionOnSquare(){
+        return card == null;
     }
 
     /**

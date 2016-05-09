@@ -1,4 +1,4 @@
-package userFeatures;
+package userinterface;
 
 import card.Card;
 

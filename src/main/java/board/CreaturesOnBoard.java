@@ -2,7 +2,7 @@ package board;
 
 import card.GeneralCard;
 import card.MinionCard;
-import userFeatures.Side;
+import userinterface.Side;
 
 import java.util.*;
 

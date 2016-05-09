@@ -1,4 +1,4 @@
-package userFeatures;
+package userinterface;
 
 public enum InteractionState {
     NONE,

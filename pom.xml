@@ -33,7 +33,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>userFeatures.Main</mainClass>
+                            <mainClass>userinterface.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
