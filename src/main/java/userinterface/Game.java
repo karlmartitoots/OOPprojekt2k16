@@ -69,8 +69,11 @@ class Game extends Scene{
         currentStateLabel = createAndPlaceStateLabel(root);
         timerScheduler.scheduleAtFixedRate(
                 (Runnable) () ->
-                        Platform.runLater(() ->
-                                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel, root)), 1L, 1L, SECONDS);
+                        Platform.runLater(() ->{
+                            if(primaryStage.isFocused()) {
+                                reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel, root);
+                            }
+                        }), 1L, 1L, SECONDS);
 
         //load the turn ending button
         Button endTurnButton = createAndPlaceEndTurnButton(root);
@@ -80,9 +83,11 @@ class Game extends Scene{
 
 
 
+
         //event listener for turn ending button
-        endTurnButton.setOnAction(event ->
-                switchTurnAndResetToStartOfATurn(timerText, turnLabel, root));
+        endTurnButton.setOnAction(event -> {
+            switchTurnAndResetToStartOfATurn(timerText, turnLabel, root);
+        });
         moveButton.setOnAction(event ->
                 updateLabel(currentStateLabel, InteractionState.MOVE)
         );
