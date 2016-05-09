@@ -9,6 +9,7 @@
 
 GENERAL;General Taavi;0;A General named Taavi.;1;10;999;5
 GENERAL;General Märt;0;A General named Märt.;2;10;999;5
+
 /cost 1
 MINION;Silverguard Squire;1;The first minion to be ever created.;101;1;4;1
 MINION;Coiledcrawler;1;Earthworm filled with venom.;109;1;3;2
@@ -18,8 +19,8 @@ MINION;Crystalcloaker;1;Weak, but fast;119;1;2;3
 MINION;Jademonk;1;Heavy fighter;123;1;4;1
 MINION;Kaidoassasin;1;Sneaky ninja;124;3;1;1
 MINION;Starfirescarab;1;Weaker than it looks;127;2;2;1
-/cos 2
 
+/cost 2
 MINION;Bluetipscorpion;2;Underground walker.;108;2;4;1
 MINION;Manaforger;2;He uses mana to cast fireballs;114;5;1;1
 MINION;Crystalwisp;2;Wisp covered with unbreakable glass;110;1;7;1
@@ -41,6 +42,7 @@ MINION;Arclyte Sentinel;3;Dis guy huuuge.;106;2;4;3
 MINION;Silverguard Knight;3;Don't challenge him to a duel.;107;3;5;1
 MINION;Hamonbladeseeker;3;Deadly assasin;122;5;2;3
 MINION;Kolossus;3;Man who turned to stone;126;3;6;1
+
 /cost 4
 MINION;Flamebloodwarlock;4;Warlock from the Sun;112;4;4;4
 MINION;Argeonhighmayne;4;Strongest man alive;118;5;5;2

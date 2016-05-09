@@ -255,17 +255,20 @@ class Game extends Scene{
         if (squareCoordinates.getX() >= 0) {
             switch (state) {
                 case MOVE:
+                    System.out.println("MOVE");
                     setSquaresNotOnPath(root);
-                    moveMinionOnScene(root, squareCoordinates);
+                    moveCardAndUpdateAllSquares(root, squareCoordinates);
                     gameBoard.clearSquaresPossibleToInteractWith();
                     gameBoard.setSelectedSquare(squareCoordinates);
                     getSquaresPossibleToMove(root);
                     break;
                 case SUMMON:
-                    interactionWithNeighboorSquares(root, squareCoordinates, false);
+                    System.out.println("SUMMON");
+                    interactionWithNeighbourSquares(root, squareCoordinates, false);
                     break;
                 case ATTACK:
-                    interactionWithNeighboorSquares(root, squareCoordinates, true);
+                    System.out.println("ATTACK");
+                    interactionWithNeighbourSquares(root, squareCoordinates, true);
                     break;
             }
         }
@@ -278,7 +281,7 @@ class Game extends Scene{
      * @param squareCoordinates coordinates of the square clicked on
      * @param offensive         interaction with enemy units
      */
-    private void interactionWithNeighboorSquares(Group root, Point2D squareCoordinates, boolean offensive) {
+    private void interactionWithNeighbourSquares(Group root, Point2D squareCoordinates, boolean offensive) {
         processAttackAction(squareCoordinates, offensive);
         gameBoard.setSelectedSquare(squareCoordinates);
         setSquaresNotOnPath(root);
@@ -303,12 +306,12 @@ class Game extends Scene{
         if (offensive && gameBoard.getSquaresPossibleToInteractWith().size() > 0) {
             MinionCard firstMinion = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPoistion(squareCoordinates)).getCard();
             MinionCard secondMinion = gameBoard.getSelectedSquare().getCard();
-            damageAction(firstMinion, secondMinion);
-            damageAction(secondMinion, firstMinion);
+            attackAndRetaliate(firstMinion, secondMinion);
+            attackAndRetaliate(secondMinion, firstMinion);
         }
     }
 
-    private void damageAction(MinionCard firstMinion, MinionCard secondMinion) {
+    private void attackAndRetaliate(MinionCard firstMinion, MinionCard secondMinion) {
         secondMinion.setCurrentHp(secondMinion.getCurrentHp() - firstMinion.getAttack());
     }
 
@@ -348,7 +351,7 @@ class Game extends Scene{
      * @param root Group that shows the scene, where events are listened
      * @param squareCoordinates coordinates of the square clicked on
      */
-    private void moveMinionOnScene(Group root, Point2D squareCoordinates) {
+    private void moveCardAndUpdateAllSquares(Group root, Point2D squareCoordinates) {
         if (gameBoard.getSelectedSquare().hasMinionOnSquare()) {
             Square target = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPoistion(squareCoordinates));
             gameBoard.moveCard(gameBoard.getSelectedSquare(), target);
