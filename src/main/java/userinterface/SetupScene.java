@@ -76,12 +76,12 @@ class SetupScene extends Scene {
         });
 
         enterButton.setOnAction(event -> {
-            whiteGeneral = GeneralCard.createWhiteGeneral(allGeneralCards.get(whiteGeneralNamesChoiceBox.getValue()));
-            blackGeneral = GeneralCard.createBlackGeneral(allGeneralCards.get(blackGeneralNamesChoiceBox.getValue()));
-            startingPositionName = positionNamesChoiceBox.getValue();
             if(!(generalIsChosen[0] && generalIsChosen[1] && positionIsChosen[0])){
                 showPopupDialog(primaryStage);
             }else{
+                whiteGeneral = GeneralCard.createWhiteGeneral(allGeneralCards.get(whiteGeneralNamesChoiceBox.getValue()));
+                blackGeneral = GeneralCard.createBlackGeneral(allGeneralCards.get(blackGeneralNamesChoiceBox.getValue()));
+                startingPositionName = positionNamesChoiceBox.getValue();
                 primaryStage.close();
                 primaryStage.setScene(new GameScene(new Group(), primaryStage, new SetupSettings(whiteGeneral, blackGeneral, startingPositionName)));
             }
