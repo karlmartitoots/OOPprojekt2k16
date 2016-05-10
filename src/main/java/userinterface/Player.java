@@ -128,5 +128,9 @@ public class Player {
     public int getUsableMana(){
         return usableMana;
     }
+
+    public void resetUsableMana() {
+        usableMana = playerCurrentMana;
+    }
 }
 

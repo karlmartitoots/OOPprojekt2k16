@@ -37,7 +37,7 @@ class GameScene extends Scene{
     //white starts
     private Player currentPlayer = playerWhite;
     private int turnCounter = 0;
-    private Label currentStateLabel, generalHealthLabel, currentManaLabel;
+    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionNameLabel, selectedMinionSideLabel;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
@@ -70,6 +70,10 @@ class GameScene extends Scene{
         currentStateLabel = createAndPlaceLabel(root, 770, 350, "Current state: " + state.toString());
         generalHealthLabel = createLabel("General health: " + currentPlayer.getGeneral().getCurrentHp());
         currentManaLabel = createLabel("Current mana: " + currentPlayer.getUsableMana());
+        selectedMinionNameLabel = createLabel("");
+        selectedMinionAttackLabel = createLabel("");
+        selectedMinionHealthLabel = createLabel("");
+        selectedMinionSideLabel = createLabel("");
 
         createAndPlaceInfoboxNode(root);
 
@@ -129,7 +133,7 @@ class GameScene extends Scene{
     }
 
     private void createAndPlaceInfoboxNode(Group root) {
-        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel);
+        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedMinionNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionSideLabel);
         infoBox.setLayoutX(770);
         infoBox.setLayoutY(30);
         root.getChildren().add(infoBox);
@@ -272,25 +276,41 @@ class GameScene extends Scene{
      */
     private void checkStateAndprocessClickOnBoard(Group root, Point2D squareCoordinates) {
         if (squareCoordinates.getX() >= 0) {
+            gameBoard.setCurrentlySelectedSquare(squareCoordinates);
+            showMinionInformationOnScreen();
             switch (state) {
                 case MOVE:
-                    System.out.println("MOVE");
                     setSquareImagesToCardImagesOrDefaults(root);
                     moveCardAndUpdateAllSquares(root, squareCoordinates);
-                    gameBoard.clearSquaresPossibleToMoveTo();
-                    gameBoard.setCurrentlySelectedSquare(squareCoordinates);
+                    gameBoard.clearSquaresPossibleToInteractWith();
                     getSquaresPossibleToMove(root);
                     break;
                 case SUMMON:
-                    System.out.println("SUMMON");
                     interactionWithNeighbourSquares(root, squareCoordinates, false);
                     break;
                 case ATTACK:
-                    System.out.println("ATTACK");
                     interactionWithNeighbourSquares(root, squareCoordinates, true);
                     break;
             }
         }
+    }
+
+    private void showMinionInformationOnScreen() {
+        if (gameBoard.getCurrentlySelectedSquare().hasMinionOnSquare()) {
+            selectedMinionNameLabel.setText("NAME: " + gameBoard.getCurrentlySelectedSquare().getCard().getName());
+            selectedMinionAttackLabel.setText("ATTACK: " + gameBoard.getCurrentlySelectedSquare().getCard().getAttack());
+            selectedMinionHealthLabel.setText("HP: " + gameBoard.getCurrentlySelectedSquare().getCard().getCurrentHp());
+            selectedMinionSideLabel.setText("SIDE: " + gameBoard.getCurrentlySelectedSquare().getCard().getSide());
+        } else {
+            clearMinionInformationLabels();
+        }
+    }
+
+    private void clearMinionInformationLabels() {
+        selectedMinionNameLabel.setText("");
+        selectedMinionAttackLabel.setText("");
+        selectedMinionHealthLabel.setText("");
+        selectedMinionSideLabel.setText("");
     }
 
     /**
@@ -301,34 +321,35 @@ class GameScene extends Scene{
      * @param offensive         interaction with enemy units
      */
     private void interactionWithNeighbourSquares(Group root, Point2D squareCoordinates, boolean offensive) {
-        processAttackAction(squareCoordinates, offensive);
-        gameBoard.setCurrentlySelectedSquare(squareCoordinates);
+        processAttackAction(offensive);
         setSquareImagesToCardImagesOrDefaults(root);
-        gameBoard.clearSquaresPossibleToMoveTo();
+        gameBoard.clearSquaresPossibleToInteractWith();
         Square currentSquare = gameBoard.getCurrentlySelectedSquare();
         if (currentSquare.hasMinionOnSquare() && cardBelongsToCurrentSide(currentSquare.getCard())) {
             List<Square> possibleSquaresToUse = gameBoard.expand(currentSquare);
             List<Square> squaresUsed = new ArrayList<>();
-            for (Square surroundingSquare : possibleSquaresToUse) {
+            possibleSquaresToUse.forEach(surroundingSquare -> {
                 // the second part of the and checks if the current square contains a general, or if the adjecent square contains an enemy minion
                 if (surroundingSquare.hasMinionOnSquare() == offensive &&
                         (isConditionForSummonOrAttackMet(offensive, currentSquare) ||
-                        isConditionForSummonOrAttackMet(offensive, surroundingSquare))) {
+                                isConditionForSummonOrAttackMet(offensive, surroundingSquare))) {
                     surroundingSquare.setImageAsMoveableSquare();
                     root.getChildren().add(surroundingSquare.getImageView());
                     squaresUsed.add(surroundingSquare);
                 }
-            }
-            gameBoard.setSquaresPossibleToMoveTo(squaresUsed);
+            });
+            gameBoard.setSquarePossibleToInteractWith(squaresUsed);
         }
     }
 
-    private void processAttackAction(Point2D squareCoordinates, boolean offensive) {
-        if (offensive && gameBoard.getSquaresPossibleToMoveTo().size() > 0) {
-            MinionCard firstMinion = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates)).getCard();
+    private void processAttackAction(boolean offensive) {
+        if (offensive && gameBoard.getSquarePossibleToInteractWith().size() > 0) {
+            MinionCard firstMinion = gameBoard.getPreviouslySelectedSquare().getCard();
+            if (firstMinion.hasAttacked()) return;
             MinionCard secondMinion = gameBoard.getCurrentlySelectedSquare().getCard();
             attackAndRetaliate(firstMinion, secondMinion);
             attackAndRetaliate(secondMinion, firstMinion);
+            firstMinion.setHasAttacked(true);
         }
     }
 
@@ -350,7 +371,7 @@ class GameScene extends Scene{
     private boolean isConditionForSummonOrAttackMet(boolean offensive, Square square) {
         return offensive &&
                 !cardBelongsToCurrentSide(square.getCard()) ||
-                square.getCard() instanceof GeneralCard;
+                square.getCard() instanceof GeneralCard; // summoning condition
     }
 
     /**
@@ -362,7 +383,7 @@ class GameScene extends Scene{
                 gameBoard.getCurrentlySelectedSquare().getCard().hasNotMoved() &&
                 gameBoard.getCurrentlySelectedSquare().getCard().getSide().equals(currentPlayer.getSide())) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
-            gameBoard.setSquaresPossibleToMoveTo(possibleSquares);
+            gameBoard.setSquarePossibleToInteractWith(possibleSquares);
             setSquaresImagesAsMoveableSquares(root, possibleSquares);
         }
     }
@@ -380,9 +401,9 @@ class GameScene extends Scene{
      * @param squareCoordinates coordinates of the square clicked on
      */
     private void moveCardAndUpdateAllSquares(Group root, Point2D squareCoordinates) {
-        if (gameBoard.getCurrentlySelectedSquare().hasMinionOnSquare()) {
+        if (gameBoard.getPreviouslySelectedSquare().hasMinionOnSquare()) {
             Square target = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
-            gameBoard.moveCardIfPossible(gameBoard.getCurrentlySelectedSquare(), target);
+            gameBoard.moveCardIfPossible(gameBoard.getPreviouslySelectedSquare(), target);
             updateAllSquares(root);
 
         }
@@ -400,7 +421,7 @@ class GameScene extends Scene{
      * @param root Group that shows the scene, where events are listned
      */
     private void setSquareImagesToCardImagesOrDefaults(Group root) {
-        for (Square square : gameBoard.getSquaresPossibleToMoveTo()) {
+        for (Square square : gameBoard.getSquarePossibleToInteractWith()) {
             square.setImageToCardImageOrDefault();
             root.getChildren().add(square.getImageView());
         }
@@ -513,8 +534,10 @@ class GameScene extends Scene{
     private void resetGameLogicToStartOfTurn(Group root) {
         switchCurrentPlayer();
         currentPlayer.incrementMana();
+        currentPlayer.resetUsableMana();
         setAllCreaturesToHaventMoved(root);
         incrementTurnCounter();
+        clearMinionInformationLabels();
     }
 
     private void resetAllNodesToStartOfTurn(Text timerText, Label sideLabel) {
@@ -537,17 +560,19 @@ class GameScene extends Scene{
      */
     private void setAllCreaturesToHaventMoved(Group root) {
         setSquareImagesToCardImagesOrDefaults(root);
-        gameBoard.clearSquaresPossibleToMoveTo();
+        gameBoard.clearSquaresPossibleToInteractWith();
         allowMovementForAllCreatures();
     }
 
     private void allowMovementForAllCreatures() {
-        for (Square square : gameBoard.getBoardBySquares()) {
+        gameBoard.getBoardBySquares().forEach(square -> {
             if(square.hasMinionOnSquare()){
                 square.getCard().allowMovement();
+                square.getCard().setHasAttacked(false);
             }
-        }
+        });
     }
+
 
     private void switchCurrentPlayer(){
         if(currentPlayer.getSide().equals(Side.WHITE)){

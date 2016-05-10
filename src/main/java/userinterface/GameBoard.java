@@ -13,7 +13,7 @@ class GameBoard {
     //!!should only be changed when currentlySelectedSquare is updated - then the previouslySelectedSquare is set as the previous current (obviously)
     private Square previouslySelectedSquare = new Square();
     private Square currentlySelectedSquare = new Square();
-    private List<Square> squaresPossibleToMoveTo = new ArrayList<>();
+    private List<Square> squarePossibleToInteractWith = new ArrayList<>();
 
     /**
      * Gets the length of the boardBySquares on the X axis
@@ -38,7 +38,7 @@ class GameBoard {
      */
     void moveCardIfPossible(Square previousSquare, Square nextSquare) {
         boolean squaresPossibleToMoveContainsSquareToMoveTo = false;
-        for (Square square : squaresPossibleToMoveTo) {
+        for (Square square : squarePossibleToInteractWith) {
             if (nextSquare.getxCordOnBoard() == square.getxCordOnBoard() && nextSquare.getyCordOnBoard() == square.getyCordOnBoard())
                 squaresPossibleToMoveContainsSquareToMoveTo = true;
         }
@@ -119,10 +119,9 @@ class GameBoard {
      * @param point Point on the GUI that will be translated to gameboard coordinates.
      */
     void setCurrentlySelectedSquare(Point2D point) {
-        previouslySelectedSquare = currentlySelectedSquare;
         if (point.getX() >= 0) {
+            previouslySelectedSquare = currentlySelectedSquare;
             currentlySelectedSquare = boardBySquares.get(Square.pointToSquare1DPosition(point));
-            System.out.println(currentlySelectedSquare);
         } else currentlySelectedSquare = new Square();
     }
 
@@ -132,6 +131,10 @@ class GameBoard {
      */
     Square getCurrentlySelectedSquare() {
         return currentlySelectedSquare;
+    }
+
+    public Square getPreviouslySelectedSquare() {
+        return previouslySelectedSquare;
     }
 
     /**
@@ -152,26 +155,26 @@ class GameBoard {
     }
 
     /**
-     * Getter method for the squaresPossibleToMoveTo field.
+     * Getter method for the squarePossibleToInteractWith field.
      * @return Returns a previously saved list of squares that a minion could have moved to.
      */
-    List<Square> getSquaresPossibleToMoveTo() {
-        return squaresPossibleToMoveTo;
+    List<Square> getSquarePossibleToInteractWith() {
+        return squarePossibleToInteractWith;
     }
 
     /**
-     * Setter method for the squaresPossibleToMoveTo field.
-     * @param squaresPossibleToMoveTo The list given as a parameter for the method is set as the objects squarePossibleToMove.
+     * Setter method for the squarePossibleToInteractWith field.
+     * @param squarePossibleToInteractWith The list given as a parameter for the method is set as the objects squarePossibleToMove.
      */
-    void setSquaresPossibleToMoveTo(List<Square> squaresPossibleToMoveTo) {
-        this.squaresPossibleToMoveTo = squaresPossibleToMoveTo;
+    void setSquarePossibleToInteractWith(List<Square> squarePossibleToInteractWith) {
+        this.squarePossibleToInteractWith = squarePossibleToInteractWith;
     }
 
     /**
-     * Removes all squares from squaresPossibleToMoveTo .
+     * Removes all squares from squarePossibleToInteractWith .
      */
-    void clearSquaresPossibleToMoveTo() {
-        squaresPossibleToMoveTo.clear();
+    void clearSquaresPossibleToInteractWith() {
+        squarePossibleToInteractWith.clear();
     }
 
     @Override
@@ -181,7 +184,7 @@ class GameBoard {
                 ", \nyDimension=" + yDimension +
                 ", \nboardBySquares=" + boardBySquares +
                 ", \ncurrentlySelectedSquare=" + currentlySelectedSquare +
-                ", \nsquaresPossibleToMoveTo=" + squaresPossibleToMoveTo +
+                ", \nsquarePossibleToInteractWith=" + squarePossibleToInteractWith +
                 '}';
     }
 }

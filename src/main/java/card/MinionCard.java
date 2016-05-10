@@ -18,6 +18,7 @@ public class MinionCard extends Card {
     private int currentHp;
     private boolean hasMoved;
     private boolean canMove;
+    private boolean hasAttacked;
     private Side side;
 
     /**
@@ -176,6 +177,15 @@ public class MinionCard extends Card {
     public void allowMovement(){
         this.hasMoved = false;
         this.canMove = true;
+    }
+
+
+    public boolean hasAttacked() {
+        return hasAttacked;
+    }
+
+    public void setHasAttacked(boolean hasAttacked) {
+        this.hasAttacked = hasAttacked;
     }
 
     public boolean canMove(){
