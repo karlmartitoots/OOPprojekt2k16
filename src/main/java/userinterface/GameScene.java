@@ -48,7 +48,7 @@ class GameScene extends Scene{
      */
     GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
         super(root);
-
+        playerWhite.getPlayerPlayerDeck().getDeckOfCards().forEach(card -> System.out.println(card));
         //set generals in  creaturesOnBoard
         CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
         creaturesOnBoard.setAllGeneralsOnBoard(setupSettings.getWhiteGeneral(), setupSettings.getBlackGeneral());
@@ -64,7 +64,7 @@ class GameScene extends Scene{
 
         //load the generals onto the board
         setGeneralsOnGameboardAndShowImages(root, setupSettings);
-        setDefaultCardImagesAllOnCardSlots(root);
+        setImagesAllOnCardSlots(root);
 
         Text timerText = createAndPlaceTimer(root);
         Label turnLabel = createAndPlaceLabel(root, (timerNodeWidthInPixels - 50)/2, 10, currentPlayer.getSide().toString());
@@ -189,7 +189,7 @@ class GameScene extends Scene{
      *
      * @param root Group that the label will be shown on.
      */
-    private void setDefaultCardImagesAllOnCardSlots(Group root) {
+    private void setImagesAllOnCardSlots(Group root) {
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
             ImageView card;
             try {
@@ -211,7 +211,6 @@ class GameScene extends Scene{
      * @param setupSettings Settings for getting, which GeneralCard's have been chosen and where they will be placed.
      */
     private void setGeneralsOnGameboardAndShowImages(Group root, SetupSettings setupSettings){
-        playerWhite.getPlayerPlayerHand().getCardsInHand().forEach(card -> System.out.println(card));
         Point2D whiteGeneralStartingCoordinates = setupSettings.getWhiteStartingSquare();
         Point2D blackGeneralStartingCoordinates = setupSettings.getBlackStartingSquare();
         //get the squares for generals
@@ -300,10 +299,10 @@ class GameScene extends Scene{
                     getSquaresPossibleToMove(root);
                     break;
                 case SUMMON:
-                    interactionWithNeighbourSquares(root, squareCoordinates, false);
+                    interactionWithNeighbourSquares(root, false);
                     break;
                 case ATTACK:
-                    interactionWithNeighbourSquares(root, squareCoordinates, true);
+                    interactionWithNeighbourSquares(root, true);
                     break;
             }
         }
@@ -331,10 +330,9 @@ class GameScene extends Scene{
      * Handles events that are related to interactions only with squares next to the given minion.
      *
      * @param root              Group that shows the scene, where events are listened.
-     * @param squareCoordinates coordinates of the square clicked on
      * @param ifHasEnemyMinion         interaction with enemy units
      */
-    private void interactionWithNeighbourSquares(Group root, Point2D squareCoordinates, boolean ifHasEnemyMinion) {
+    private void interactionWithNeighbourSquares(Group root, boolean ifHasEnemyMinion) {
         processAttackAction(ifHasEnemyMinion);
         setSquareImagesToCardImagesOrDefaults(root);
         gameBoard.clearSquaresPossibleToInteractWith();
@@ -359,7 +357,7 @@ class GameScene extends Scene{
     }
 
     private void processAttackAction(boolean offensive) {
-        if (offensive && gameBoard.getSquarePossibleToInteractWith().size() > 0) {
+        if (offensive && gameBoard.getSquarePossibleToInteractWith().contains(gameBoard.getCurrentlySelectedSquare())) {
             MinionCard firstMinion = gameBoard.getPreviouslySelectedSquare().getCard();
             if (firstMinion.hasAttacked()) return;
             MinionCard secondMinion = gameBoard.getCurrentlySelectedSquare().getCard();
@@ -554,6 +552,7 @@ class GameScene extends Scene{
         setAllCreaturesToHaventMoved(root);
         incrementTurnCounter();
         clearMinionInformationLabels();
+        setImagesAllOnCardSlots(root);
     }
 
     private void resetAllNodesToStartOfTurn(Text timerText, Label sideLabel) {

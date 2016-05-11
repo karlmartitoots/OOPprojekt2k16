@@ -8,6 +8,7 @@ import collection.Collection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * When the game begins, 2 players are created. A Player class will hold anything, that
@@ -45,10 +46,17 @@ public class Player {
      * Loads in the player's deck for the first time.
      */
     private void initiateDeck() {
-        Map<Integer, Card> allCards = new Collection().getAllCards();
         for (int i = 0; i < deckSize; i++) {
-            playerPlayerDeck.addCard(allCards.get((int) Math.round(Math.random() * allCards.size())));
+            playerPlayerDeck.addCard(randomCard());
         }
+    }
+
+    private Card randomCard() {
+        Map<Integer, Card> allCards = new Collection().getAllCards();
+        List<Card> cardList = new ArrayList<>(allCards.values());
+        int randomIndex = new Random().nextInt(cardList.size());
+        Card randomCard = cardList.get(randomIndex);
+        return randomCard;
     }
 
     /**
@@ -131,6 +139,10 @@ public class Player {
 
     public void resetUsableMana() {
         usableMana = playerCurrentMana;
+    }
+
+    public PlayerDeck getPlayerPlayerDeck() {
+        return playerPlayerDeck;
     }
 }
 

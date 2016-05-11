@@ -21,6 +21,7 @@ public class MinionCard extends Card {
     private boolean hasAttacked;
     private Side side;
 
+
     /**
      * Construtor
      *
