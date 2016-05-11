@@ -315,19 +315,16 @@ class GameScene extends Scene{
     private void checkStateAndprocessClickOnBoard(Group root, Point2D squareCoordinates) {
         if (squareCoordinates.getX() >= 0) {
             gameBoard.setCurrentlySelectedSquare(squareCoordinates);
+            setSquareImagesToCardImagesOrDefaults(root);
             showMinionInformationOnScreen();
             switch (state) {
                 case MOVE:
-                    setSquareImagesToCardImagesOrDefaults(root);
                     moveCardAndUpdateAllSquares(root, squareCoordinates);
                     gameBoard.clearSquaresPossibleToInteractWith();
                     getSquaresPossibleToMove(root);
                     break;
-                case SUMMON:
-                    interactionWithNeighbourSquares(root, false);
-                    break;
                 case ATTACK:
-                    interactionWithNeighbourSquares(root, true);
+                    this.processAttackAction(root);
                     break;
             }
         }
@@ -352,26 +349,19 @@ class GameScene extends Scene{
     }
 
     /**
-     * Handles events that are related to interactions only with squares next to the given minion.
+     * Handles events that are related
      *
-     * @param root              Group that shows the scene, where events are listened.
-     * @param ifHasEnemyMinion         interaction with enemy units
+     * @param root  Group that shows the scene, where events are listened.
      */
-    private void interactionWithNeighbourSquares(Group root, boolean ifHasEnemyMinion) {
-        processAttackAction(ifHasEnemyMinion);
-        setSquareImagesToCardImagesOrDefaults(root);
+    private void processAttackAction(Group root) {
+        processCombat();
         gameBoard.clearSquaresPossibleToInteractWith();
         Square currentSquare = gameBoard.getCurrentlySelectedSquare();
         if (currentSquare.hasMinionOnSquare() && cardBelongsToCurrentSide(currentSquare.getCard())) {
-            List<Square> possibleSquaresToUse = gameBoard.expand(currentSquare);
+            List<Square> possibleSquareToAttackTo = gameBoard.expand(currentSquare);
             List<Square> squaresUsed = new ArrayList<>();
-            possibleSquaresToUse.forEach(surroundingSquare -> {
-                // the second part of the and checks if the current square contains a general, or if the adjecent square contains an enemy minion
-                if (surroundingSquare.hasMinionOnSquare() == ifHasEnemyMinion &&
-                        (isConditionForSummonOrAttackMet(ifHasEnemyMinion, currentSquare) ||
-                                isConditionForSummonOrAttackMet(ifHasEnemyMinion, surroundingSquare))) {
-                    if (ifHasEnemyMinion && currentSquare.getCard().hasAttacked())
-                        return; // Breaks, if minion has alredy attacked this turn.
+            possibleSquareToAttackTo.forEach(surroundingSquare -> {
+                if (surroundingSquare.hasMinionOnSquare() && surroundingSquare.getCard().getSide() != currentPlayer.getSide() && !currentSquare.getCard().hasAttacked()) {
                     surroundingSquare.setImageAsMoveableSquare();
                     root.getChildren().remove(surroundingSquare.getImageView());
                     root.getChildren().add(surroundingSquare.getImageView());
@@ -382,8 +372,8 @@ class GameScene extends Scene{
         }
     }
 
-    private void processAttackAction(boolean offensive) {
-        if (offensive && gameBoard.getSquarePossibleToInteractWith().contains(gameBoard.getCurrentlySelectedSquare())) {
+    private void processCombat() {
+        if (gameBoard.getSquarePossibleToInteractWith().contains(gameBoard.getCurrentlySelectedSquare())) {
             MinionCard firstMinion = gameBoard.getPreviouslySelectedSquare().getCard();
             if (firstMinion.hasAttacked()) return;
             MinionCard secondMinion = gameBoard.getCurrentlySelectedSquare().getCard();

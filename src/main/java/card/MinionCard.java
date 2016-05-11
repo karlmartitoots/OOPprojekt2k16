@@ -193,6 +193,10 @@ public class MinionCard extends Card {
         return this.canMove;
     }
 
+    public boolean isAlive() {
+        return currentHp > 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
