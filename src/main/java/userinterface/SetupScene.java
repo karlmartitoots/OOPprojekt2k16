@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 class SetupScene extends Scene {
-
     private Collection collection = new Collection();
     private Map<String, GeneralCard> allGeneralCards = collection.getAllGeneralCardsByName();
     private GeneralCard whiteGeneral = null, blackGeneral = null;

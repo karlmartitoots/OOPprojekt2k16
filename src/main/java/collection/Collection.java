@@ -2,6 +2,7 @@ package collection;
 
 import card.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -15,7 +16,11 @@ public class Collection {
 
     public Collection(){
         try(InputStream resourceInputStream = Collection.class.getClassLoader().getResourceAsStream("collection.txt");
-        Scanner fileReader = new Scanner(resourceInputStream)){
+        Scanner fileReader = new Scanner(resourceInputStream))
+        {
+            if(resourceInputStream == null){
+                throw new FileNotFoundException("collection.txt");
+            }
             String line;
             while(fileReader.hasNextLine()){
                 line = fileReader.nextLine();
@@ -25,7 +30,8 @@ public class Collection {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Couldn't open collections.txt");
+            System.out.println("Couldn't open collections.txt: ");
+            System.exit(-1);
         }
     }
 

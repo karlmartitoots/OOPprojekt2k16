@@ -8,7 +8,7 @@
 /ID rules: until a better system is developed, generals will have ID from 0 to 100
 
 GENERAL;General Taavi;0;A General named Taavi.;1;10;20;5
-GENERAL;General Märt;0;A General named Märt.;2;10;999;5
+GENERAL;General Mart;0;A General named Märt.;2;10;999;5
 
 /cost 1
 MINION;Silverguard Squire;1;The first minion to be ever created.;101;1;4;1

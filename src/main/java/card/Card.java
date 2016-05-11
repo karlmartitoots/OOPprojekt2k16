@@ -23,8 +23,13 @@ public abstract class Card {
         this.name = name;
         this.cost = cost;
         this.description = description;
-        this.image = new Image(name + ".jpg");
-        this.smallImage = new Image(name + "Small.jpg");
+        try {
+            this.image = new Image(name + ".jpg");
+            this.smallImage = new Image(name + "Small.jpg");
+        }catch(IllegalArgumentException e){
+            System.out.println(name + ".jpg" + " ei leitud! Väljun...");
+            System.exit(-1);
+        }
     }
 
     /**
