@@ -602,13 +602,11 @@ class GameScene extends Scene{
     }
 
     private Player getWinner(){
-        if(playerWhite.getGeneral().getCurrentHp() <= 0 && playerBlack.getGeneral().getCurrentHp() <= 0){
-            return null;
-        }else if(playerWhite.getGeneral().getCurrentHp() < 0){
+        if (playerWhite.getGeneral().getCurrentHp() <= 0) {
+            if (playerBlack.getGeneral().getCurrentHp() <= 0) return null;
             return playerBlack;
-        }else{
-            return playerWhite;
         }
+        return playerWhite;
     }
 
 }
