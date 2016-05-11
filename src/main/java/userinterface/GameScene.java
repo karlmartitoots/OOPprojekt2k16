@@ -191,18 +191,17 @@ class GameScene extends Scene{
      */
     private void setImagesAllOnCardSlots(Group root) {
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
-            ImageView card;
+            ImageView cardImageView;
             try {
                 Card cardInHand = currentPlayer.getPlayerPlayerHand().getCardsInHand().get(cardSlot);
-                card = new ImageView(cardInHand.getImage());
-            } catch (IndexOutOfBoundsException e) {
-                card = new ImageView(new Image("sampleCard.png"));
-            } catch (NullPointerException e) {
-                card = new ImageView(new Image("sampleCard.png"));
+                cardImageView = new ImageView(cardInHand.getImage());
+            } catch (IndexOutOfBoundsException | NullPointerException e) {
+                cardImageView = new ImageView(new Image("sampleCard.png"));
             }
-            card.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
-            card.setY(PlayerHand.getTopMostPixelValue());
-            root.getChildren().add(card);
+            cardImageView.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
+            cardImageView.setY(PlayerHand.getTopMostPixelValue());
+            root.getChildren().remove(cardImageView);
+            root.getChildren().add(cardImageView);
         }
 
     }
@@ -222,8 +221,10 @@ class GameScene extends Scene{
         whiteGeneralSquare.setSquaresCard(setupSettings.getWhiteGeneral());
         blackGeneralSquare.setSquaresCard(setupSettings.getBlackGeneral());
         whiteGeneralSquare.updateImage();
+        root.getChildren().remove(whiteGeneralSquare.getImageView());
         root.getChildren().add(whiteGeneralSquare.getImageView());
         blackGeneralSquare.updateImage();
+        root.getChildren().remove(blackGeneralSquare.getImageView());
         root.getChildren().add(blackGeneralSquare.getImageView());
 
     }
@@ -348,6 +349,7 @@ class GameScene extends Scene{
                     if (ifHasEnemyMinion && currentSquare.getCard().hasAttacked())
                         return; // Breaks, if minion has alredy attacked this turn.
                     surroundingSquare.setImageAsMoveableSquare();
+                    root.getChildren().remove(surroundingSquare.getImageView());
                     root.getChildren().add(surroundingSquare.getImageView());
                     squaresUsed.add(surroundingSquare);
                 }
@@ -405,6 +407,7 @@ class GameScene extends Scene{
     private void setSquaresImagesAsMoveableSquares(Group root, List<Square> possibleSquares) {
         for (Square possibleSquare : possibleSquares) {
             possibleSquare.setImageAsMoveableSquare();
+            root.getChildren().remove(possibleSquare.getImageView());
             root.getChildren().add(possibleSquare.getImageView());
         }
     }
@@ -426,6 +429,7 @@ class GameScene extends Scene{
     private void updateAllSquares(Group root) {
         for (Square square : gameBoard.getBoardBySquares()) {
             square.updateImage();
+            root.getChildren().remove(square.getImageView());
             root.getChildren().add(square.getImageView());
         }
     }
@@ -437,6 +441,7 @@ class GameScene extends Scene{
     private void setSquareImagesToCardImagesOrDefaults(Group root) {
         for (Square square : gameBoard.getSquarePossibleToInteractWith()) {
             square.setImageToCardImageOrDefault();
+            root.getChildren().remove(square.getImageView());
             root.getChildren().add(square.getImageView());
         }
     }

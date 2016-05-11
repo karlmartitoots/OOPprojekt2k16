@@ -14,7 +14,7 @@ public class Collection {
     private Map<Integer, Card> allCards = new HashMap<>();
 
     public Collection(){
-        try (Scanner fileReader = new Scanner(open("collection.txt")))
+        try(Scanner fileReader = new Scanner(open("collection.txt")))
         {
             String line;
             while (fileReader.hasNextLine()) {
