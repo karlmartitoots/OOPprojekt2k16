@@ -2,7 +2,6 @@ package collection;
 
 import card.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -15,16 +14,12 @@ public class Collection {
     private Map<Integer, Card> allCards = new HashMap<>();
 
     public Collection(){
-        try(InputStream resourceInputStream = Collection.class.getClassLoader().getResourceAsStream("collection.txt");
-        Scanner fileReader = new Scanner(resourceInputStream))
+        try(Scanner fileReader = new Scanner(open("collections.txt")))
         {
-            if(resourceInputStream == null){
-                throw new FileNotFoundException("collection.txt");
-            }
             String line;
-            while(fileReader.hasNextLine()){
+            while (fileReader.hasNextLine()) {
                 line = fileReader.nextLine();
-                if(!line.startsWith("/") && !line.equals("")){
+                if (!line.startsWith("/") && !line.equals("")) {
                     String[] parts = line.split(";");
                     createCard(parts);
                 }
@@ -32,6 +27,14 @@ public class Collection {
         } catch (IOException e) {
             throw new IllegalStateException("Couldn't open collections.txt: ", e);
         }
+    }
+
+    private InputStream open(String fileName) throws IOException{
+        InputStream is = Collection.class.getClassLoader().getResourceAsStream(fileName);
+        if(is == null){
+            throw new IOException(fileName);
+        }
+        return is;
     }
 
     /**
