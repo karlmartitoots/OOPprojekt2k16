@@ -37,6 +37,7 @@ class GameScene extends Scene{
             Executors.newScheduledThreadPool(1);
     //white starts
     private Player currentPlayer = playerWhite;
+    //for the time being if currentActiveCard is used, needs to be checked with currentCardExists
     private Card currentActiveCard = null;
     private int turnCounter = 0;
     private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionNameLabel, selectedMinionSideLabel;
@@ -286,21 +287,24 @@ class GameScene extends Scene{
     }
 
     private void setCurrentActiveCardByCardSlot(int cardSlotNumber) {
-        if (cardSlotNumber != -1) {
         int currentHandSize = currentPlayer.getPlayerHand().getCardsInHand().size();
         if(slotContainsCard(cardSlotNumber, currentHandSize)) {
             currentActiveCard = getCardByCardSlotNumber(cardSlotNumber);
-        }
+        }else{
+            currentActiveCard = null;
         }
     }
 
     private boolean slotContainsCard(int cardSlotNumber, int currentHandSize) {
-        return (currentHandSize - 1) >= cardSlotNumber;
+        return ((currentHandSize - 1) >= cardSlotNumber) && (cardSlotNumber != -1);
+    }
+
+    private boolean currentActiveCardExists(){
+        return currentActiveCard != null;
     }
 
     private Card getCardByCardSlotNumber(int cardSlotNumber){
         return currentPlayer.getPlayerHand().getCardsInHand().get(cardSlotNumber);
-
     }
 
     /**
