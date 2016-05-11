@@ -211,6 +211,7 @@ class GameScene extends Scene{
      * @param setupSettings Settings for getting, which GeneralCard's have been chosen and where they will be placed.
      */
     private void setGeneralsOnGameboardAndShowImages(Group root, SetupSettings setupSettings){
+        playerWhite.getPlayerPlayerHand().getCardsInHand().forEach(card -> System.out.println(card));
         Point2D whiteGeneralStartingCoordinates = setupSettings.getWhiteStartingSquare();
         Point2D blackGeneralStartingCoordinates = setupSettings.getBlackStartingSquare();
         //get the squares for generals
@@ -331,10 +332,10 @@ class GameScene extends Scene{
      *
      * @param root              Group that shows the scene, where events are listened.
      * @param squareCoordinates coordinates of the square clicked on
-     * @param offensive         interaction with enemy units
+     * @param ifHasEnemyMinion         interaction with enemy units
      */
-    private void interactionWithNeighbourSquares(Group root, Point2D squareCoordinates, boolean offensive) {
-        processAttackAction(offensive);
+    private void interactionWithNeighbourSquares(Group root, Point2D squareCoordinates, boolean ifHasEnemyMinion) {
+        processAttackAction(ifHasEnemyMinion);
         setSquareImagesToCardImagesOrDefaults(root);
         gameBoard.clearSquaresPossibleToInteractWith();
         Square currentSquare = gameBoard.getCurrentlySelectedSquare();
@@ -343,10 +344,10 @@ class GameScene extends Scene{
             List<Square> squaresUsed = new ArrayList<>();
             possibleSquaresToUse.forEach(surroundingSquare -> {
                 // the second part of the and checks if the current square contains a general, or if the adjecent square contains an enemy minion
-                if (surroundingSquare.hasMinionOnSquare() == offensive &&
-                        (isConditionForSummonOrAttackMet(offensive, currentSquare) ||
-                                isConditionForSummonOrAttackMet(offensive, surroundingSquare))) {
-                    if (offensive && currentSquare.getCard().hasAttacked())
+                if (surroundingSquare.hasMinionOnSquare() == ifHasEnemyMinion &&
+                        (isConditionForSummonOrAttackMet(ifHasEnemyMinion, currentSquare) ||
+                                isConditionForSummonOrAttackMet(ifHasEnemyMinion, surroundingSquare))) {
+                    if (ifHasEnemyMinion && currentSquare.getCard().hasAttacked())
                         return; // Breaks, if minion has alredy attacked this turn.
                     surroundingSquare.setImageAsMoveableSquare();
                     root.getChildren().add(surroundingSquare.getImageView());
@@ -602,8 +603,8 @@ class GameScene extends Scene{
     }
 
     private Player getWinner(){
-        if (playerWhite.getGeneral().getCurrentHp() <= 0) {
-            if (playerBlack.getGeneral().getCurrentHp() <= 0) return null;
+        if (!playerWhite.isAlive()) {
+            if (!playerBlack.isAlive()) return null;
             return playerBlack;
         }
         return playerWhite;
