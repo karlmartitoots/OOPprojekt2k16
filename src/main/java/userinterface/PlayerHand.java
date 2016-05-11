@@ -21,8 +21,8 @@ class PlayerHand {
      *
      * @param card Card to add to cardsInHand
      */
-    void addCard(Card card) {
-        if (cardsInHand.size() <= maximumHandSize) {
+    void addCardIfPossible(Card card) {
+        if (cardsInHand.size() < maximumHandSize) {
             cardsInHand.add(card);
         }
     }

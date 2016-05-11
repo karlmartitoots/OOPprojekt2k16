@@ -55,8 +55,7 @@ public class Player {
         Map<Integer, Card> allCards = new Collection().getAllCards();
         List<Card> cardList = new ArrayList<>(allCards.values());
         int randomIndex = new Random().nextInt(cardList.size());
-        Card randomCard = cardList.get(randomIndex);
-        return randomCard;
+        return cardList.get(randomIndex);
     }
 
     /**
@@ -64,7 +63,7 @@ public class Player {
      */
     private void initiateHand() {
         for (int i = 0; i < handSize; i++) {
-            playerPlayerHand.addCard(playerPlayerDeck.draw());
+            playerPlayerHand.addCardIfPossible(playerPlayerDeck.draw());
         }
     }
 
@@ -109,7 +108,7 @@ public class Player {
      *
      * @return hand of the player
      */
-    public PlayerHand getPlayerPlayerHand() {
+    public PlayerHand getPlayerHand() {
         return playerPlayerHand;
     }
 
@@ -141,7 +140,7 @@ public class Player {
         usableMana = playerCurrentMana;
     }
 
-    public PlayerDeck getPlayerPlayerDeck() {
+    public PlayerDeck getPlayerDeck() {
         return playerPlayerDeck;
     }
 }

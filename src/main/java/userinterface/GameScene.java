@@ -37,6 +37,7 @@ class GameScene extends Scene{
             Executors.newScheduledThreadPool(1);
     //white starts
     private Player currentPlayer = playerWhite;
+    private Card currentActiveCard = null;
     private int turnCounter = 0;
     private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionNameLabel, selectedMinionSideLabel;
 
@@ -48,7 +49,7 @@ class GameScene extends Scene{
      */
     GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
         super(root);
-        playerWhite.getPlayerPlayerDeck().getDeckOfCards().forEach(card -> System.out.println(card));
+        playerWhite.getPlayerDeck().getDeckOfCards().forEach(System.out::println);
         //set generals in  creaturesOnBoard
         CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
         creaturesOnBoard.setAllGeneralsOnBoard(setupSettings.getWhiteGeneral(), setupSettings.getBlackGeneral());
@@ -193,7 +194,7 @@ class GameScene extends Scene{
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
             ImageView cardImageView;
             try {
-                Card cardInHand = currentPlayer.getPlayerPlayerHand().getCardsInHand().get(cardSlot);
+                Card cardInHand = currentPlayer.getPlayerHand().getCardsInHand().get(cardSlot);
                 cardImageView = new ImageView(cardInHand.getImage());
             } catch (IndexOutOfBoundsException | NullPointerException e) {
                 cardImageView = new ImageView(new Image("sampleCard.png"));
@@ -278,9 +279,25 @@ class GameScene extends Scene{
     private void mouseEventHandler(Group root, MouseEvent event) {
         Point2D squareCoordinates = getSquare(event.getSceneX(), event.getSceneY());
         int cardSlotNumber = getCardSlotNumber(event.getSceneX(), event.getSceneY());
+        setCurrentActiveCardByCardSlot(cardSlotNumber);
         System.out.println(cardSlotNumber);
         checkStateAndprocessClickOnBoard(root, squareCoordinates);
         System.out.println("X: " + event.getX() + ", Y:" + event.getY());
+    }
+
+    private void setCurrentActiveCardByCardSlot(int cardSlotNumber) {
+        int currentHandSize = currentPlayer.getPlayerHand().getCardsInHand().size();
+        if(slotContainsCard(cardSlotNumber, currentHandSize)) {
+            currentActiveCard = getCardByCardSlotNumber(cardSlotNumber);
+        }
+    }
+
+    private boolean slotContainsCard(int cardSlotNumber, int currentHandSize) {
+        return (currentHandSize - 1) >= cardSlotNumber;
+    }
+
+    private Card getCardByCardSlotNumber(int cardSlotNumber){
+        return currentPlayer.getPlayerHand().getCardsInHand().get(cardSlotNumber);
     }
 
     /**
@@ -557,6 +574,7 @@ class GameScene extends Scene{
         setAllCreaturesToHaventMoved(root);
         incrementTurnCounter();
         clearMinionInformationLabels();
+        currentPlayer.getPlayerHand().addCardIfPossible(currentPlayer.getPlayerDeck().draw());
         setImagesAllOnCardSlots(root);
     }
 
