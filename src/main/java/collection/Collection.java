@@ -30,8 +30,7 @@ public class Collection {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Couldn't open collections.txt: ");
-            System.exit(-1);
+            throw new IllegalStateException("Couldn't open collections.txt: ", e);
         }
     }
 
