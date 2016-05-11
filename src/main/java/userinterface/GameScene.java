@@ -286,9 +286,11 @@ class GameScene extends Scene{
     }
 
     private void setCurrentActiveCardByCardSlot(int cardSlotNumber) {
+        if (cardSlotNumber != -1) {
         int currentHandSize = currentPlayer.getPlayerHand().getCardsInHand().size();
         if(slotContainsCard(cardSlotNumber, currentHandSize)) {
             currentActiveCard = getCardByCardSlotNumber(cardSlotNumber);
+        }
         }
     }
 
@@ -298,6 +300,7 @@ class GameScene extends Scene{
 
     private Card getCardByCardSlotNumber(int cardSlotNumber){
         return currentPlayer.getPlayerHand().getCardsInHand().get(cardSlotNumber);
+
     }
 
     /**
