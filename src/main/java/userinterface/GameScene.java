@@ -1,6 +1,7 @@
 package userinterface;
 
 import board.CreaturesOnBoard;
+import card.Card;
 import card.GeneralCard;
 import card.MinionCard;
 import javafx.application.Platform;
@@ -67,13 +68,7 @@ class GameScene extends Scene{
 
         Text timerText = createAndPlaceTimer(root);
         Label turnLabel = createAndPlaceLabel(root, (timerNodeWidthInPixels - 50)/2, 10, currentPlayer.getSide().toString());
-        currentStateLabel = createAndPlaceLabel(root, 770, 350, "Current state: " + state.toString());
-        generalHealthLabel = createLabel("General health: " + currentPlayer.getGeneral().getCurrentHp());
-        currentManaLabel = createLabel("Current mana: " + currentPlayer.getUsableMana());
-        selectedMinionNameLabel = createLabel("");
-        selectedMinionAttackLabel = createLabel("");
-        selectedMinionHealthLabel = createLabel("");
-        selectedMinionSideLabel = createLabel("");
+        createInformationLabels(root);
 
         createAndPlaceInfoboxNode(root);
 
@@ -132,6 +127,16 @@ class GameScene extends Scene{
         primaryStage.show();
     }
 
+    private void createInformationLabels(Group root) {
+        currentStateLabel = createAndPlaceLabel(root, 770, 350, "Current state: " + state.toString());
+        generalHealthLabel = createLabel("General health: " + currentPlayer.getGeneral().getCurrentHp());
+        currentManaLabel = createLabel("Current mana: " + currentPlayer.getUsableMana());
+        selectedMinionNameLabel = createLabel("");
+        selectedMinionAttackLabel = createLabel("");
+        selectedMinionHealthLabel = createLabel("");
+        selectedMinionSideLabel = createLabel("");
+    }
+
     private void createAndPlaceInfoboxNode(Group root) {
         VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedMinionNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionSideLabel);
         infoBox.setLayoutX(770);
@@ -186,10 +191,18 @@ class GameScene extends Scene{
      */
     private void setDefaultCardImagesAllOnCardSlots(Group root) {
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
-            ImageView defaultCard = new ImageView(new Image("sampleCard.png"));
-            defaultCard.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
-            defaultCard.setY(PlayerHand.getTopMostPixelValue());
-            root.getChildren().add(defaultCard);
+            ImageView card;
+            try {
+                Card cardInHand = currentPlayer.getPlayerPlayerHand().getCardsInHand().get(cardSlot);
+                card = new ImageView(cardInHand.getImage());
+            } catch (IndexOutOfBoundsException e) {
+                card = new ImageView(new Image("sampleCard.png"));
+            } catch (NullPointerException e) {
+                card = new ImageView(new Image("sampleCard.png"));
+            }
+            card.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
+            card.setY(PlayerHand.getTopMostPixelValue());
+            root.getChildren().add(card);
         }
 
     }
@@ -333,6 +346,8 @@ class GameScene extends Scene{
                 if (surroundingSquare.hasMinionOnSquare() == offensive &&
                         (isConditionForSummonOrAttackMet(offensive, currentSquare) ||
                                 isConditionForSummonOrAttackMet(offensive, surroundingSquare))) {
+                    if (offensive && currentSquare.getCard().hasAttacked())
+                        return; // Breaks, if minion has alredy attacked this turn.
                     surroundingSquare.setImageAsMoveableSquare();
                     root.getChildren().add(surroundingSquare.getImageView());
                     squaresUsed.add(surroundingSquare);
