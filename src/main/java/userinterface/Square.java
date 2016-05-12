@@ -144,6 +144,7 @@ public class Square {
      */
     public void setSquaresCard(MinionCard minionCard) {
         this.card = minionCard;
+        minionCard.setCurrentPosition(this);
         setSquaresImageView(minionCard.getSmallImage());
     }
 

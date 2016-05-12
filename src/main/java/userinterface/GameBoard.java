@@ -56,7 +56,7 @@ class GameBoard {
      * Finds all the possible squares a minion can go to from the given position using BFS
      * @return All squares the minion can move
      */
-    List<Square> getAllPossibleSquares() {
+    public List<Square> getAllPossibleSquares() {
         Map<Square, Integer> movesUsedToGo = new HashMap<>();
         movesUsedToGo.put(getCurrentlySelectedSquare(), 0);
         Queue<Square> queueOfSquaresToCheck = new LinkedList<>();
@@ -80,6 +80,16 @@ class GameBoard {
             });
         }
         return squaresPossibleToMoveTo;
+    }
+
+    public List<Square> getPossibleSquaresInGeneralsSummonRange(Square startSquare){
+        List<Square> possibleSquaresInRange = new ArrayList<>();
+        for (Square sq : expand(startSquare)) {
+            if(sq.doesNotHaveMinionOnSquare()){
+                possibleSquaresInRange.add(sq);
+            }
+        }
+        return possibleSquaresInRange;
     }
 
     /**

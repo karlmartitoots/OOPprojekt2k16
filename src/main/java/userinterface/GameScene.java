@@ -33,6 +33,7 @@ class GameScene extends Scene{
     private int timerStartTime = 60;
     private double timerNodeWidthInPixels = 250;
     private InteractionState state = InteractionState.NONE;
+    private Group parentGroup;
     private final ScheduledExecutorService timerScheduler =
             Executors.newScheduledThreadPool(1);
     //white starts
@@ -44,12 +45,12 @@ class GameScene extends Scene{
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
-     * @param root  Group, that everything is set on.
      * @param primaryStage Stage for the scene.
      * @param setupSettings Initial settings that are loaded, when the game begins.
      */
     GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
         super(root);
+        parentGroup = root;
         playerWhite.getPlayerDeck().getDeckOfCards().forEach(System.out::println);
         //set generals in  creaturesOnBoard
         CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
@@ -59,27 +60,27 @@ class GameScene extends Scene{
 
         //load the gameframe onto the gui
         ImageView gameFrame = new ImageView(new Image("GUI frame.jpg"));
-        root.getChildren().add(gameFrame);
+        parentGroup.getChildren().add(gameFrame);
 
         //load the board onto the gui
-        loadGameboardForStartOfGame(root);
+        loadGameboardForStartOfGame();
 
         //load the generals onto the board
-        setGeneralsOnGameboardAndShowImages(root, setupSettings);
-        setImagesAllOnCardSlots(root);
+        setGeneralsOnGameboardAndShowImages(setupSettings);
+        setImagesAllOnCardSlots();
 
-        Text timerText = createAndPlaceTimer(root);
-        Label turnLabel = createAndPlaceLabel(root, (timerNodeWidthInPixels - 50)/2, 10, currentPlayer.getSide().toString());
-        createInformationLabels(root);
+        Text timerText = createAndPlaceTimer();
+        Label turnLabel = createAndPlaceLabel((timerNodeWidthInPixels - 50)/2, 10, currentPlayer.getSide().toString());
+        createInformationLabels();
 
-        createAndPlaceInfoboxNode(root);
+        createAndPlaceInfoboxNode();
 
         timerScheduler.scheduleAtFixedRate(
                 (Runnable) () ->
                         Platform.runLater(() ->{
                             if(primaryStage.isFocused()) {
                                 if(!gameIsOver()) {
-                                    reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel, root);
+                                    reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel);
                                 }else{
                                     primaryStage.close();
                                     timerScheduler.shutdown();
@@ -94,28 +95,22 @@ class GameScene extends Scene{
                         }), 1L, 1L, SECONDS);
 
         //load the turn ending button
-        Button endTurnButton = createAndPlaceEndTurnButton(root);
-        Button moveButton = createAndPlaceButton(root, InteractionState.MOVE, 760, 380, 230, 40);
-        Button attackButton = createAndPlaceButton(root, InteractionState.ATTACK, 760, 420, 230, 40);
-        Button summonButton = createAndPlaceButton(root, InteractionState.SUMMON, 760, 460, 230, 40);
+        Button endTurnButton = createAndPlaceEndTurnButton();
+        Button moveButton = createAndPlaceButton(InteractionState.MOVE, 760, 380, 230, 40);
+        Button attackButton = createAndPlaceButton(InteractionState.ATTACK, 760, 420, 230, 40);
 
         //event listener for turn ending button
         endTurnButton.setOnAction(event ->
-                switchTurnAndResetToStartOfTurn(timerText, turnLabel, root));
+                switchTurnAndResetToStartOfTurn(timerText, turnLabel));
         moveButton.setOnAction(event ->
                 updateLabel(currentStateLabel, InteractionState.MOVE)
         );
         attackButton.setOnAction(event ->
                 updateLabel(currentStateLabel, InteractionState.ATTACK)
         );
-        summonButton.setOnAction(event ->
-                updateLabel(currentStateLabel, InteractionState.SUMMON)
-        );
 
         //event listener for handling the clicks on the group.
-        root.setOnMouseClicked((event) ->
-                mouseEventHandler(root, event)
-        );
+        parentGroup.setOnMouseClicked(this::mouseEventHandler);
 
         //When the GUI window is closed, stops the timer scheduler thread.
         primaryStage.setOnCloseRequest(event -> timerScheduler.shutdown());
@@ -129,8 +124,8 @@ class GameScene extends Scene{
         primaryStage.show();
     }
 
-    private void createInformationLabels(Group root) {
-        currentStateLabel = createAndPlaceLabel(root, 770, 350, "Current state: " + state.toString());
+    private void createInformationLabels() {
+        currentStateLabel = createAndPlaceLabel(770, 350, "Current state: " + state.toString());
         generalHealthLabel = createLabel("General health: " + currentPlayer.getGeneral().getCurrentHp());
         currentManaLabel = createLabel("Current mana: " + currentPlayer.getUsableMana());
         selectedMinionNameLabel = createLabel("");
@@ -139,17 +134,16 @@ class GameScene extends Scene{
         selectedMinionSideLabel = createLabel("");
     }
 
-    private void createAndPlaceInfoboxNode(Group root) {
+    private void createAndPlaceInfoboxNode() {
         VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedMinionNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionSideLabel);
         infoBox.setLayoutX(770);
         infoBox.setLayoutY(30);
-        root.getChildren().add(infoBox);
+        parentGroup.getChildren().add(infoBox);
     }
 
     /**
      * Creates a button that allows the user to change to given state in his turn
      *
-     * @param root      Parent of the button
      * @param state     State to switch to
      * @param xStarting starting x position of the button
      * @param yStarting starting y position of the button
@@ -157,20 +151,20 @@ class GameScene extends Scene{
      * @param height    height of the button
      * @return          Returns the button that was created.
      */
-    private Button createAndPlaceButton(Group root, InteractionState state, int xStarting, int yStarting, int width, int height) {
+    private Button createAndPlaceButton(InteractionState state, int xStarting, int yStarting, int width, int height) {
         Button button = new Button(state.toString());
         button.relocate(xStarting, yStarting);
         button.setMinSize(width, height);
         button.setFont(new Font(20));
-        root.getChildren().add(button);
+        parentGroup.getChildren().add(button);
         return button;
     }
 
-    private Label createAndPlaceLabel(Group root, double xOnGui, double yOnGui, String message) {
+    private Label createAndPlaceLabel(double xOnGui, double yOnGui, String message) {
         Label label = new Label(message);
         label.relocate(xOnGui, yOnGui);
         label.setFont(new Font(20));
-        root.getChildren().add(label);
+        parentGroup.getChildren().add(label);
         return label;
     }
 
@@ -188,10 +182,8 @@ class GameScene extends Scene{
 
     /**
      * Method loads the images of cards in the given card slots
-     *
-     * @param root Group that the label will be shown on.
      */
-    private void setImagesAllOnCardSlots(Group root) {
+    private void setImagesAllOnCardSlots() {
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
             ImageView cardImageView;
             try {
@@ -202,8 +194,8 @@ class GameScene extends Scene{
             }
             cardImageView.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
             cardImageView.setY(PlayerHand.getTopMostPixelValue());
-            root.getChildren().remove(cardImageView);
-            root.getChildren().add(cardImageView);
+            parentGroup.getChildren().remove(cardImageView);
+            parentGroup.getChildren().add(cardImageView);
         }
 
     }
@@ -211,7 +203,7 @@ class GameScene extends Scene{
      * Method to initially place both generals on the GUI and in gameboard class.
      * @param setupSettings Settings for getting, which GeneralCard's have been chosen and where they will be placed.
      */
-    private void setGeneralsOnGameboardAndShowImages(Group root, SetupSettings setupSettings){
+    private void setGeneralsOnGameboardAndShowImages(SetupSettings setupSettings){
         Point2D whiteGeneralStartingCoordinates = setupSettings.getWhiteStartingSquare();
         Point2D blackGeneralStartingCoordinates = setupSettings.getBlackStartingSquare();
         //get the squares for generals
@@ -223,38 +215,33 @@ class GameScene extends Scene{
         whiteGeneralSquare.setSquaresCard(setupSettings.getWhiteGeneral());
         blackGeneralSquare.setSquaresCard(setupSettings.getBlackGeneral());
         whiteGeneralSquare.updateImage();
-        root.getChildren().remove(whiteGeneralSquare.getImageView());
-        root.getChildren().add(whiteGeneralSquare.getImageView());
+        parentGroup.getChildren().remove(whiteGeneralSquare.getImageView());
+        parentGroup.getChildren().add(whiteGeneralSquare.getImageView());
         blackGeneralSquare.updateImage();
-        root.getChildren().remove(blackGeneralSquare.getImageView());
-        root.getChildren().add(blackGeneralSquare.getImageView());
+        parentGroup.getChildren().remove(blackGeneralSquare.getImageView());
+        parentGroup.getChildren().add(blackGeneralSquare.getImageView());
 
     }
 
     /**
      * Creates a button to end the current players turn.
-     * @param root Group that the button will be shown on.
      * @return Returns the button itself.
      */
-    private Button createAndPlaceEndTurnButton(Group root) {
+    private Button createAndPlaceEndTurnButton() {
         Button endTurnButton = new Button("END TURN");
         endTurnButton.relocate(5, 250);
         endTurnButton.setMinSize(250, 245);
         endTurnButton.setFont(new Font(40));
-        root.getChildren().add(endTurnButton);
+        parentGroup.getChildren().add(endTurnButton);
         return endTurnButton;
     }
 
-    /**
-     * Initiates the board on the root group.
-     * @param root Group that the squares will be loaded in on.
-     */
-    private void loadGameboardForStartOfGame(Group root) {
+    private void loadGameboardForStartOfGame() {
         for (int x = 0; x < GameBoard.getxDimension(); x++) {
             for (int y = 0; y < GameBoard.getyDimension(); y++) {
                 Square initialSquare;
                 gameBoard.addSquareToBoardBySquares(initialSquare = new Square(x, y, null));
-                root.getChildren().add(initialSquare.getImageView());
+                parentGroup.getChildren().add(initialSquare.getImageView());
             }
         }
     }
@@ -274,16 +261,35 @@ class GameScene extends Scene{
 
     /**
      * Handles events in the case mouse is pressed
-     * @param root  Group that shows the scene, where events are listened.
      * @param event Event to be listened for.
      */
-    private void mouseEventHandler(Group root, MouseEvent event) {
+    private void mouseEventHandler(MouseEvent event) {
         Point2D squareCoordinates = getSquare(event.getSceneX(), event.getSceneY());
         int cardSlotNumber = getCardSlotNumber(event.getSceneX(), event.getSceneY());
-        setCurrentActiveCardByCardSlot(cardSlotNumber);
-        System.out.println(cardSlotNumber);
-        checkStateAndprocessClickOnBoard(root, squareCoordinates);
-        System.out.println("X: " + event.getX() + ", Y:" + event.getY());
+
+        if(cardSlotNumber != -1) {//click on cardslots
+            setCurrentActiveCardByCardSlot(cardSlotNumber);
+            highlightPossibleSummonSquares();
+        }else {//click not on cardslots
+            checkStateAndprocessClickOnBoard(squareCoordinates);
+            setSquareImagesToCardImagesOrDefaults();
+            currentActiveCard = null;
+        }
+    }
+
+    private Square getCurrentGeneralSquare(){
+        return currentPlayer.getGeneral().getCurrentPosition();
+    }
+
+    private void highlightPossibleSummonSquares() {
+        Square currentGeneralSquare = getCurrentGeneralSquare();
+        gameBoard.setSquarePossibleToInteractWith(
+                gameBoard.getPossibleSquaresInGeneralsSummonRange(currentGeneralSquare));
+        for (Square square : gameBoard.getSquarePossibleToInteractWith()) {
+            parentGroup.getChildren().remove(square.getImageView());
+            square.setImageAsMoveableSquare();
+            parentGroup.getChildren().add(square.getImageView());
+        }
     }
 
     private void setCurrentActiveCardByCardSlot(int cardSlotNumber) {
@@ -296,7 +302,7 @@ class GameScene extends Scene{
     }
 
     private boolean slotContainsCard(int cardSlotNumber, int currentHandSize) {
-        return ((currentHandSize - 1) >= cardSlotNumber) && (cardSlotNumber != -1);
+        return (currentHandSize - 1) >= cardSlotNumber;
     }
 
     private boolean currentActiveCardExists(){
@@ -309,22 +315,27 @@ class GameScene extends Scene{
 
     /**
      * Handles events that happens when the mouse is clicked on the board
-     * @param root Group that shows the scene, where events are listened.
      * @param squareCoordinates coordinates of the square clicked on
      */
-    private void checkStateAndprocessClickOnBoard(Group root, Point2D squareCoordinates) {
+    private void checkStateAndprocessClickOnBoard(Point2D squareCoordinates) {
+        if(currentActiveCardExists()){
+            Square squareToSummonOn = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
+            //bug: when not minioncard - breaks
+            squareToSummonOn.setSquaresCard((MinionCard) currentActiveCard);
+            squareToSummonOn.getCard().setSide(currentPlayer.getSide());
+        }
         if (squareCoordinates.getX() >= 0) {
             gameBoard.setCurrentlySelectedSquare(squareCoordinates);
-            setSquareImagesToCardImagesOrDefaults(root);
+            setSquareImagesToCardImagesOrDefaults();
             showMinionInformationOnScreen();
             switch (state) {
                 case MOVE:
-                    moveCardAndUpdateAllSquares(root, squareCoordinates);
+                    moveCardAndUpdateAllSquares(squareCoordinates);
                     gameBoard.clearSquaresPossibleToInteractWith();
-                    getSquaresPossibleToMove(root);
+                    getSquaresPossibleToInteractWith();
                     break;
                 case ATTACK:
-                    this.processAttackAction(root);
+                    this.processAttackAction();
                     break;
             }
         }
@@ -350,10 +361,8 @@ class GameScene extends Scene{
 
     /**
      * Handles events that are related
-     *
-     * @param root  Group that shows the scene, where events are listened.
      */
-    private void processAttackAction(Group root) {
+    private void processAttackAction() {
         processCombat();
         gameBoard.clearSquaresPossibleToInteractWith();
         Square currentSquare = gameBoard.getCurrentlySelectedSquare();
@@ -363,8 +372,8 @@ class GameScene extends Scene{
             possibleSquareToAttackTo.forEach(surroundingSquare -> {
                 if (surroundingSquare.hasMinionOnSquare() && surroundingSquare.getCard().getSide() != currentPlayer.getSide() && !currentSquare.getCard().hasAttacked()) {
                     surroundingSquare.setImageAsMoveableSquare();
-                    root.getChildren().remove(surroundingSquare.getImageView());
-                    root.getChildren().add(surroundingSquare.getImageView());
+                    parentGroup.getChildren().remove(surroundingSquare.getImageView());
+                    parentGroup.getChildren().add(surroundingSquare.getImageView());
                     squaresUsed.add(surroundingSquare);
                 }
             });
@@ -406,57 +415,54 @@ class GameScene extends Scene{
 
     /**
      * If event is registered on square that has a minion, the method displays all the squares the minion can move, as well as saves them.
-     * @param root Group that shows the scene, where events are listned
      */
-    private void getSquaresPossibleToMove(Group root) {
+    private void getSquaresPossibleToInteractWith() {
         if (gameBoard.getCurrentlySelectedSquare().hasMinionOnSquare() &&
                 gameBoard.getCurrentlySelectedSquare().getCard().hasNotMoved() &&
                 gameBoard.getCurrentlySelectedSquare().getCard().getSide().equals(currentPlayer.getSide())) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setSquarePossibleToInteractWith(possibleSquares);
-            setSquaresImagesAsMoveableSquares(root, possibleSquares);
+            setSquaresImagesAsMoveableSquares(possibleSquares);
         }
     }
 
-    private void setSquaresImagesAsMoveableSquares(Group root, List<Square> possibleSquares) {
+    private void setSquaresImagesAsMoveableSquares(List<Square> possibleSquares) {
         for (Square possibleSquare : possibleSquares) {
             possibleSquare.setImageAsMoveableSquare();
-            root.getChildren().remove(possibleSquare.getImageView());
-            root.getChildren().add(possibleSquare.getImageView());
+            parentGroup.getChildren().remove(possibleSquare.getImageView());
+            parentGroup.getChildren().add(possibleSquare.getImageView());
         }
     }
 
     /**
      * If the previously selected square had a minion on it, then the method will reposition the minion on the game board, if the minion has not moved this turn;
-     * @param root Group that shows the scene, where events are listened
      * @param squareCoordinates coordinates of the square clicked on
      */
-    private void moveCardAndUpdateAllSquares(Group root, Point2D squareCoordinates) {
+    private void moveCardAndUpdateAllSquares(Point2D squareCoordinates) {
         if (gameBoard.getPreviouslySelectedSquare().hasMinionOnSquare()) {
             Square target = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
             gameBoard.moveCardIfPossible(gameBoard.getPreviouslySelectedSquare(), target);
-            updateAllSquares(root);
+            updateAllSquares();
 
         }
     }
 
-    private void updateAllSquares(Group root) {
+    private void updateAllSquares() {
         for (Square square : gameBoard.getBoardBySquares()) {
             square.updateImage();
-            root.getChildren().remove(square.getImageView());
-            root.getChildren().add(square.getImageView());
+            parentGroup.getChildren().remove(square.getImageView());
+            parentGroup.getChildren().add(square.getImageView());
         }
     }
 
     /**
      * Deselects the squares which were able to move to by the previously selected minion.
-     * @param root Group that shows the scene, where events are listned
      */
-    private void setSquareImagesToCardImagesOrDefaults(Group root) {
+    private void setSquareImagesToCardImagesOrDefaults() {
         for (Square square : gameBoard.getSquarePossibleToInteractWith()) {
             square.setImageToCardImageOrDefault();
-            root.getChildren().remove(square.getImageView());
-            root.getChildren().add(square.getImageView());
+            parentGroup.getChildren().remove(square.getImageView());
+            parentGroup.getChildren().add(square.getImageView());
         }
     }
 
@@ -523,13 +529,12 @@ class GameScene extends Scene{
 
     /**
      * Creates and places the timer on the game GUI.
-     * @param root Group, that the timer text will be placed on.
      * @return Returns the text that shows the current time left on someone's turn.
      */
-    private Text createAndPlaceTimer(Group root){
+    private Text createAndPlaceTimer(){
         Text timerText = new Text(10, 210, String.valueOf(timerStartTime));
         timerText.setFont(new Font(220));
-        root.getChildren().add(timerText);
+        parentGroup.getChildren().add(timerText);
         return timerText;
     }
 
@@ -538,9 +543,9 @@ class GameScene extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel, Group root){
+    private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel){
         if(timerText.getText().equals("1")) {
-            switchTurnAndResetToStartOfTurn(timerText, sideLabel, root);
+            switchTurnAndResetToStartOfTurn(timerText, sideLabel);
         }else {
             timerText.setText(String.valueOf(Integer.parseInt(timerText.getText()) - 1));
         }
@@ -559,20 +564,20 @@ class GameScene extends Scene{
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void switchTurnAndResetToStartOfTurn(Text timerText, Label sideLabel, Group root) {
-        resetGameLogicToStartOfTurn(root);
+    private void switchTurnAndResetToStartOfTurn(Text timerText, Label sideLabel) {
+        resetGameLogicToStartOfTurn();
         resetAllNodesToStartOfTurn(timerText, sideLabel);
     }
 
-    private void resetGameLogicToStartOfTurn(Group root) {
+    private void resetGameLogicToStartOfTurn() {
         switchCurrentPlayer();
         currentPlayer.incrementMana();
         currentPlayer.resetUsableMana();
-        setAllCreaturesToHaventMoved(root);
+        setAllCreaturesToHaventMoved();
         incrementTurnCounter();
         clearMinionInformationLabels();
         currentPlayer.getPlayerHand().addCardIfPossible(currentPlayer.getPlayerDeck().draw());
-        setImagesAllOnCardSlots(root);
+        setImagesAllOnCardSlots();
     }
 
     private void resetAllNodesToStartOfTurn(Text timerText, Label sideLabel) {
@@ -593,8 +598,8 @@ class GameScene extends Scene{
     /**
      * Finds all the creatures on the gameboard and sets their hasMoved state to false.
      */
-    private void setAllCreaturesToHaventMoved(Group root) {
-        setSquareImagesToCardImagesOrDefaults(root);
+    private void setAllCreaturesToHaventMoved() {
+        setSquareImagesToCardImagesOrDefaults();
         gameBoard.clearSquaresPossibleToInteractWith();
         allowMovementForAllCreatures();
     }
