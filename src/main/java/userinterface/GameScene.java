@@ -200,23 +200,42 @@ class GameScene extends Scene {
      */
     private void setCardSlotImages() {
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
-            ImageView cardImageView;
+            Group cardPicture;
             if (cardSlot < currentPlayer.getPlayerHand().getCardsInHand().size()) {
                 Card cardInHand = currentPlayer.getPlayerHand().getCardsInHand().get(cardSlot);
                 if(cardInHand instanceof MinionCard){
                     ((MinionCard) cardInHand).setSide(currentPlayer.getSide());
+                    cardPicture = getCardDisplayImage(cardInHand);
+                    cardPicture.setLayoutX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
+                    cardPicture.setLayoutY(PlayerHand.getTopMostPixelValue());
+                    parentGroup.getChildren().add(cardPicture);
                 }
-                cardImageView = new ImageView(cardInHand.getImage());
-                cardImageView.setFitHeight(PlayerHand.getPreferredCardHeight());
-                cardImageView.setFitWidth(PlayerHand.getPreferredCardWidth());
-            } else {
-                cardImageView = new ImageView(new Image("sampleCard.png"));
             }
-            cardImageView.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
-            cardImageView.setY(PlayerHand.getTopMostPixelValue());
-            parentGroup.getChildren().add(cardImageView);
-        }
 
+        }
+    }
+
+    private Group getCardDisplayImage(Card card){
+        Group cardGroup = new Group();
+
+        ImageView cardImageView = new ImageView(card.getImage());
+        cardImageView.setFitHeight(PlayerHand.getPreferredCardHeight());
+        cardImageView.setFitWidth(PlayerHand.getPreferredCardWidth());
+
+        ImageView cardFrame = new ImageView(new Image("cardFrame.png"));
+        cardFrame.setFitHeight(PlayerHand.getPreferredCardHeight());
+        cardFrame.setFitWidth(PlayerHand.getPreferredCardWidth());
+
+        int nameXAdjustment = 35, nameYAdjustment = 20;
+        Text minionName = new Text(nameXAdjustment, nameYAdjustment, card.getName());
+        int nameLength = card.getName().length();
+        double fontFunction = 30/(1 + nameLength/10.0);
+        minionName.setFont(new Font(fontFunction));
+        minionName.setFill(Color.WHITE);
+
+        cardGroup.getChildren().addAll(cardImageView, cardFrame, minionName);
+
+        return cardGroup;
     }
 
     /**
@@ -480,7 +499,6 @@ class GameScene extends Scene {
             Square target = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
             gameBoard.moveCardIfPossible(gameBoard.getPreviouslySelectedSquare(), target);
             updateAllSquares();
-
         }
     }
 
