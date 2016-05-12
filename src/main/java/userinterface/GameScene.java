@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -101,11 +102,15 @@ class GameScene extends Scene {
         //event listener for turn ending button
         endTurnButton.setOnAction(event ->
                 switchTurnAndResetToStartOfTurn(timerText, turnLabel));
-        moveButton.setOnAction(event ->
-                updateLabel(currentStateLabel, InteractionState.MOVE)
+        moveButton.setOnAction(event ->{
+                updateLabel(currentStateLabel, InteractionState.MOVE);
+                flashAllyMinionSquares(Color.LIMEGREEN);
+        }
         );
-        attackButton.setOnAction(event ->
-                updateLabel(currentStateLabel, InteractionState.ATTACK)
+        attackButton.setOnAction(event ->{
+                updateLabel(currentStateLabel, InteractionState.ATTACK);
+                flashAllyMinionSquares(Color.LIMEGREEN);
+        }
         );
 
         //event listener for handling the clicks on the group.
@@ -121,6 +126,16 @@ class GameScene extends Scene {
         String gameTitle = "Card Game 1.0";
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
+    }
+
+    private void flashAllyMinionSquares(Color color) {
+        for (Square square : gameBoard.getBoardBySquares()) {
+            if(square.hasMinionOnSquare()){
+                if(square.getCard().getSide().equals(currentPlayer.getSide())){
+                    square.flashSquareInColor(color, parentGroup);
+                }
+            }
+        }
     }
 
     private void createInformationLabels() {
@@ -610,6 +625,7 @@ class GameScene extends Scene {
         sideLabel.setText(currentPlayer.getSide().toString());
         generalHealthLabel.setText(String.valueOf("General health: " + currentPlayer.getGeneral().getCurrentHp()));
         currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getUsableMana()));
+        flashAllyMinionSquares(Color.LIMEGREEN);
     }
 
     /**

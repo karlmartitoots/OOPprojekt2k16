@@ -1,9 +1,15 @@
 package userinterface;
 
 import card.MinionCard;
+import javafx.animation.StrokeTransition;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class Square {
     private int xCordOnBoard;
@@ -193,6 +199,30 @@ public class Square {
      */
     public MinionCard getCard() {
         return card;
+    }
+
+    public void flashSquareInColor(Color color, Group root){
+        Platform.runLater(() -> {
+            Rectangle rect = new Rectangle ();
+            rect.setStrokeWidth(4);
+            rect.setFill(Color.TRANSPARENT);
+            rect.setX(xPixelCoordinate);
+            rect.setY(yPixelCoordinate);
+            rect.setWidth(width);
+            rect.setHeight(height);
+
+            StrokeTransition ft = new StrokeTransition(Duration.millis(300), rect, Color.BLACK, color);
+            ft.setCycleCount(4);
+            ft.setAutoReverse(true);
+            root.getChildren().add(rect);
+
+            ft.play();
+            ft.setOnFinished(event -> {
+                root.getChildren().remove(rect);
+                root.getChildren().remove(this.imageView);
+                root.getChildren().add(this.imageView);
+            });
+        });
     }
 
     /**
