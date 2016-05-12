@@ -143,9 +143,14 @@ public class Square {
      * @param minionCard card to place on square
      */
     public void setSquaresCard(MinionCard minionCard) {
-        this.card = minionCard;
-        minionCard.setCurrentPosition(this);
-        setSquaresImageView(minionCard.getSmallImage());
+        if (minionCard == null) {
+            this.card = null;
+            imageView.setImage(defaultSquare);
+        } else {
+            this.card = minionCard;
+            minionCard.setCurrentPosition(this);
+            setSquaresImageView(minionCard.getSmallImage());
+        }
     }
 
     /**
@@ -157,6 +162,8 @@ public class Square {
         imageView = new ImageView(image);
         imageView.setX(xPixelCoordinate);
         imageView.setY(yPixelCoordinate);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
     }
     /**
      * Updates the image of the square when gameboard is changed.

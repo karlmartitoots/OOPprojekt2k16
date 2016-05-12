@@ -82,13 +82,6 @@ public class Player {
     }
 
     /**
-     * Sets players usable mana to the current maximum amount of mana the player can have.
-     */
-    public void resetMana() {
-        usableMana = playerCurrentMana;
-    }
-
-    /**
      * Method that tries to use mana, if it is sucessful, the mana is used up. If not then then no mana is used.
      *
      * @param manaToUse mana to be used in the given action

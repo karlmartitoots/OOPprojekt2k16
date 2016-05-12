@@ -2,7 +2,6 @@ package userinterface;
 
 import board.CreaturesOnBoard;
 import card.Card;
-import card.GeneralCard;
 import card.MinionCard;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
@@ -26,7 +25,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-class GameScene extends Scene{
+class GameScene extends Scene {
 
     private GameBoard gameBoard = new GameBoard();
     private Player playerWhite = new Player(Side.WHITE), playerBlack = new Player(Side.BLACK);
@@ -41,11 +40,12 @@ class GameScene extends Scene{
     //for the time being if currentActiveCard is used, needs to be checked with currentCardExists
     private Card currentActiveCard = null;
     private int turnCounter = 0;
-    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionNameLabel, selectedMinionSideLabel;
+    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionNameLabel, selectedMinionManaCostLabel, selectedMinionSideLabel;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
-     * @param primaryStage Stage for the scene.
+     *
+     * @param primaryStage  Stage for the scene.
      * @param setupSettings Initial settings that are loaded, when the game begins.
      */
     GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
@@ -70,18 +70,18 @@ class GameScene extends Scene{
         setImagesAllOnCardSlots();
 
         Text timerText = createAndPlaceTimer();
-        Label turnLabel = createAndPlaceLabel((timerNodeWidthInPixels - 50)/2, 10, currentPlayer.getSide().toString());
+        Label turnLabel = createAndPlaceLabel((timerNodeWidthInPixels - 50) / 2, 10, currentPlayer.getSide().toString());
         createInformationLabels();
 
         createAndPlaceInfoboxNode();
 
         timerScheduler.scheduleAtFixedRate(
                 (Runnable) () ->
-                        Platform.runLater(() ->{
-                            if(primaryStage.isFocused()) {
-                                if(!gameIsOver()) {
+                        Platform.runLater(() -> {
+                            if (primaryStage.isFocused()) {
+                                if (!gameIsOver()) {
                                     reduceTimerAndSwitchTurnIfTimeOver(timerText, turnLabel);
-                                }else{
+                                } else {
                                     primaryStage.close();
                                     timerScheduler.shutdown();
                                     primaryStage.setScene(new GameOverScene(
@@ -131,11 +131,12 @@ class GameScene extends Scene{
         selectedMinionNameLabel = createLabel("");
         selectedMinionAttackLabel = createLabel("");
         selectedMinionHealthLabel = createLabel("");
+        selectedMinionManaCostLabel = createLabel("");
         selectedMinionSideLabel = createLabel("");
     }
 
     private void createAndPlaceInfoboxNode() {
-        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedMinionNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionSideLabel);
+        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedMinionNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionManaCostLabel, selectedMinionSideLabel);
         infoBox.setLayoutX(770);
         infoBox.setLayoutY(30);
         parentGroup.getChildren().add(infoBox);
@@ -149,7 +150,7 @@ class GameScene extends Scene{
      * @param yStarting starting y position of the button
      * @param width     width of the button
      * @param height    height of the button
-     * @return          Returns the button that was created.
+     * @return Returns the button that was created.
      */
     private Button createAndPlaceButton(InteractionState state, int xStarting, int yStarting, int width, int height) {
         Button button = new Button(state.toString());
@@ -168,7 +169,7 @@ class GameScene extends Scene{
         return label;
     }
 
-    private Label createLabel(String message){
+    private Label createLabel(String message) {
         Label label = new Label(message);
         label.setFont(new Font(20));
         return label;
@@ -189,6 +190,8 @@ class GameScene extends Scene{
             try {
                 Card cardInHand = currentPlayer.getPlayerHand().getCardsInHand().get(cardSlot);
                 cardImageView = new ImageView(cardInHand.getImage());
+                cardImageView.setFitHeight(PlayerHand.getPreferredCardHeight());
+                cardImageView.setFitWidth(PlayerHand.getPreferredCardWidth());
             } catch (IndexOutOfBoundsException | NullPointerException e) {
                 cardImageView = new ImageView(new Image("sampleCard.png"));
             }
@@ -199,11 +202,13 @@ class GameScene extends Scene{
         }
 
     }
+
     /**
      * Method to initially place both generals on the GUI and in gameboard class.
+     *
      * @param setupSettings Settings for getting, which GeneralCard's have been chosen and where they will be placed.
      */
-    private void setGeneralsOnGameboardAndShowImages(SetupSettings setupSettings){
+    private void setGeneralsOnGameboardAndShowImages(SetupSettings setupSettings) {
         Point2D whiteGeneralStartingCoordinates = setupSettings.getWhiteStartingSquare();
         Point2D blackGeneralStartingCoordinates = setupSettings.getBlackStartingSquare();
         //get the squares for generals
@@ -225,6 +230,7 @@ class GameScene extends Scene{
 
     /**
      * Creates a button to end the current players turn.
+     *
      * @return Returns the button itself.
      */
     private Button createAndPlaceEndTurnButton() {
@@ -245,8 +251,10 @@ class GameScene extends Scene{
             }
         }
     }
+
     /**
      * Method for declaring the properties of the game GUI.
+     *
      * @param primaryStage Primary stage of GUI.
      */
     private void setPrimaryStageProperties(Stage primaryStage) {
@@ -261,23 +269,25 @@ class GameScene extends Scene{
 
     /**
      * Handles events in the case mouse is pressed
+     *
      * @param event Event to be listened for.
      */
     private void mouseEventHandler(MouseEvent event) {
         Point2D squareCoordinates = getSquare(event.getSceneX(), event.getSceneY());
         int cardSlotNumber = getCardSlotNumber(event.getSceneX(), event.getSceneY());
 
-        if(cardSlotNumber != -1) {//click on cardslots
+        if (cardSlotNumber != -1) {//click on cardslots
+            state = InteractionState.NONE;
             setCurrentActiveCardByCardSlot(cardSlotNumber);
             highlightPossibleSummonSquares();
-        }else {//click not on cardslots
+
+        } else {//click not on cardslots
             checkStateAndprocessClickOnBoard(squareCoordinates);
-            setSquareImagesToCardImagesOrDefaults();
             currentActiveCard = null;
         }
     }
 
-    private Square getCurrentGeneralSquare(){
+    private Square getCurrentGeneralSquare() {
         return currentPlayer.getGeneral().getCurrentPosition();
     }
 
@@ -294,59 +304,70 @@ class GameScene extends Scene{
 
     private void setCurrentActiveCardByCardSlot(int cardSlotNumber) {
         int currentHandSize = currentPlayer.getPlayerHand().getCardsInHand().size();
-        if(slotContainsCard(cardSlotNumber, currentHandSize)) {
+        if (slotContainsCard(cardSlotNumber, currentHandSize)) {
             currentActiveCard = getCardByCardSlotNumber(cardSlotNumber);
-        }else{
+
+        } else {
             currentActiveCard = null;
         }
+        showMinionInformationOnScreen((MinionCard) currentActiveCard);
     }
 
     private boolean slotContainsCard(int cardSlotNumber, int currentHandSize) {
         return (currentHandSize - 1) >= cardSlotNumber;
     }
 
-    private boolean currentActiveCardExists(){
+    private boolean currentActiveCardExists() {
         return currentActiveCard != null;
     }
 
-    private Card getCardByCardSlotNumber(int cardSlotNumber){
+    private Card getCardByCardSlotNumber(int cardSlotNumber) {
         return currentPlayer.getPlayerHand().getCardsInHand().get(cardSlotNumber);
     }
 
     /**
      * Handles events that happens when the mouse is clicked on the board
+     *
      * @param squareCoordinates coordinates of the square clicked on
      */
     private void checkStateAndprocessClickOnBoard(Point2D squareCoordinates) {
-        if(currentActiveCardExists()){
+        if (currentActiveCardExists()) {
             Square squareToSummonOn = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
-            //bug: when not minioncard - breaks
-            squareToSummonOn.setSquaresCard((MinionCard) currentActiveCard);
-            squareToSummonOn.getCard().setSide(currentPlayer.getSide());
+            if (gameBoard.getSquarePossibleToInteractWith().contains(squareToSummonOn) && currentPlayer.useMana(currentActiveCard.getCost())) {
+                //bug: when not minioncard - breaks
+                squareToSummonOn.setSquaresCard((MinionCard) currentActiveCard);
+                squareToSummonOn.getCard().setSide(currentPlayer.getSide());
+                squareToSummonOn.getCard().blockMovement();
+                squareToSummonOn.getCard().setHasAttacked(true);
+                currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
+                currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getUsableMana()));
+                setImagesAllOnCardSlots();
+            }
         }
         if (squareCoordinates.getX() >= 0) {
             gameBoard.setCurrentlySelectedSquare(squareCoordinates);
             setSquareImagesToCardImagesOrDefaults();
-            showMinionInformationOnScreen();
+            showMinionInformationOnScreen(gameBoard.getCurrentlySelectedSquare().getCard());
             switch (state) {
                 case MOVE:
                     moveCardAndUpdateAllSquares(squareCoordinates);
                     gameBoard.clearSquaresPossibleToInteractWith();
-                    getSquaresPossibleToInteractWith();
+                    getSquaresPossibleToMoveTo();
                     break;
                 case ATTACK:
-                    this.processAttackAction();
+                    processAttackAction();
                     break;
             }
         }
     }
 
-    private void showMinionInformationOnScreen() {
-        if (gameBoard.getCurrentlySelectedSquare().hasMinionOnSquare()) {
-            selectedMinionNameLabel.setText("NAME: " + gameBoard.getCurrentlySelectedSquare().getCard().getName());
-            selectedMinionAttackLabel.setText("ATTACK: " + gameBoard.getCurrentlySelectedSquare().getCard().getAttack());
-            selectedMinionHealthLabel.setText("HP: " + gameBoard.getCurrentlySelectedSquare().getCard().getCurrentHp());
-            selectedMinionSideLabel.setText("SIDE: " + gameBoard.getCurrentlySelectedSquare().getCard().getSide());
+    private void showMinionInformationOnScreen(MinionCard card) {
+        if (card != null) {
+            selectedMinionNameLabel.setText("NAME: " + card.getName());
+            selectedMinionAttackLabel.setText("ATTACK: " + card.getAttack());
+            selectedMinionHealthLabel.setText("HP: " + card.getCurrentHp());
+            selectedMinionManaCostLabel.setText("MANACOST: " + card.getCost());
+            selectedMinionSideLabel.setText("SIDE: " + card.getSide());
         } else {
             clearMinionInformationLabels();
         }
@@ -356,6 +377,7 @@ class GameScene extends Scene{
         selectedMinionNameLabel.setText("");
         selectedMinionAttackLabel.setText("");
         selectedMinionHealthLabel.setText("");
+        selectedMinionManaCostLabel.setText("");
         selectedMinionSideLabel.setText("");
     }
 
@@ -388,11 +410,21 @@ class GameScene extends Scene{
             MinionCard secondMinion = gameBoard.getCurrentlySelectedSquare().getCard();
             attackAndRetaliate(firstMinion, secondMinion);
             attackAndRetaliate(secondMinion, firstMinion);
+            if (!firstMinion.isAlive()) {
+                parentGroup.getChildren().remove(gameBoard.getPreviouslySelectedSquare().getImageView());
+                gameBoard.getPreviouslySelectedSquare().setSquaresCard(null);
+                parentGroup.getChildren().add(gameBoard.getPreviouslySelectedSquare().getImageView());
+            }
+            if (!secondMinion.isAlive()) {
+                parentGroup.getChildren().remove(gameBoard.getCurrentlySelectedSquare().getImageView());
+                gameBoard.getCurrentlySelectedSquare().setSquaresCard(null);
+                parentGroup.getChildren().add(gameBoard.getCurrentlySelectedSquare().getImageView());
+            }
             firstMinion.setHasAttacked(true);
         }
     }
 
-    private boolean cardBelongsToCurrentSide(MinionCard minionCard){
+    private boolean cardBelongsToCurrentSide(MinionCard minionCard) {
         return minionCard.getSide().equals(currentPlayer.getSide());
     }
 
@@ -401,41 +433,29 @@ class GameScene extends Scene{
     }
 
     /**
-     * Chekcs if the specific condition to use Summon or Attack action is met.
-     *
-     * @param offensive Parameter that shows if it affects squares with minions or not
-     * @param square    Current square clicked on
-     * @return True if the conditions for the SUMMON/ATTACK are met, false if otherwise
-     */
-    private boolean isConditionForSummonOrAttackMet(boolean offensive, Square square) {
-        return offensive &&
-                !cardBelongsToCurrentSide(square.getCard()) ||
-                square.getCard() instanceof GeneralCard; // summoning condition
-    }
-
-    /**
      * If event is registered on square that has a minion, the method displays all the squares the minion can move, as well as saves them.
      */
-    private void getSquaresPossibleToInteractWith() {
+    private void getSquaresPossibleToMoveTo() {
         if (gameBoard.getCurrentlySelectedSquare().hasMinionOnSquare() &&
                 gameBoard.getCurrentlySelectedSquare().getCard().hasNotMoved() &&
                 gameBoard.getCurrentlySelectedSquare().getCard().getSide().equals(currentPlayer.getSide())) {
             List<Square> possibleSquares = gameBoard.getAllPossibleSquares();
             gameBoard.setSquarePossibleToInteractWith(possibleSquares);
-            setSquaresImagesAsMoveableSquares(possibleSquares);
+            setSquaresImagesAsMoveableSquares();
         }
     }
 
-    private void setSquaresImagesAsMoveableSquares(List<Square> possibleSquares) {
-        for (Square possibleSquare : possibleSquares) {
-            possibleSquare.setImageAsMoveableSquare();
+    private void setSquaresImagesAsMoveableSquares() {
+        for (Square possibleSquare : gameBoard.getSquarePossibleToInteractWith()) {
             parentGroup.getChildren().remove(possibleSquare.getImageView());
+            possibleSquare.setImageAsMoveableSquare();
             parentGroup.getChildren().add(possibleSquare.getImageView());
         }
     }
 
     /**
      * If the previously selected square had a minion on it, then the method will reposition the minion on the game board, if the minion has not moved this turn;
+     *
      * @param squareCoordinates coordinates of the square clicked on
      */
     private void moveCardAndUpdateAllSquares(Point2D squareCoordinates) {
@@ -468,6 +488,7 @@ class GameScene extends Scene{
 
     /**
      * Gets the X coordinates of the given square in pixels.
+     *
      * @param squaresXCoordOnBoard The X coordinate of the square on the board
      * @return The X Pixel coordinates of the given square.
      */
@@ -529,9 +550,10 @@ class GameScene extends Scene{
 
     /**
      * Creates and places the timer on the game GUI.
+     *
      * @return Returns the text that shows the current time left on someone's turn.
      */
-    private Text createAndPlaceTimer(){
+    private Text createAndPlaceTimer() {
         Text timerText = new Text(10, 210, String.valueOf(timerStartTime));
         timerText.setFont(new Font(220));
         parentGroup.getChildren().add(timerText);
@@ -540,27 +562,30 @@ class GameScene extends Scene{
 
     /**
      * Method for reducing the timer by one unit or switching turns when the time is up.
+     *
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
-    private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel){
-        if(timerText.getText().equals("1")) {
+    private void reduceTimerAndSwitchTurnIfTimeOver(Text timerText, Label sideLabel) {
+        if (timerText.getText().equals("1")) {
             switchTurnAndResetToStartOfTurn(timerText, sideLabel);
-        }else {
+        } else {
             timerText.setText(String.valueOf(Integer.parseInt(timerText.getText()) - 1));
         }
     }
 
     /**
      * Method for resetting the timer to the time in the beginning of a turn.
+     *
      * @param timerText The text, which shows the time.
      */
-    private void resetTimer(Text timerText){
+    private void resetTimer(Text timerText) {
         timerText.setText(String.valueOf(timerStartTime));
     }
 
     /**
      * Switches turns and does all the operations needed in the end and start of a turn.
+     *
      * @param timerText The text, which shows the time.
      * @param sideLabel Label, that shows who's turn it currently is.
      */
@@ -591,7 +616,7 @@ class GameScene extends Scene{
     /**
      * Increases the turn counter by 1.
      */
-    private void incrementTurnCounter(){
+    private void incrementTurnCounter() {
         turnCounter += 1;
     }
 
@@ -606,7 +631,7 @@ class GameScene extends Scene{
 
     private void allowMovementForAllCreatures() {
         gameBoard.getBoardBySquares().forEach(square -> {
-            if(square.hasMinionOnSquare()){
+            if (square.hasMinionOnSquare()) {
                 square.getCard().allowMovement();
                 square.getCard().setHasAttacked(false);
             }
@@ -614,19 +639,19 @@ class GameScene extends Scene{
     }
 
 
-    private void switchCurrentPlayer(){
-        if(currentPlayer.getSide().equals(Side.WHITE)){
+    private void switchCurrentPlayer() {
+        if (currentPlayer.getSide().equals(Side.WHITE)) {
             this.currentPlayer = playerBlack;
-        }else{
+        } else {
             this.currentPlayer = playerWhite;
         }
     }
 
-    private boolean gameIsOver(){
+    private boolean gameIsOver() {
         return !(playerBlack.isAlive() && playerWhite.isAlive());
     }
 
-    private Player getWinner(){
+    private Player getWinner() {
         if (!playerWhite.isAlive()) {
             if (!playerBlack.isAlive()) return null;
             return playerBlack;
