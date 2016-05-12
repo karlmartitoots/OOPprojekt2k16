@@ -96,6 +96,7 @@ public class Player {
             return false;
         }
         usableMana -= manaToUse;
+        playerCurrentMana -= manaToUse;
         return true;
     }
 
@@ -134,6 +135,10 @@ public class Player {
 
     public void resetUsableMana() {
         usableMana = playerCurrentMana;
+    }
+
+    public int getPlayerCurrentMana(){
+        return playerCurrentMana;
     }
 
     public PlayerDeck getPlayerDeck() {

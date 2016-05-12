@@ -365,19 +365,7 @@ class GameScene extends Scene {
      * @param squareCoordinates coordinates of the square clicked on
      */
     private void checkStateAndprocessClickOnBoard(Point2D squareCoordinates) {
-        //summoning minion
-        if (currentActiveCardExists() && currentActiveCard instanceof MinionCard) {
-            Square squareToSummonOn = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
-            if (gameBoard.getSquarePossibleToInteractWith().contains(squareToSummonOn) && currentPlayer.useMana(currentActiveCard.getCost())) {
-                squareToSummonOn.setSquaresCard((MinionCard) currentActiveCard);
-                squareToSummonOn.getCard().setCurrentPosition(squareToSummonOn);
-                squareToSummonOn.getCard().blockMovement();
-                squareToSummonOn.getCard().setHasAttacked(true);
-                currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
-                currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getUsableMana()));
-                updateCardSlots();
-            }
-        }
+        summonMinionIfPossible(squareCoordinates);
         if (squareCoordinates.getX() >= 0) {
             gameBoard.setCurrentlySelectedSquare(squareCoordinates);
             setSquareImagesToCardImagesOrDefaults();
@@ -393,6 +381,23 @@ class GameScene extends Scene {
                     break;
             }
         }
+    }
+
+    private void summonMinionIfPossible(Point2D squareCoordinates) {
+        if (currentActiveCardExists() && currentActiveCard instanceof MinionCard) {
+            Square squareToSummonOn = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
+            if (gameBoard.getSquarePossibleToInteractWith().contains(squareToSummonOn) && currentPlayer.useMana(currentActiveCard.getCost())) {
+                squareToSummonOn.setSquaresCard((MinionCard) currentActiveCard);
+                squareToSummonOn.getCard().setCurrentPosition(squareToSummonOn);
+                squareToSummonOn.getCard().blockMovement();
+                squareToSummonOn.getCard().setHasAttacked(true);
+                currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
+                currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getPlayerCurrentMana()));
+                //This doesn't remove the card from players hands view on the cardslots. Don't know why yet.
+                //TODO: fix updateCardSlots(); on summoning a card
+            }
+        }
+        updateCardSlots();
     }
 
     private void showMinionInformationOnScreen(MinionCard card) {
