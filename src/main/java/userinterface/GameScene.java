@@ -29,6 +29,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 class GameScene extends Scene {
 
     private GameBoard gameBoard = new GameBoard();
+    private List<CardSlot> cardSlots = new ArrayList<>();
     private Player playerWhite = new Player(Side.WHITE), playerBlack = new Player(Side.BLACK);
     private int timerStartTime = 60;
     private double timerNodeWidthInPixels = 250;
@@ -67,7 +68,8 @@ class GameScene extends Scene {
 
         //load the generals onto the board
         setGeneralsOnGameboardAndShowImages(setupSettings);
-        setCardSlotImages();
+        cardSlots = createAndGetCardSlots();
+        updateCardSlots();
 
         Text timerText = createAndPlaceTimer();
         Label turnLabel = createAndPlaceLabel((timerNodeWidthInPixels - 50) / 2, 10, currentPlayer.getSide().toString());
@@ -126,6 +128,40 @@ class GameScene extends Scene {
         String gameTitle = "Card Game 1.0";
         primaryStage.setTitle(gameTitle);
         primaryStage.show();
+    }
+
+    private List<CardSlot> createAndGetCardSlots() {
+        List<CardSlot> cardSlots = new ArrayList<>();
+        for (int cardSlotNr = 0; cardSlotNr < PlayerHand.getMaximumHandSize(); cardSlotNr++) {
+            CardSlot newCardSlot = new CardSlot(cardSlotNr);
+            Group cardSlotImage = newCardSlot.getCardSlotImage();
+            cardSlotImage.setLayoutX(cardSlotNr * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
+            cardSlotImage.setLayoutY(PlayerHand.getTopMostPixelValue());
+            parentGroup.getChildren().add(cardSlotImage);
+            cardSlots.add(newCardSlot);
+        }
+        return cardSlots;
+    }
+
+    private void updateCardSlots(){
+        CardSlot currentCardSlot;
+        for (int cardSlotNr = 0; cardSlotNr < PlayerHand.getMaximumHandSize(); cardSlotNr++) {
+            //get the right cardslot
+            currentCardSlot = cardSlots.get(cardSlotNr);
+            //remove the old image
+            parentGroup.getChildren().remove(currentCardSlot.getCardSlotImage());
+            //set it's card if there is one
+            if (cardSlotNr < currentPlayer.getPlayerHand().getCardsInHand().size()) {
+                currentCardSlot.setCard(currentPlayer.getPlayerHand().getCardsInHand().get(cardSlotNr));
+            }
+            //update the cardslot image according to if it has a card now or not (the function sorts it out)
+            cardSlots.get(cardSlotNr).updateCardSlotImage();
+            //set the new image and show it
+            Group cardSlotImage = currentCardSlot.getCardSlotImage();
+            cardSlotImage.setLayoutX(cardSlotNr * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
+            cardSlotImage.setLayoutY(PlayerHand.getTopMostPixelValue());
+            parentGroup.getChildren().add(cardSlotImage);
+        }
     }
 
     private void flashAllyMinionSquares(Color color) {
@@ -189,53 +225,10 @@ class GameScene extends Scene {
         return label;
     }
 
+
     private void updateLabel(Label label, InteractionState state) {
         this.state = state;
         label.setText("Current state: " + state.toString());
-    }
-
-
-    /**
-     * Method loads the images of cards in the given card slots
-     */
-    private void setCardSlotImages() {
-        for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
-            Group cardPicture;
-            if (cardSlot < currentPlayer.getPlayerHand().getCardsInHand().size()) {
-                Card cardInHand = currentPlayer.getPlayerHand().getCardsInHand().get(cardSlot);
-                if(cardInHand instanceof MinionCard){
-                    ((MinionCard) cardInHand).setSide(currentPlayer.getSide());
-                    cardPicture = getCardDisplayImage(cardInHand);
-                    cardPicture.setLayoutX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
-                    cardPicture.setLayoutY(PlayerHand.getTopMostPixelValue());
-                    parentGroup.getChildren().add(cardPicture);
-                }
-            }
-
-        }
-    }
-
-    private Group getCardDisplayImage(Card card){
-        Group cardGroup = new Group();
-
-        ImageView cardImageView = new ImageView(card.getImage());
-        cardImageView.setFitHeight(PlayerHand.getPreferredCardHeight());
-        cardImageView.setFitWidth(PlayerHand.getPreferredCardWidth());
-
-        ImageView cardFrame = new ImageView(new Image("cardFrame.png"));
-        cardFrame.setFitHeight(PlayerHand.getPreferredCardHeight());
-        cardFrame.setFitWidth(PlayerHand.getPreferredCardWidth());
-
-        int nameXAdjustment = 35, nameYAdjustment = 20;
-        Text minionName = new Text(nameXAdjustment, nameYAdjustment, card.getName());
-        int nameLength = card.getName().length();
-        double fontFunction = 30/(1 + nameLength/10.0);
-        minionName.setFont(new Font(fontFunction));
-        minionName.setFill(Color.WHITE);
-
-        cardGroup.getChildren().addAll(cardImageView, cardFrame, minionName);
-
-        return cardGroup;
     }
 
     /**
@@ -311,15 +304,21 @@ class GameScene extends Scene {
         Point2D squareCoordinates = getSquareByPixelCoordinates(event.getSceneX(), event.getSceneY());
         int cardSlotNumber = getCardSlotNumber(event.getSceneX(), event.getSceneY());
 
-        if (cardSlotNumber != -1) {//click on cardslots
+        if (cardSlotNumber != -1 && cardSlotNumber < currentPlayer.getPlayerHand().getCardsInHand().size()) {//click on cardslots
             state = InteractionState.NONE;
             setCurrentActiveCardByCardSlot(cardSlotNumber);
             highlightPossibleSummonSquares();
 
-        } else {//click not on cardslots
+        } else if(coordinatesOnGameboard(squareCoordinates)){//click on gameboard
             checkStateAndprocessClickOnBoard(squareCoordinates);
             currentActiveCard = null;
+        }else{
+            setSquareImagesToCardImagesOrDefaults();
         }
+    }
+
+    private boolean coordinatesOnGameboard(Point2D squareCoordinates){
+        return !squareCoordinates.equals(new Point2D(-1, -1));
     }
 
     private Square getCurrentGeneralSquare() {
@@ -376,7 +375,7 @@ class GameScene extends Scene {
                 squareToSummonOn.getCard().setHasAttacked(true);
                 currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
                 currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getUsableMana()));
-                setCardSlotImages();
+                updateCardSlots();
             }
         }
         if (squareCoordinates.getX() >= 0) {
@@ -637,11 +636,11 @@ class GameScene extends Scene {
         incrementTurnCounter();
         clearMinionInformationLabels();
         currentPlayer.getPlayerHand().addCardIfPossible(currentPlayer.getPlayerDeck().draw());
-        setCardSlotImages();
     }
 
     private void resetAllNodesToStartOfTurn(Text timerText, Label sideLabel) {
         updateLabel(currentStateLabel, InteractionState.NONE);
+        updateCardSlots();
         resetTimer(timerText);
         sideLabel.setText(currentPlayer.getSide().toString());
         generalHealthLabel.setText(String.valueOf("General health: " + currentPlayer.getGeneral().getCurrentHp()));

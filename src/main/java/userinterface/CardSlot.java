@@ -11,16 +11,21 @@ import javafx.scene.text.Text;
 public class CardSlot {
     private int slotNumber;
     private double slotWidth = 140, slotHeight = 250;
-    private Card card;
     private Group imageGroup = new Group();
+    private Card card = null;
+    private ImageView defaultImageView = new ImageView(new Image("emptySlot.jpg"));
 
-    public CardSlot(int slotNumber, Card card) {
+    public CardSlot(int slotNumber) {
         this.slotNumber = slotNumber;
-        this.card = card;
-        imageGroup.getChildren().add(new ImageView(new Image("emptySlot.jpg")));
+        imageGroup.getChildren().add(defaultImageView);
     }
 
-    public void setCardSlotImage(){
+    public void updateCardSlotImage(){
+        if(!hasCard()){
+            imageGroup.getChildren().clear();
+            imageGroup.getChildren().add(defaultImageView);
+            return;
+        }
         ImageView cardImageView = new ImageView(card.getImage());
         cardImageView.setFitHeight(slotHeight);
         cardImageView.setFitWidth(slotWidth);
@@ -36,11 +41,30 @@ public class CardSlot {
         minionName.setFont(new Font(fontFunction));
         minionName.setFill(Color.WHITE);
 
-        imageGroup.getChildren().removeAll();
+        imageGroup.getChildren().clear();
         imageGroup.getChildren().addAll(cardImageView, cardFrame, minionName);
+    }
+
+    public void setCard(Card card){
+        this.card = card;
+    }
+    public Card getCard(){
+        return this.card;
+    }
+
+    public boolean hasCard(){
+        return card != null;
     }
 
     public Group getCardSlotImage(){
         return this.imageGroup;
+    }
+
+    @Override
+    public String toString() {
+        return "CardSlot{" +
+                "slotNumber=" + slotNumber +
+                ", card=" + card +
+                '}';
     }
 }

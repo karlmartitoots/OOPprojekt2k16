@@ -46,7 +46,11 @@ public class Player {
      */
     private void initiateDeck() {
         for (int i = 0; i < deckSize; i++) {
-            playerPlayerDeck.addCard(randomCard());
+            Card newCard = randomCard();
+            if(newCard instanceof MinionCard){
+                ((MinionCard) newCard).setSide(this.side);
+            }
+            playerPlayerDeck.addCard(newCard);
         }
     }
 
