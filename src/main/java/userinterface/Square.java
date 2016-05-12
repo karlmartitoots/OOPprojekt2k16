@@ -1,6 +1,7 @@
 package userinterface;
 
 import card.MinionCard;
+import javafx.animation.PauseTransition;
 import javafx.animation.StrokeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
@@ -9,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class Square {
@@ -218,9 +221,34 @@ public class Square {
 
             ft.play();
             ft.setOnFinished(event -> {
-                root.getChildren().remove(rect);
-                root.getChildren().remove(this.imageView);
+                root.getChildren().removeAll(rect, this.imageView);
                 root.getChildren().add(this.imageView);
+            });
+        });
+    }
+
+    public void showHitSplatOnSquare(int damage, Group parentGroup){
+        Platform.runLater(() -> {
+            ImageView hitsplat = new ImageView(new Image("hitsplat.png"));
+            hitsplat.setX(xPixelCoordinate);
+            hitsplat.setY(yPixelCoordinate);
+            hitsplat.setFitWidth(width);
+            hitsplat.setFitHeight(height);
+
+            int textAdjustmentFromSquareCorner = 15;//pixels
+            Text damageText = new Text(String.valueOf(damage));//square is 50x50 so this should be 30x30
+            damageText.setFont(new Font(25));
+            int damageTextWidth = 5;
+            damageText.setX(xPixelCoordinate + textAdjustmentFromSquareCorner - damageTextWidth);
+            damageText.setY(yPixelCoordinate + Square.getSquareHeight() - textAdjustmentFromSquareCorner);
+
+            parentGroup.getChildren().addAll(hitsplat, damageText);
+            PauseTransition pt = new PauseTransition(Duration.millis(700));
+
+            pt.play();
+            pt.setOnFinished(event -> {
+                parentGroup.getChildren().removeAll(hitsplat, damageText, this.imageView);
+                parentGroup.getChildren().add(this.imageView);
             });
         });
     }

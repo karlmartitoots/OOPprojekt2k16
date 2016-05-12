@@ -49,6 +49,7 @@ class GameBoard {
             nextSquare.setSquaresCard(minion);
             boardBySquares.set(nextSquare.squares1DPosition(), nextSquare);
             nextSquare.getCard().blockMovement();
+            nextSquare.getCard().setCurrentPosition(nextSquare);
         }
     }
 

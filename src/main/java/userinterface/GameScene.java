@@ -67,7 +67,7 @@ class GameScene extends Scene {
 
         //load the generals onto the board
         setGeneralsOnGameboardAndShowImages(setupSettings);
-        setImagesAllOnCardSlots();
+        setCardSlotImages();
 
         Text timerText = createAndPlaceTimer();
         Label turnLabel = createAndPlaceLabel((timerNodeWidthInPixels - 50) / 2, 10, currentPlayer.getSide().toString());
@@ -198,11 +198,14 @@ class GameScene extends Scene {
     /**
      * Method loads the images of cards in the given card slots
      */
-    private void setImagesAllOnCardSlots() {
+    private void setCardSlotImages() {
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
             ImageView cardImageView;
             if (cardSlot < currentPlayer.getPlayerHand().getCardsInHand().size()) {
                 Card cardInHand = currentPlayer.getPlayerHand().getCardsInHand().get(cardSlot);
+                if(cardInHand instanceof MinionCard){
+                    ((MinionCard) cardInHand).setSide(currentPlayer.getSide());
+                }
                 cardImageView = new ImageView(cardInHand.getImage());
                 cardImageView.setFitHeight(PlayerHand.getPreferredCardHeight());
                 cardImageView.setFitWidth(PlayerHand.getPreferredCardWidth());
@@ -211,7 +214,6 @@ class GameScene extends Scene {
             }
             cardImageView.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
             cardImageView.setY(PlayerHand.getTopMostPixelValue());
-            parentGroup.getChildren().remove(cardImageView);
             parentGroup.getChildren().add(cardImageView);
         }
 
@@ -287,7 +289,7 @@ class GameScene extends Scene {
      * @param event Event to be listened for.
      */
     private void mouseEventHandler(MouseEvent event) {
-        Point2D squareCoordinates = getSquare(event.getSceneX(), event.getSceneY());
+        Point2D squareCoordinates = getSquareByPixelCoordinates(event.getSceneX(), event.getSceneY());
         int cardSlotNumber = getCardSlotNumber(event.getSceneX(), event.getSceneY());
 
         if (cardSlotNumber != -1) {//click on cardslots
@@ -345,17 +347,17 @@ class GameScene extends Scene {
      * @param squareCoordinates coordinates of the square clicked on
      */
     private void checkStateAndprocessClickOnBoard(Point2D squareCoordinates) {
-        if (currentActiveCardExists()) {
+        //summoning minion
+        if (currentActiveCardExists() && currentActiveCard instanceof MinionCard) {
             Square squareToSummonOn = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
             if (gameBoard.getSquarePossibleToInteractWith().contains(squareToSummonOn) && currentPlayer.useMana(currentActiveCard.getCost())) {
-                //bug: when not minioncard - breaks
                 squareToSummonOn.setSquaresCard((MinionCard) currentActiveCard);
-                squareToSummonOn.getCard().setSide(currentPlayer.getSide());
+                squareToSummonOn.getCard().setCurrentPosition(squareToSummonOn);
                 squareToSummonOn.getCard().blockMovement();
                 squareToSummonOn.getCard().setHasAttacked(true);
                 currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
                 currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getUsableMana()));
-                setImagesAllOnCardSlots();
+                setCardSlotImages();
             }
         }
         if (squareCoordinates.getX() >= 0) {
@@ -444,6 +446,7 @@ class GameScene extends Scene {
 
     private void attackAndRetaliate(MinionCard firstMinion, MinionCard secondMinion) {
         secondMinion.setCurrentHp(secondMinion.getCurrentHp() - firstMinion.getAttack());
+        secondMinion.getCurrentPosition().showHitSplatOnSquare(firstMinion.getAttack(), parentGroup);
     }
 
     /**
@@ -528,7 +531,7 @@ class GameScene extends Scene {
      * @return Coordinates of the square. -1,-1 if not a square
      */
 
-    private Point2D getSquare(double pixelX, double pixelY) {
+    private Point2D getSquareByPixelCoordinates(double pixelX, double pixelY) {
         for (int x = 0; x < GameBoard.getxDimension(); x++) {
             for (int y = 0; y < GameBoard.getyDimension(); y++) {
                 double left = getSquaresXCoordinatesInPixels(x);
@@ -616,7 +619,7 @@ class GameScene extends Scene {
         incrementTurnCounter();
         clearMinionInformationLabels();
         currentPlayer.getPlayerHand().addCardIfPossible(currentPlayer.getPlayerDeck().draw());
-        setImagesAllOnCardSlots();
+        setCardSlotImages();
     }
 
     private void resetAllNodesToStartOfTurn(Text timerText, Label sideLabel) {
