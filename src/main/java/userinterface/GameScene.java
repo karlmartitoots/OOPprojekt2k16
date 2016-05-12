@@ -51,7 +51,6 @@ class GameScene extends Scene {
     GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
         super(root);
         parentGroup = root;
-        playerWhite.getPlayerDeck().getDeckOfCards().forEach(System.out::println);
         //set generals in  creaturesOnBoard
         CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
         creaturesOnBoard.setAllGeneralsOnBoard(setupSettings.getWhiteGeneral(), setupSettings.getBlackGeneral());
@@ -187,12 +186,12 @@ class GameScene extends Scene {
     private void setImagesAllOnCardSlots() {
         for (int cardSlot = 0; cardSlot < PlayerHand.getMaximumHandSize(); cardSlot++) {
             ImageView cardImageView;
-            try {
+            if (cardSlot < currentPlayer.getPlayerHand().getCardsInHand().size()) {
                 Card cardInHand = currentPlayer.getPlayerHand().getCardsInHand().get(cardSlot);
                 cardImageView = new ImageView(cardInHand.getImage());
                 cardImageView.setFitHeight(PlayerHand.getPreferredCardHeight());
                 cardImageView.setFitWidth(PlayerHand.getPreferredCardWidth());
-            } catch (IndexOutOfBoundsException | NullPointerException e) {
+            } else {
                 cardImageView = new ImageView(new Image("sampleCard.png"));
             }
             cardImageView.setX(cardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());

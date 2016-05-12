@@ -41,6 +41,8 @@ public class Square {
         }
         imageView.setX(xPixelCoordinate);
         imageView.setY(yPixelCoordinate);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
     }
 
     /**
@@ -79,15 +81,6 @@ public class Square {
     }
 
     /**
-     * Calculates the moves that are needed to move from this Square to toMoveTo. Movement is horizontal and vertical.
-     * @param toMoveTo The square to move to.
-     * @return Returns the amount of steps needed to take to reach the square toMoveTo.
-     */
-    public int getDistance(Square toMoveTo) {
-        return Math.abs(xCordOnBoard - toMoveTo.getxCordOnBoard()) + Math.abs(yCordOnBoard - toMoveTo.getyCordOnBoard());
-    }
-
-    /**
      * Getter method for the x-coordinate of the square on the gameboard.
      * @return Returns the x-coordinate in gameboard unit lengths.
      */
@@ -108,7 +101,7 @@ public class Square {
      * a picture of a path square.
      */
     void setImageAsMoveableSquare() {
-        setSquaresImageView(squareInMovementReach);
+        imageView.setImage(squareInMovementReach);
     }
 
     /**
@@ -117,8 +110,8 @@ public class Square {
      */
     void setImageToCardImageOrDefault() {
         if (card == null) {
-            setSquaresImageView(defaultSquare);
-        } else setSquaresImageView(card.getSmallImage());
+            imageView.setImage(defaultSquare);
+        } else imageView.setImage(card.getSmallImage());
     }
 
     /**
@@ -149,22 +142,10 @@ public class Square {
         } else {
             this.card = minionCard;
             minionCard.setCurrentPosition(this);
-            setSquaresImageView(minionCard.getSmallImage());
+            imageView.setImage(minionCard.getSmallImage());
         }
     }
 
-    /**
-     * Method that sets an image on the imageView
-     * @param image Image to be placed on board
-     */
-    private void setSquaresImageView(Image image) {
-        //For future reference: imageView.updateImage(image) breaks the code so make the change only when it does not brake it!!!
-        imageView = new ImageView(image);
-        imageView.setX(xPixelCoordinate);
-        imageView.setY(yPixelCoordinate);
-        imageView.setFitWidth(width);
-        imageView.setFitHeight(height);
-    }
     /**
      * Updates the image of the square when gameboard is changed.
      */
@@ -175,7 +156,7 @@ public class Square {
         } else {
             image = defaultSquare;
         }
-        setSquaresImageView(image);
+        imageView.setImage(image);
     }
 
     /**
