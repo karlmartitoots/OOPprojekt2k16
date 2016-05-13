@@ -153,6 +153,8 @@ class GameScene extends Scene {
             //set it's card if there is one
             if (cardSlotNr < currentPlayer.getPlayerHand().getCardsInHand().size()) {
                 currentCardSlot.setCard(currentPlayer.getPlayerHand().getCardsInHand().get(cardSlotNr));
+            } else {
+                currentCardSlot.setCard(null);
             }
             //update the cardslot image according to if it has a card now or not (the function sorts it out)
             cardSlots.get(cardSlotNr).updateCardSlotImage();
@@ -165,19 +167,21 @@ class GameScene extends Scene {
     }
 
     private void flashAllyMinionSquares(Color color) {
-        for (Square square : gameBoard.getBoardBySquares()) {
+        gameBoard.getBoardBySquares().forEach(square -> {
             if(square.hasMinionOnSquare()){
                 if(square.getCard().getSide().equals(currentPlayer.getSide())){
                     square.flashSquareInColor(color, parentGroup);
                 }
             }
-        }
+        });
     }
 
     private void createInformationLabels() {
         currentStateLabel = createAndPlaceLabel(770, 350, "Current state: " + state.toString());
-        generalHealthLabel = createLabel("General health: " + currentPlayer.getGeneral().getCurrentHp());
-        currentManaLabel = createLabel("Current mana: " + currentPlayer.getUsableMana());
+        generalHealthLabel = createLabel("");
+        updateGeneralHealthLabel();
+        currentManaLabel = createLabel("");
+        updateManaLabel();
         selectedMinionNameLabel = createLabel("");
         selectedMinionAttackLabel = createLabel("");
         selectedMinionHealthLabel = createLabel("");
@@ -229,6 +233,14 @@ class GameScene extends Scene {
     private void updateLabel(Label label, InteractionState state) {
         this.state = state;
         label.setText("Current state: " + state.toString());
+    }
+
+    private void updateManaLabel() {
+        currentManaLabel.setText(String.valueOf("Full mana crystals: " + currentPlayer.getFullManaCrystals()));
+    }
+
+    private void updateGeneralHealthLabel() {
+        generalHealthLabel.setText(String.valueOf("General health: " + currentPlayer.getGeneral().getCurrentHp()));
     }
 
     /**
@@ -392,9 +404,7 @@ class GameScene extends Scene {
                 squareToSummonOn.getCard().blockMovement();
                 squareToSummonOn.getCard().setHasAttacked(true);
                 currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
-                currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getPlayerCurrentMana()));
-                //This doesn't remove the card from players hands view on the cardslots. Don't know why yet.
-                //TODO: fix updateCardSlots(); on summoning a card
+                updateManaLabel();
             }
         }
         updateCardSlots();
@@ -460,6 +470,9 @@ class GameScene extends Scene {
                 parentGroup.getChildren().add(gameBoard.getCurrentlySelectedSquare().getImageView());
             }
             firstMinion.setHasAttacked(true);
+            if (firstMinion.equals(currentPlayer.getGeneral())) {
+                updateGeneralHealthLabel();
+            }
         }
     }
 
@@ -635,8 +648,8 @@ class GameScene extends Scene {
 
     private void resetGameLogicToStartOfTurn() {
         switchCurrentPlayer();
-        currentPlayer.incrementMana();
-        currentPlayer.resetUsableMana();
+        currentPlayer.addManaCrystal();
+        currentPlayer.refilManaCrystals();
         setAllCreaturesToHaventMoved();
         incrementTurnCounter();
         clearMinionInformationLabels();
@@ -648,8 +661,8 @@ class GameScene extends Scene {
         updateCardSlots();
         resetTimer(timerText);
         sideLabel.setText(currentPlayer.getSide().toString());
-        generalHealthLabel.setText(String.valueOf("General health: " + currentPlayer.getGeneral().getCurrentHp()));
-        currentManaLabel.setText(String.valueOf("Current mana: " + currentPlayer.getUsableMana()));
+        updateGeneralHealthLabel();
+        updateManaLabel();
         flashAllyMinionSquares(Color.LIMEGREEN);
     }
 
