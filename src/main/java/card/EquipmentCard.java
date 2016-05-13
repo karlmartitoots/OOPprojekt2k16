@@ -13,4 +13,12 @@ public class EquipmentCard extends Card {
         this.bonusHealth = bonusHealth;
         this.bonusSpeed = bonusSpeed;
     }
+
+    public int getBonusAttack() {
+        return bonusAttack;
+    }
+
+    public int getBonusHealth() {
+        return bonusHealth;
+    }
 }

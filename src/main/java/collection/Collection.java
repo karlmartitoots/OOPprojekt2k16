@@ -81,9 +81,9 @@ public class Collection {
                         parts[1],
                         Integer.parseInt(parts[2]),
                         parts[3],
-                        Integer.parseInt(parts[4]),
                         Integer.parseInt(parts[5]),
-                        Integer.parseInt(parts[6])
+                        Integer.parseInt(parts[6]),
+                        Integer.parseInt(parts[7])
                 ));
         }
     }
