@@ -1,4 +1,4 @@
-package userinterface;
+package gamelogic.player;
 
 import card.Card;
 
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * For holding all cards in cardsInHand and operating with them through gamelogic.
  */
-class PlayerHand {
+public class Hand {
     private static final int maximumHandSize = 7;
     private static final int preferredCardHeight = 250;//pixels
     private static final int preferredCardWidth = 140;//pixels
@@ -21,7 +21,7 @@ class PlayerHand {
      *
      * @param card Card to add to cardsInHand
      */
-    void addCardIfPossible(Card card) {
+    public void addCardIfPossible(Card card) {
         if (cardsInHand.size() < maximumHandSize) {
             cardsInHand.add(card);
         }

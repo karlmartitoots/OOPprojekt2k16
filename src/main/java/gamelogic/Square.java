@@ -1,4 +1,4 @@
-package userinterface;
+package gamelogic;
 
 import card.MinionCard;
 import javafx.animation.PauseTransition;
@@ -31,15 +31,16 @@ public class Square {
     /**
      * Default constructor
      */
-    Square() {
+    public Square() {
     }
+
     /**
      * Constructor
      *
      * @param xCordOnBoard x Coordinates of the square on the Main
      * @param yCordOnBoard Y Coordinates of the square on the Main
      */
-    Square(int xCordOnBoard, int yCordOnBoard, MinionCard card) {
+    public Square(int xCordOnBoard, int yCordOnBoard, MinionCard card) {
         this.xCordOnBoard = xCordOnBoard;
         this.yCordOnBoard = yCordOnBoard;
         this.card = card;
@@ -58,7 +59,7 @@ public class Square {
      * For getting the adjuster of the gameboard position on GUI.
      * @return Returns the x-coordinate adjustment.
      */
-    static int getxTopMostValue() {
+    public static int getxTopMostValue() {
         return xTopMostValue;
     }
 
@@ -66,7 +67,7 @@ public class Square {
      * For getting the adjuster of the gameboard position on GUI.
      * @return Returns the y-coordinate adjustment.
      */
-    static int getyLeftMostValue() {
+    public static int getyLeftMostValue() {
         return yLeftMostValue;
     }
 
@@ -93,7 +94,7 @@ public class Square {
      * Getter method for the x-coordinate of the square on the gameboard.
      * @return Returns the x-coordinate in gameboard unit lengths.
      */
-    int getxCordOnBoard() {
+    public int getxCordOnBoard() {
         return xCordOnBoard;
     }
 
@@ -101,7 +102,7 @@ public class Square {
      * Getter method for the y-coordinate of the square on the gameboard.
      * @return Returns the y-coordinate in gameboard unit lengths.
      */
-    int getyCordOnBoard() {
+    public int getyCordOnBoard() {
         return yCordOnBoard;
     }
 
@@ -109,7 +110,7 @@ public class Square {
      * A method, for when the gameboard shows a path on some action, to change the square to
      * a picture of a path square.
      */
-    void setImageAsMoveableSquare() {
+    public void setImageAsMoveableSquare() {
         imageView.setImage(squareInMovementReach);
     }
 
@@ -117,7 +118,7 @@ public class Square {
      * A method, for when the gameboard shows a path on some action, to change the square back
      * to what it is like by default.
      */
-    void setImageToCardImageOrDefault() {
+    public void setImageToCardImageOrDefault() {
         if (card == null) {
             imageView.setImage(defaultSquare);
         } else imageView.setImage(card.getSmallImage());
@@ -127,7 +128,7 @@ public class Square {
      * Getter for the width of the square.
      * @return Returns the width of the square in pixels.
      */
-    static int getSquareWidth() {
+    public static int getSquareWidth() {
         return width;
     }
 
@@ -135,7 +136,7 @@ public class Square {
      * Getter method for square height in pixels.
      * @return Returns the height of the square in pixels.
      */
-    static int getSquareHeight() {
+    public static int getSquareHeight() {
         return height;
     }
 
@@ -158,7 +159,7 @@ public class Square {
     /**
      * Updates the image of the square when gameboard is changed.
      */
-    void updateImage() {
+    public void updateImage() {
         Image image;
         if (hasMinionOnSquare()) {
             image = card.getSmallImage();
@@ -171,7 +172,7 @@ public class Square {
     /**
      * Removes a card from the current square
      */
-    void removeCardIfHas() {
+    public void removeCardIfHas() {
         card = null;
     }
 
@@ -180,11 +181,11 @@ public class Square {
      *
      * @return true if has a card on the square, false if otherwise
      */
-    boolean hasMinionOnSquare() {
+    public boolean hasMinionOnSquare() {
         return card != null;
     }
 
-    boolean doesNotHaveMinionOnSquare(){
+    public boolean doesNotHaveMinionOnSquare(){
         return card == null;
     }
 
@@ -192,7 +193,7 @@ public class Square {
      * Gets the picture, that the square will currently display.
      * @return Returns that pictures ImageView.
      */
-    ImageView getImageView() {
+    public ImageView getImageView() {
         return imageView;
     }
 

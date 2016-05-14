@@ -1,11 +1,11 @@
-package userinterface;
+package gamelogic.player;
 import card.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class PlayerDeck {
+public class Deck {
     /**
      * Field for holding all cards in a deck.
      */
@@ -16,7 +16,7 @@ class PlayerDeck {
      *
      * @param deckOfCards the Deck of cards
      */
-    PlayerDeck(List<Card> deckOfCards) {
+    Deck(List<Card> deckOfCards) {
         this.deckOfCards = deckOfCards;
     }
 
@@ -31,7 +31,7 @@ class PlayerDeck {
      * Draws a card from the top of the deck
      * @return Card drawn
      */
-    Card draw() {
+    public Card draw() {
         if (deckOfCards.size() > 0) {
             return deckOfCards.remove(0);
         } else return null;
@@ -41,7 +41,7 @@ class PlayerDeck {
      * Adds a new card on the bottom of the deck.
      * @param newCard The new card to be added.
      */
-    void addCard(Card newCard){
+    public void addCard(Card newCard){
         deckOfCards.add(newCard);
     }
     /**

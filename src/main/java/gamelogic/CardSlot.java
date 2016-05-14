@@ -1,4 +1,4 @@
-package userinterface;
+package gamelogic;
 
 import card.Card;
 import javafx.scene.Group;

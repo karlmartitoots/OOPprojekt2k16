@@ -1,7 +1,7 @@
 package card;
 
-import userinterface.Side;
-import userinterface.Square;
+import gamelogic.Side;
+import gamelogic.Square;
 
 /**
  * GeneralCard is subclass of the MinionCard class. It is a minion that represents the main leader of the army in the game.

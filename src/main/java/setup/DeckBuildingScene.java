@@ -1,23 +1,23 @@
-package userinterface;
+package setup;
 
 import card.Card;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-class CardDeck extends Scene {
+class DeckBuildingScene extends Scene {
     private Group parentGroup;
 
-    CardDeck(Group root, Stage primaryStage, SetupSettings setupSettings) {
+    //should be on a separate Stage for convenience.
+    DeckBuildingScene(Group root, Stage primaryStage) {
         super(root);
         parentGroup = root;
 
@@ -49,7 +49,7 @@ class CardDeck extends Scene {
         int rowSeperator = 0;
         for (Card card : cardList
                 ) {
-            if (kaardiLehekülg * 9 <= pageCards && pageCards < 9 + kaardiLehekülg * 9  && card.getChosen() == false) {
+            if (kaardiLehekülg * 9 <= pageCards && pageCards < 9 + kaardiLehekülg * 9  && !card.getChosen()) {
                 Button cardViewer = new Button();
                 ImageView cardViewerImage = new ImageView((card.getImage()));
                 cardViewerImage.setFitWidth(100);

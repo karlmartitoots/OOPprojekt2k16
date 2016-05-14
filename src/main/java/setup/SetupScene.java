@@ -1,7 +1,8 @@
-package userinterface;
+package setup;
 
 import card.GeneralCard;
 import collection.Collection;
+import game.GameScene;
 import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,10 +14,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import settings.SetupSettings;
 
 import java.util.Map;
 
-class SetupScene extends Scene {
+public class SetupScene extends Scene {
     private Collection collection = new Collection();
     private Map<String, GeneralCard> allGeneralCards = collection.getAllGeneralCardsByName();
     private GeneralCard whiteGeneral = null, blackGeneral = null;
@@ -28,7 +30,7 @@ class SetupScene extends Scene {
      * @param root  Main class passes Setup a Group to place everything onto.
      * @param primaryStage The stage that everything happens in.
      */
-    SetupScene(Group root, Stage primaryStage) {
+    public SetupScene(Group root, Stage primaryStage) {
         super(root);
 
         Label chooseGeneralLabel = createLabel("Choose your general", 20, 50, 0);
@@ -82,7 +84,8 @@ class SetupScene extends Scene {
                 blackGeneral = GeneralCard.createBlackGeneral(allGeneralCards.get(blackGeneralNamesChoiceBox.getValue()));
                 startingPositionName = positionNamesChoiceBox.getValue();
                 primaryStage.close();
-                primaryStage.setScene(new CardDeck((new Group()), primaryStage, new SetupSettings(whiteGeneral, blackGeneral, startingPositionName)));
+                primaryStage.setScene(new GameScene((new Group()), primaryStage, new SetupSettings(whiteGeneral, blackGeneral, startingPositionName)));
+                //primaryStage.setScene(new CardDeck((new Group()), primaryStage, new SetupSettings(whiteGeneral, blackGeneral, startingPositionName)));
             }
         });
 

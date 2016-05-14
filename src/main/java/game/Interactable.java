@@ -1,4 +1,4 @@
-package userinterface;
+package game;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseDragEvent;

@@ -1,9 +1,10 @@
-package userinterface;
+package gamelogic.player;
 
 import card.Card;
 import card.GeneralCard;
 import card.MinionCard;
 import collection.Collection;
+import gamelogic.Side;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ public class Player {
      */
     private int playerManaCrystals = 0;
     private int fullManaCrystals = 0;
-    private PlayerHand playerPlayerHand = new PlayerHand();
-    private PlayerDeck playerPlayerDeck = new PlayerDeck(new ArrayList<>());
+    private Hand playerHand = new Hand();
+    private Deck playerDeck = new Deck(new ArrayList<>());
     private List<MinionCard> controlledAllies = new ArrayList<>();
     private GeneralCard general;
     private Side side;
@@ -50,7 +51,7 @@ public class Player {
             if(newCard instanceof MinionCard){
                 ((MinionCard) newCard).setSide(this.side);
             }
-            playerPlayerDeck.addCard(newCard);
+            playerDeck.addCard(newCard);
         }
     }
 
@@ -66,7 +67,7 @@ public class Player {
      */
     private void initiateHand() {
         for (int i = 0; i < handSize; i++) {
-            playerPlayerHand.addCardIfPossible(playerPlayerDeck.draw());
+            playerHand.addCardIfPossible(playerDeck.draw());
         }
     }
 
@@ -104,8 +105,8 @@ public class Player {
      *
      * @return hand of the player
      */
-    public PlayerHand getPlayerHand() {
-        return playerPlayerHand;
+    public Hand getPlayerHand() {
+        return playerHand;
     }
 
     public Side getSide() {
@@ -140,8 +141,8 @@ public class Player {
         return playerManaCrystals;
     }
 
-    public PlayerDeck getPlayerDeck() {
-        return playerPlayerDeck;
+    public Deck getPlayerDeck() {
+        return playerDeck;
     }
 }
 

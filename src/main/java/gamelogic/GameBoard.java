@@ -1,11 +1,11 @@
-package userinterface;
+package gamelogic;
 
 import card.MinionCard;
 import javafx.geometry.Point2D;
 
 import java.util.*;
 
-class GameBoard {
+public class GameBoard {
     private final static int xDimension = 10;
     private final static int yDimension = 10;
     private List<Square> boardBySquares = new ArrayList<>();
@@ -19,7 +19,7 @@ class GameBoard {
      * Gets the length of the boardBySquares on the X axis
      * @return x Dimension length
      */
-    static int getxDimension() {
+    public static int getxDimension() {
         return xDimension;
     }
 
@@ -27,7 +27,7 @@ class GameBoard {
      * Gets the length of the boardBySquares on the Y axis
      * @return y Dimension length
      */
-    static int getyDimension() {
+    public static int getyDimension() {
         return yDimension;
     }
 
@@ -36,7 +36,7 @@ class GameBoard {
      * @param previousSquare The previous square the minion was on (or is on before moving).
      * @param nextSquare The next square the minion will be on.
      */
-    void moveCardIfPossible(Square previousSquare, Square nextSquare) {
+    public void moveCardIfPossible(Square previousSquare, Square nextSquare) {
         boolean squaresPossibleToMoveContainsSquareToMoveTo = false;
         for (Square square : squarePossibleToInteractWith) {
             if (nextSquare.getxCordOnBoard() == square.getxCordOnBoard() && nextSquare.getyCordOnBoard() == square.getyCordOnBoard())
@@ -129,7 +129,7 @@ class GameBoard {
      * sets that square as the current previously selected square.
      * @param point Point on the GUI that will be translated to gameboard coordinates.
      */
-    void setCurrentlySelectedSquare(Point2D point) {
+    public void setCurrentlySelectedSquare(Point2D point) {
         if (point.getX() >= 0) {
             previouslySelectedSquare = currentlySelectedSquare;
             currentlySelectedSquare = boardBySquares.get(Square.pointToSquare1DPosition(point));
@@ -140,7 +140,7 @@ class GameBoard {
      * Getter method for the gameboard square, previously clicked on.
      * @return Returns the previously selected square.
      */
-    Square getCurrentlySelectedSquare() {
+    public Square getCurrentlySelectedSquare() {
         return currentlySelectedSquare;
     }
 
@@ -153,7 +153,7 @@ class GameBoard {
      * TODO: we can make a static initializer for the board in GUI, to add all the squares so we might not need a loadBoard
      * @param square The square added to boardBySquares.
      */
-    void addSquareToBoardBySquares(Square square) {
+    public void addSquareToBoardBySquares(Square square) {
         boardBySquares.add(square);
     }
 
@@ -161,7 +161,7 @@ class GameBoard {
      * Getter method to get boardBySquares list. BoardBySquares contains all the squares on the gameboard.
      * @return Returns a list of all the squares on the gameboard.
      */
-    List<Square> getBoardBySquares() {
+    public List<Square> getBoardBySquares() {
         return boardBySquares;
     }
 
@@ -169,7 +169,7 @@ class GameBoard {
      * Getter method for the squarePossibleToInteractWith field.
      * @return Returns a previously saved list of squares that a minion could have moved to.
      */
-    List<Square> getSquarePossibleToInteractWith() {
+    public List<Square> getSquarePossibleToInteractWith() {
         return squarePossibleToInteractWith;
     }
 
@@ -177,14 +177,14 @@ class GameBoard {
      * Setter method for the squarePossibleToInteractWith field.
      * @param squarePossibleToInteractWith The list given as a parameter for the method is set as the objects squarePossibleToMove.
      */
-    void setSquarePossibleToInteractWith(List<Square> squarePossibleToInteractWith) {
+    public void setSquarePossibleToInteractWith(List<Square> squarePossibleToInteractWith) {
         this.squarePossibleToInteractWith = squarePossibleToInteractWith;
     }
 
     /**
      * Removes all squares from squarePossibleToInteractWith .
      */
-    void clearSquaresPossibleToInteractWith() {
+    public void clearSquaresPossibleToInteractWith() {
         squarePossibleToInteractWith.clear();
     }
 

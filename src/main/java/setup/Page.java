@@ -1,8 +1,5 @@
-package userinterface;
+package setup;
 
-/**
- * Created by PusH on 5/14/2016.
- */
 public class Page {
     private int page = 0;
 

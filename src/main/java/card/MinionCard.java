@@ -1,8 +1,8 @@
 
 package card;
 
-import userinterface.Side;
-import userinterface.Square;
+import gamelogic.Side;
+import gamelogic.Square;
 
 import java.util.ArrayList;
 import java.util.List;

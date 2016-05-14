@@ -1,4 +1,4 @@
-package userinterface;
+package settings;
 
 import card.GeneralCard;
 import javafx.geometry.Point2D;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //basically a "struct" to pass along to the game's GUI
-class SetupSettings {
+public class SetupSettings {
     private GeneralCard whiteGeneral, blackGeneral;
     private Point2D whiteStartingSquare, blackStartingSquare;
     private static Map<String, ArrayList<Point2D>> allStartingPositions;
@@ -40,7 +40,7 @@ class SetupSettings {
      * @param blackGeneral Holds the black sides GeneralCard
      * @param startingPositionName Holds the name of the starting position, passed to the Settings class.
      */
-    SetupSettings(GeneralCard whiteGeneral, GeneralCard blackGeneral, String startingPositionName) {
+    public SetupSettings(GeneralCard whiteGeneral, GeneralCard blackGeneral, String startingPositionName) {
         this.whiteGeneral = whiteGeneral;
         this.blackGeneral = blackGeneral;
         this.whiteStartingSquare = allStartingPositions.get(startingPositionName).get(0);
@@ -51,7 +51,7 @@ class SetupSettings {
      * Getter method to get the white sides generalCard.
      * @return Returns the white side's generalCard.
      */
-    GeneralCard getWhiteGeneral() {
+    public GeneralCard getWhiteGeneral() {
         return whiteGeneral;
     }
 
@@ -59,7 +59,7 @@ class SetupSettings {
      * Getter method to get the black sides generalCard.
      * @return Returns the black side's generalCard.
      */
-    GeneralCard getBlackGeneral() {
+    public GeneralCard getBlackGeneral() {
         return blackGeneral;
     }
 
@@ -67,7 +67,7 @@ class SetupSettings {
      * Getter method to get the white side's generals starting square coordinates.
      * @return Returns white's generals starting square coordinates as a Point2D object.
      */
-    Point2D getWhiteStartingSquare(){
+    public Point2D getWhiteStartingSquare(){
         return whiteStartingSquare;
     }
 
@@ -75,7 +75,7 @@ class SetupSettings {
      * Getter method to get the black side's generals starting square coordinates.
      * @return Returns black's generals starting square coordinates as a Point2D object.
      */
-    Point2D getBlackStartingSquare(){
+    public Point2D getBlackStartingSquare(){
         return blackStartingSquare;
     }
 

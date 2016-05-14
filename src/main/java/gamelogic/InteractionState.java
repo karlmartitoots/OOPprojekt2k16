@@ -1,8 +1,7 @@
-package userinterface;
+package gamelogic;
 
 public enum InteractionState {
     NONE,
-    SUMMON,
     ATTACK,
     MOVE
 }

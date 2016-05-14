@@ -1,9 +1,11 @@
-package userinterface;
+package game;
 
-import board.CreaturesOnBoard;
 import card.Card;
 import card.EquipmentCard;
 import card.MinionCard;
+import gamelogic.*;
+import gamelogic.player.Hand;
+import gamelogic.player.Player;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -19,6 +21,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import settings.SetupSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +30,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-class GameScene extends Scene {
+public class GameScene extends Scene {
 
     private GameBoard gameBoard = new GameBoard();
     private List<CardSlot> cardSlots = new ArrayList<>();
@@ -51,12 +54,10 @@ class GameScene extends Scene {
      * @param primaryStage  Stage for the scene.
      * @param setupSettings Initial settings that are loaded, when the game begins.
      */
-    GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
+    public GameScene(Group root, Stage primaryStage, SetupSettings setupSettings) {
         super(root);
         parentGroup = root;
-        //set generals in  creaturesOnBoard
-        CreaturesOnBoard creaturesOnBoard = new CreaturesOnBoard();
-        creaturesOnBoard.setAllGeneralsOnBoard(setupSettings.getWhiteGeneral(), setupSettings.getBlackGeneral());
+
         playerWhite.setGeneral(setupSettings.getWhiteGeneral());
         playerBlack.setGeneral(setupSettings.getBlackGeneral());
 
@@ -133,11 +134,11 @@ class GameScene extends Scene {
 
     private List<CardSlot> createAndGetCardSlots() {
         List<CardSlot> cardSlots = new ArrayList<>();
-        for (int cardSlotNr = 0; cardSlotNr < PlayerHand.getMaximumHandSize(); cardSlotNr++) {
+        for (int cardSlotNr = 0; cardSlotNr < Hand.getMaximumHandSize(); cardSlotNr++) {
             CardSlot newCardSlot = new CardSlot(cardSlotNr);
             Group cardSlotImage = newCardSlot.getCardSlotImage();
-            cardSlotImage.setLayoutX(cardSlotNr * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
-            cardSlotImage.setLayoutY(PlayerHand.getTopMostPixelValue());
+            cardSlotImage.setLayoutX(cardSlotNr * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue());
+            cardSlotImage.setLayoutY(Hand.getTopMostPixelValue());
             parentGroup.getChildren().add(cardSlotImage);
             cardSlots.add(newCardSlot);
         }
@@ -146,7 +147,7 @@ class GameScene extends Scene {
 
     private void updateCardSlots(){
         CardSlot currentCardSlot;
-        for (int cardSlotNr = 0; cardSlotNr < PlayerHand.getMaximumHandSize(); cardSlotNr++) {
+        for (int cardSlotNr = 0; cardSlotNr < Hand.getMaximumHandSize(); cardSlotNr++) {
             //get the right cardslot
             currentCardSlot = cardSlots.get(cardSlotNr);
             //remove the old image
@@ -161,8 +162,8 @@ class GameScene extends Scene {
             cardSlots.get(cardSlotNr).updateCardSlotImage();
             //set the new image and show it
             Group cardSlotImage = currentCardSlot.getCardSlotImage();
-            cardSlotImage.setLayoutX(cardSlotNr * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue());
-            cardSlotImage.setLayoutY(PlayerHand.getTopMostPixelValue());
+            cardSlotImage.setLayoutX(cardSlotNr * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue());
+            cardSlotImage.setLayoutY(Hand.getTopMostPixelValue());
             parentGroup.getChildren().add(cardSlotImage);
         }
     }
@@ -642,10 +643,10 @@ class GameScene extends Scene {
      * @return The card slot number that has been currently clicked on, -1 if not a card slot
      */
     private int getCardSlotNumber(double pixelX, double pixelY) {
-        for (int possibleCardSlot = 0; possibleCardSlot < PlayerHand.getMaximumHandSize(); possibleCardSlot++) {
-            double left = possibleCardSlot * PlayerHand.getPreferredCardWidth() + PlayerHand.getLeftMostPixelValue();
-            double top = PlayerHand.getTopMostPixelValue();
-            Rectangle rectangle = new Rectangle(left, top, PlayerHand.getPreferredCardWidth(), PlayerHand.getPreferredCardHeight());
+        for (int possibleCardSlot = 0; possibleCardSlot < Hand.getMaximumHandSize(); possibleCardSlot++) {
+            double left = possibleCardSlot * Hand.getPreferredCardWidth() + Hand.getLeftMostPixelValue();
+            double top = Hand.getTopMostPixelValue();
+            Rectangle rectangle = new Rectangle(left, top, Hand.getPreferredCardWidth(), Hand.getPreferredCardHeight());
             if (rectangle.contains(pixelX, pixelY)) {
                 return possibleCardSlot;
             }

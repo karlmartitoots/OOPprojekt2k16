@@ -1,4 +1,4 @@
-package userinterface;
+package gamelogic;
 
 public enum Side {
     WHITE,
