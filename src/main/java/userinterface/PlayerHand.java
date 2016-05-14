@@ -50,6 +50,9 @@ class PlayerHand {
         cardsInHand.remove(i);
     }
 
+    public void discardSpecificCard(Card card){
+        cardsInHand.remove(card);
+    }
     /**
      * Get cards in ur cardsInHand as list
      * @return Cards in cardsInHand
@@ -59,7 +62,7 @@ class PlayerHand {
     @Override
     public String toString() {
         return "Hand{" +
-                ", \ncardsInHand=" + cardsInHand +
+                "\ncardsInHand=" + cardsInHand +
                 '}';
     }
 

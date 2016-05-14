@@ -4,6 +4,8 @@ package card;
 import userinterface.Side;
 import userinterface.Square;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -12,14 +14,15 @@ import java.util.Objects;
 public class MinionCard extends Card {
     private Square currentPosition;
     private final int ID;
-    private final int attack;
-    private final int maxHp;
-    private final int movementReach;
+    private int attack;
+    private int maxHp;
+    private int movementReach;
     private int currentHp;
     private boolean hasMoved;
     private boolean canMove;
     private boolean hasAttacked;
     private Side side;
+    private List<EquipmentCard> equipments = new ArrayList<>();
 
 
     /**
@@ -195,6 +198,13 @@ public class MinionCard extends Card {
 
     public boolean isAlive() {
         return currentHp > 0;
+    }
+
+    public void addEquipment(EquipmentCard equipmentCard) {
+        attack += equipmentCard.getBonusAttack();
+        currentHp += equipmentCard.getBonusHealth();
+        maxHp += equipmentCard.getBonusHealth();
+        equipments.add(equipmentCard);
     }
 
     @Override

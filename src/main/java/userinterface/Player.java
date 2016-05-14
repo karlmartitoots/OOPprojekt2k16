@@ -18,13 +18,13 @@ public class Player {
 
     private final int handSize = 3;
     private final int deckSize = 7;
-    private final int maximumMana = 10;
+    private final int maximumManaCrystals = 10;
     /**
      * When mana is first initiated it's 0 and initial mana will be loaded by the Game itself, when
      * everything is loaded.
      */
-    private int playerCurrentMana = 0;
-    private int usableMana = 0;
+    private int playerManaCrystals = 0;
+    private int fullManaCrystals = 0;
     private PlayerHand playerPlayerHand = new PlayerHand();
     private PlayerDeck playerPlayerDeck = new PlayerDeck(new ArrayList<>());
     private List<MinionCard> controlledAllies = new ArrayList<>();
@@ -55,7 +55,7 @@ public class Player {
     }
 
     private Card randomCard() {
-        Map<Integer, Card> allCards = new Collection().getAllCards();
+        Map<Integer, Card> allCards = new Collection().getCardsWithoutGenerals();
         List<Card> cardList = new ArrayList<>(allCards.values());
         int randomIndex = new Random().nextInt(cardList.size());
         return cardList.get(randomIndex);
@@ -73,30 +73,29 @@ public class Player {
     /**
      * Method for adding 1 mana to a Player object.
      */
-    public void incrementMana() {
-        if (playerCurrentMana < maximumMana) {
-            playerCurrentMana++;
+    public void addManaCrystal() {
+        if (playerManaCrystals < maximumManaCrystals) {
+            playerManaCrystals++;
         }
     }
 
     public void addMana(int amount){
-        if ((playerCurrentMana + amount) <= maximumMana) {
-            playerCurrentMana += amount;
+        if ((playerManaCrystals + amount) <= maximumManaCrystals) {
+            playerManaCrystals += amount;
         }
     }
 
     /**
      * Method that tries to use mana, if it is sucessful, the mana is used up. If not then then no mana is used.
      *
-     * @param manaToUse mana to be used in the given action
+     * @param manaCrystalsToTap mana to be used in the given action
      * @return True if the auction is sucessful, false othewirse
      */
-    public boolean useMana(int manaToUse) {
-        if (manaToUse > usableMana) {
+    public boolean useMana(int manaCrystalsToTap) {
+        if (manaCrystalsToTap > fullManaCrystals) {
             return false;
         }
-        usableMana -= manaToUse;
-        playerCurrentMana -= manaToUse;
+        fullManaCrystals -= manaCrystalsToTap;
         return true;
     }
 
@@ -129,16 +128,16 @@ public class Player {
         return general;
     }
 
-    public int getUsableMana(){
-        return usableMana;
+    public int getFullManaCrystals() {
+        return fullManaCrystals;
     }
 
-    public void resetUsableMana() {
-        usableMana = playerCurrentMana;
+    public void refilManaCrystals() {
+        fullManaCrystals = playerManaCrystals;
     }
 
-    public int getPlayerCurrentMana(){
-        return playerCurrentMana;
+    public int getPlayerManaCrystals() {
+        return playerManaCrystals;
     }
 
     public PlayerDeck getPlayerDeck() {

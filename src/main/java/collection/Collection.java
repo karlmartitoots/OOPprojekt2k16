@@ -81,9 +81,9 @@ public class Collection {
                         parts[1],
                         Integer.parseInt(parts[2]),
                         parts[3],
-                        Integer.parseInt(parts[4]),
                         Integer.parseInt(parts[5]),
-                        Integer.parseInt(parts[6])
+                        Integer.parseInt(parts[6]),
+                        Integer.parseInt(parts[7])
                 ));
         }
     }
@@ -107,6 +107,17 @@ public class Collection {
                 generalCards.put(card.getName(),(GeneralCard) card);
         }
         return generalCards;
+    }
+
+    public Map<Integer, Card> getCardsWithoutGenerals(){
+        Map<Integer, Card> cWG = new HashMap<>();
+        for (Integer integer : allCards.keySet()) {
+            Card card = allCards.get(integer);
+            if(!(card instanceof GeneralCard)){
+                cWG.put(integer, card);
+            }
+        }
+        return cWG;
     }
 
 }
