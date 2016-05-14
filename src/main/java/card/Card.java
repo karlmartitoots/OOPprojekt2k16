@@ -12,7 +12,7 @@ public abstract class Card {
     private final String description;
     private Image image;
     private Image smallImage;
-
+    private boolean chosen=false;
     /**
      * Constructor
      *  @param name   Name of the card
@@ -48,6 +48,13 @@ public abstract class Card {
      */
     public Image getSmallImage() {
         return smallImage;
+    }
+
+    public void setChosen(boolean chosen) {
+        this.chosen = chosen;
+    }
+    public boolean getChosen(){
+        return chosen;
     }
 
     public String getName() {

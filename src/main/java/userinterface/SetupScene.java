@@ -82,7 +82,7 @@ class SetupScene extends Scene {
                 blackGeneral = GeneralCard.createBlackGeneral(allGeneralCards.get(blackGeneralNamesChoiceBox.getValue()));
                 startingPositionName = positionNamesChoiceBox.getValue();
                 primaryStage.close();
-                primaryStage.setScene(new GameScene(new Group(), primaryStage, new SetupSettings(whiteGeneral, blackGeneral, startingPositionName)));
+                primaryStage.setScene(new CardDeck((new Group()), primaryStage, new SetupSettings(whiteGeneral, blackGeneral, startingPositionName)));
             }
         });
 
