@@ -15,29 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 class CardDeck extends Scene {
-
-    private GameBoard gameBoard = new GameBoard();
-    private List<CardSlot> cardSlots = new ArrayList<>();
-    private Player playerWhite = new Player(Side.WHITE), playerBlack = new Player(Side.BLACK);
-    private int timerStartTime = 60;
-    private double timerNodeWidthInPixels = 250;
-    private InteractionState state = InteractionState.NONE;
     private Group parentGroup;
-    private final ScheduledExecutorService timerScheduler =
-            Executors.newScheduledThreadPool(1);
-    //white starts
-    private Player currentPlayer = playerWhite;
-    //for the time being if currentActiveCard is used, needs to be checked with currentCardExists
-    private Card currentActiveCard = null;
-    private int turnCounter = 0;
-    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionNameLabel, selectedMinionManaCostLabel, selectedMinionSideLabel;
 
-    /**
-     * The constructor of Game conducts all whats happening in gamelogic on gui.
-     *
-     * @param primaryStage  Stage for the scene.
-     * @param setupSettings Initial settings that are loaded, when the game begins.
-     */
     CardDeck(Group root, Stage primaryStage, SetupSettings setupSettings) {
         super(root);
         parentGroup = root;
@@ -46,7 +25,7 @@ class CardDeck extends Scene {
 
 
 
-        Map<Integer, Card> allCards = new collection.Collection().getAllCards();
+        Map<Integer, Card> allCards = new collection.Collection().getCardsWithoutGenerals();
         List<Card> cardList = new ArrayList<>(allCards.values());
         int i = 0;
         Page page = new Page();
@@ -70,7 +49,7 @@ class CardDeck extends Scene {
         int rowSeperator = 0;
         for (Card card : cardList
                 ) {
-            if (kaardiLehekülg * 9 + 2 < pageCards && pageCards < 9 + kaardiLehekülg * 9 + 3 && card.getChosen() == false) {
+            if (kaardiLehekülg * 9 <= pageCards && pageCards < 9 + kaardiLehekülg * 9  && card.getChosen() == false) {
                 Button cardViewer = new Button();
                 ImageView cardViewerImage = new ImageView((card.getImage()));
                 cardViewerImage.setFitWidth(100);
