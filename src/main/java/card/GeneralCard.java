@@ -56,6 +56,8 @@ public class GeneralCard extends MinionCard {
 
     @Override
     public String toString() {
-        return "GeneralCard{} " + super.toString();
+        return "GeneralCard{ " +
+                super.toString() +
+                '}';
     }
 }

@@ -267,10 +267,7 @@ public class Square {
         return "Square{" +
                 "xCordOnBoard=" + xCordOnBoard +
                 ", yCordOnBoard=" + yCordOnBoard +
-                ", width=" + width +
-                ", height=" + height +
-                ", imageView=" + imageView +
-                ", card=" + card +
+                ", card=" + card.getName() +
                 '}';
     }
 }

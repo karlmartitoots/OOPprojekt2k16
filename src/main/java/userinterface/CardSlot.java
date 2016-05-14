@@ -65,6 +65,7 @@ public class CardSlot {
         return "CardSlot{" +
                 "slotNumber=" + slotNumber +
                 ", card=" + card +
+                ", Nodes on group: " + imageGroup.getChildren() +
                 '}';
     }
 }

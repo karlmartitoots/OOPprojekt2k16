@@ -109,4 +109,15 @@ public class Collection {
         return generalCards;
     }
 
+    public Map<Integer, Card> getCardsWithoutGenerals(){
+        Map<Integer, Card> cWG = new HashMap<>();
+        for (Integer integer : allCards.keySet()) {
+            Card card = allCards.get(integer);
+            if(!(card instanceof GeneralCard)){
+                cWG.put(integer, card);
+            }
+        }
+        return cWG;
+    }
+
 }

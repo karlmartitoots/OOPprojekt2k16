@@ -22,7 +22,7 @@ public class MinionCard extends Card {
     private boolean canMove;
     private boolean hasAttacked;
     private Side side;
-    List<EquipmentCard> equipments = new ArrayList<>();
+    private List<EquipmentCard> equipments = new ArrayList<>();
 
 
     /**

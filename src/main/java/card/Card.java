@@ -65,11 +65,9 @@ public abstract class Card {
     @Override
     public String toString() {
         return "Card{" +
-                "name='" + name + '\'' +
-                ", cost=" + cost +
-                ", description='" + description + '\'' +
-                ", image=" + image +
-                ", smallImage=" + smallImage +
-                '}';
+                "\nname='" + name + '\'' +
+                ", \ncost=" + cost +
+                ", \ndescription='" + description + '\'' +
+                "}\n";
     }
 }

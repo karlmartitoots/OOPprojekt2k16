@@ -55,7 +55,7 @@ public class Player {
     }
 
     private Card randomCard() {
-        Map<Integer, Card> allCards = new Collection().getAllCards();
+        Map<Integer, Card> allCards = new Collection().getCardsWithoutGenerals();
         List<Card> cardList = new ArrayList<>(allCards.values());
         int randomIndex = new Random().nextInt(cardList.size());
         return cardList.get(randomIndex);
