@@ -2,6 +2,9 @@ package card;
 
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The card class represents the skeleton of card. It has consists of the three main features a card has: Name,
  * manacost and description.
@@ -13,6 +16,7 @@ public abstract class Card {
     private Image image;
     private Image smallImage;
     private boolean chosen=false;
+    List<Attributes> cardAttributes = new ArrayList<>();
     /**
      * Constructor
      *  @param name   Name of the card
@@ -67,6 +71,10 @@ public abstract class Card {
 
     public String getDescription() {
         return description;
+    }
+
+    public List<Attributes> getCardAttributes() {
+        return cardAttributes;
     }
 
     @Override

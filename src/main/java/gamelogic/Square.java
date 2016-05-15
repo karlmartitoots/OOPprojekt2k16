@@ -263,6 +263,7 @@ public class Square {
         return square.getxCordOnBoard() == xCordOnBoard && square.getyCordOnBoard() == yCordOnBoard;
     }
 
+
     @Override
     public String toString() {
         return "Square{" +

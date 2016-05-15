@@ -22,9 +22,13 @@ public class Hand {
      * @param card Card to add to cardsInHand
      */
     public void addCardIfPossible(Card card) {
-        if (cardsInHand.size() < maximumHandSize) {
+        if (freeSlotInHand()) {
             cardsInHand.add(card);
         }
+    }
+
+    public boolean freeSlotInHand() {
+        return cardsInHand.size() < maximumHandSize;
     }
 
     /**

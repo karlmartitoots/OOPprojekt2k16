@@ -28,9 +28,6 @@ public class GeneralCard extends MinionCard {
         this.setSide(side);
     }
 
-    public void summonMinion(Square squareToSummon){
-        //TODO: implement
-    }
 
     public static GeneralCard createWhiteGeneral(GeneralCard generalCard){
         return new GeneralCard(generalCard.getName(),
