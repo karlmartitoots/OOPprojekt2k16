@@ -14,7 +14,6 @@ public abstract class Card {
     private final int cost;
     private final String description;
     private Image image;
-    private Image smallImage;
     private boolean chosen=false;
     private List<Attribute> attributes = new ArrayList<>();
     /**
@@ -29,7 +28,6 @@ public abstract class Card {
         this.description = description;
         try {
             this.image = new Image(name + ".jpg");
-            this.smallImage = new Image(name + "Small.jpg");
         }catch(IllegalArgumentException e){
             System.out.println(name + ".jpg" + " ei leitud! Väljun...");
             System.exit(-1);
@@ -43,15 +41,6 @@ public abstract class Card {
      */
     public Image getImage() {
         return image;
-    }
-
-    /**
-     * Gets the small image of the card
-     *
-     * @return small image of the card
-     */
-    public Image getSmallImage() {
-        return smallImage;
     }
 
     public void setChosen(boolean chosen) {

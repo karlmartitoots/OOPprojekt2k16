@@ -47,7 +47,7 @@ public class Square {
         xPixelCoordinate = xCordOnBoard * width + xTopMostValue;
         yPixelCoordinate = yCordOnBoard * height + yLeftMostValue;
         if (hasMinionOnSquare()) {
-            imageView.setImage(card.getSmallImage());
+            imageView.setImage(card.getImage());
         }
         imageView.setX(xPixelCoordinate);
         imageView.setY(yPixelCoordinate);
@@ -121,7 +121,7 @@ public class Square {
     public void setImageToCardImageOrDefault() {
         if (card == null) {
             imageView.setImage(defaultSquare);
-        } else imageView.setImage(card.getSmallImage());
+        } else imageView.setImage(card.getImage());
     }
 
     /**
@@ -152,7 +152,7 @@ public class Square {
         } else {
             this.card = minionCard;
             minionCard.setCurrentPosition(this);
-            imageView.setImage(minionCard.getSmallImage());
+            imageView.setImage(minionCard.getImage());
         }
     }
 
@@ -162,7 +162,7 @@ public class Square {
     public void updateImage() {
         Image image;
         if (hasMinionOnSquare()) {
-            image = card.getSmallImage();
+            image = card.getImage();
         } else {
             image = defaultSquare;
         }
