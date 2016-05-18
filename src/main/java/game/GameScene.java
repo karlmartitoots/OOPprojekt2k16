@@ -5,6 +5,8 @@ import card.Card;
 import card.EquipmentCard;
 import card.GeneralCard;
 import card.MinionCard;
+import attributes.ProcessReinforcmentAction;
+import card.*;
 import gamelogic.*;
 import gamelogic.player.Hand;
 import gamelogic.player.Player;
@@ -433,6 +435,7 @@ public class GameScene extends Scene {
     private void checkStateAndprocessClickOnBoard(Point2D squareCoordinates) {
         summonMinionIfPossible(squareCoordinates);
         equipEquipmentIfPossible(squareCoordinates);
+        useSpellIfPossible();
         if (squareCoordinates.getX() >= 0) {
             gameBoard.setCurrentlySelectedSquare(squareCoordinates);
             setSquareImagesToCardImagesOrDefaults();
@@ -446,6 +449,15 @@ public class GameScene extends Scene {
                 case ATTACK:
                     processAttackAction();
                     break;
+            }
+        }
+    }
+
+    private void useSpellIfPossible() {
+        if (currentActiveCardExists() && currentActiveCard instanceof SpellCard) {
+            SpellCard currentCard = (SpellCard) currentActiveCard;
+            if (currentCard.getAttributeListMap().keySet().contains(Attribute.REINFORCMENT)) {
+                ProcessReinforcmentAction.summonSquires((currentCard.getAttributeListMap().get(Attribute.REINFORCMENT).get(0)), gameBoard.getBoardBySquares(), currentPlayer.getSide());
             }
         }
     }

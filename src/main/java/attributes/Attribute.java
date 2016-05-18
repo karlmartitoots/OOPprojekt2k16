@@ -1,6 +1,7 @@
 package attributes;
 
 public enum Attribute {
+    NONE,
     DRAW, //Draw cards
     SHOUT, // Effect when entering the gameboard
     CHARGE, // Can move and attack on the turn when summoned
@@ -12,5 +13,6 @@ public enum Attribute {
     AIRDROP, //Possible to summon anywhere
     INSPIRE, // Bonus if next to general
     FLYING, // Can fly over minions
-    DEATHTOUCH // If deals damage to minion, kills instantly
+    DEATHTOUCH, // If deals damage to minion, kills instantly
+    REINFORCMENT //Summons that many 1/1 units for you
 }

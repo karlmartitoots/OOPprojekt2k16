@@ -15,6 +15,7 @@ GENERAL;General Karl;0;Choose your fate.;5;9;200;3
 GENERAL;General Joker;0;What's so funny?;6;999;999;999
 
 /cost 1
+MINION;Elf Token;1;Token;169;2;1;4
 MINION;Spider;1;Spider LEVEL 1;101;1;5;1
 MINION;Knight;1;Knight LEVEL 1;109;2;10;1
 MINION;Rat;1;Rat LEVEL 1;107;1;5;2
@@ -31,6 +32,7 @@ MINION;Piranha;2;Piranha LEVEL 2;111;3;7;3
 EQUIPMENT;IncreaseAttack;2;Increases attack by 2;129;2;0;0
 EQUIPMENT;IncreaseHealth;2;Increases health by 10;132;0;10;0
 EQUIPMENT;IncreaseSpeed;2;Increases speed by 2;135;0;0;2
+SPELL;Travelers;2;yes;301;REINFORCMENT;4
 
 /cost 3
 MINION;Spider;3;Spider LEVEL 3;113;3;15;3

@@ -1,12 +1,12 @@
 package collection;
 
+import attributes.Attribute;
+import attributes.AttributeHelper;
 import card.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Collection {
 
@@ -14,6 +14,7 @@ public class Collection {
     private Map<Integer, Card> allCards = new HashMap<>();
 
     public Collection(){
+        AttributeHelper.initMap();
         try(Scanner fileReader = new Scanner(open("collection.txt")))
         {
             String line;
@@ -70,10 +71,8 @@ public class Collection {
                 allCards.put(Integer.parseInt(parts[4]), new SpellCard(
                         parts[1],
                         Integer.parseInt(parts[2]),
-                        parts[3]
-                        //,Integer.parseInt(parts[4]),
-                        //Integer.parseInt(parts[5])
-                        //TODO: add spellcard effects
+                        parts[3],
+                        processAttributes(parts[5], parts[6])
                 ));
                 break;
             case "EQUIPMENT":
@@ -86,6 +85,26 @@ public class Collection {
                         Integer.parseInt(parts[7])
                 ));
         }
+    }
+
+    private Map<Attribute, List<Integer>> processAttributes(String part, String part1) {
+        Map<Attribute, List<Integer>> attributes = new HashMap<>();
+        String[] attributeStrings = part.split("\\|");
+        String[] parameters = part1.split("\\|");
+        int parametersCounter = 0;
+        for (String attributeString : attributeStrings) {
+            Attribute attribute = AttributeHelper.stringToAttribute(attributeString.toUpperCase());
+            List<Integer> parameterList = new ArrayList<>();
+            int toLoopTo = AttributeHelper.getParameterMap().get(attribute);
+            for (int i = 0; i < toLoopTo; i++) {
+                parameterList.add(Integer.parseInt(parameters[parametersCounter]));
+                parametersCounter++;
+            }
+
+            attributes.put(AttributeHelper.stringToAttribute(attributeString), parameterList);
+        }
+
+        return attributes;
     }
 
     /**
