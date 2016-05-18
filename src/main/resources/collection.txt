@@ -7,49 +7,48 @@
 
 /ID rules: until a better system is developed, generals will have ID from 0 to 100
 
-GENERAL;General Taavi;0;A General named Taavi.;1;7;50;4
-GENERAL;General Mart;0;A General named Märt.;2;8;45;4
+GENERAL;General Taavi;0;A General named Taavi.;1;7;200;4
+GENERAL;General Mart;0;A General named Märt.;2;7;200;4
+GENERAL;General Aleksis;0;Spaghetti is life. Spaghetti is love.;3;9;200;3
+GENERAL;General Heiti;0;GeneralNotFoundException.;4;9;200;3
+GENERAL;General Karl;0;Choose your fate.;5;9;200;3
+GENERAL;General Joker;0;What's so funny?;6;999;999;999
 
 /cost 1
-MINION;Silverguard Squire;1;The first minion to be ever created.;101;1;4;1
-MINION;Coiledcrawler;1;Earthworm filled with venom.;109;1;3;2
-MINION;Blazehound;1;Dog filled with fury.;107;2;1;3
-MINION;Sandburrower;1;His venom does not even kill;115;1;2;4
-MINION;Crystalcloaker;1;Weak, but fast;119;1;2;3
-MINION;Jademonk;1;Heavy fighter;123;1;4;1
-MINION;Kaidoassasin;1;Sneaky ninja;124;3;1;1
-MINION;Starfirescarab;1;Weaker than it looks;127;2;2;1
-EQUIPMENT;Hook;1;Yarr mate;200;2;0;0
-EQUIPMENT;Snowpiercer;1;Pierces Snow;201;3;0;0
-EQUIPMENT;Horn of the forsaken;1;Its a horn!;202;3;0;1
+MINION;Spider;1;Spider LEVEL 1;101;1;5;1
+MINION;Knight;1;Knight LEVEL 1;109;2;10;1
+MINION;Rat;1;Rat LEVEL 1;107;1;5;2
+MINION;Piranha;1;Piranha LEVEL 1;115;2;5;2
+EQUIPMENT;IncreaseAttack;1;Increases attack by 1;138;1;0;0
+EQUIPMENT;IncreaseHealth;1;Increases health by 5;139;0;5;0
+EQUIPMENT;IncreaseSpeed;1;Increases speed by 1;140;0;0;1
 
 /cost 2
-MINION;Bluetipscorpion;2;Underground walker.;108;2;4;1
-MINION;Manaforger;2;He uses mana to cast fireballs;114;5;1;1
-MINION;Crystalwisp;2;Wisp covered with unbreakable glass;110;1;7;1
-MINION;Ephermalshroud;2;Mutant from other planet;111;4;1;2
-MINION;Sunseer;2;She uses wisdom to defeat her enemys;117;2;3;2
-MINION;Azurite Lion;2;The second minion to be ever created.;102;2;3;2
-MINION;Lightchaser;2;Chases lights.;103;3;2;2
-MINION;Sunstone Templar;2;The sunstone guy.;104;1;4;3
-MINION;Windblade Adept;2;Uses a blade of wind.;105;2;3;1
-MINION;Darkspineelemental;2;From the darkness he has come;120;4;2;1
-MINION;Fourwindsmagi;2;Created from the four winds;121;2;4;2
-MINION;Kesharifanblade;2;Throws deadly fans;125;5;1;1
+MINION;Spider;2;Spider LEVEL 2;108;2;10;2
+MINION;Knight;2;Knight LEVEL 2;114;4;12;1
+MINION;Rat;2;Rat LEVEL 2;110;1;10;4
+MINION;Piranha;2;Piranha LEVEL 2;111;3;7;3
+EQUIPMENT;IncreaseAttack;2;Increases attack by 2;129;2;0;0
+EQUIPMENT;IncreaseHealth;2;Increases health by 10;132;0;10;0
+EQUIPMENT;IncreaseSpeed;2;Increases speed by 2;135;0;0;2
 
 /cost 3
-MINION;Golemmetallurgist;3;Warlock from the Sun;113;2;6;2
-MINION;Ironcliffeguardian;3;His armor is made by Gods;113;2;8;1
-MINION;Stormaratha;3;Fast and furious beetle;116;2;2;8
-MINION;Arclyte Sentinel;3;Dis guy huuuge.;106;2;4;3
-MINION;Silverguard Knight;3;Don't challenge him to a duel.;107;3;5;1
-MINION;Hamonbladeseeker;3;Deadly assasin;122;5;2;3
-MINION;Kolossus;3;Man who turned to stone;126;3;6;1
+MINION;Spider;3;Spider LEVEL 3;113;3;15;3
+MINION;Knight;3;Knight LEVEL 3;116;6;14;2
+MINION;Rat;3;Rat LEVEL 3;106;2;15;6
+MINION;Piranha;3;Piranha LEVEL 3;107;4;9;4
+EQUIPMENT;IncreaseAttack;3;Increases attack by 3;130;3;0;0
+EQUIPMENT;IncreaseHealth;3;Increases health by 15;133;0;15;0
+EQUIPMENT;IncreaseSpeed;3;Increases speed by 3;136;0;0;3
 
 /cost 4
-MINION;Flamebloodwarlock;4;Warlock from the Sun;112;4;4;4
-MINION;Argeonhighmayne;4;Strongest man alive;118;5;5;2
-MINION;Suntidemaiden;4;Flying knight;128;3;3;6
+MINION;Spider;4;Spider LEVEL 4;112;4;20;4
+MINION;Knight;4;Knight LEVEL 4;118;8;16;2
+MINION;Rat;4;Rat LEVEL 4;128;2;20;8
+MINION;Piranha;4;Piranha LEVEL 4;141;5;11;5
+EQUIPMENT;IncreaseAttack;4;Increases attack by 4;131;4;0;0
+EQUIPMENT;IncreaseHealth;4;Increases health by 20;134;0;20;0
+EQUIPMENT;IncreaseSpeed;4;Increases speed by 4;137;0;0;4
 
 
 
