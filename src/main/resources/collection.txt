@@ -3,7 +3,7 @@
 /GENERAL;name;0(cost for summoning);descriptionOnTheCard;ID;attack;health;movementReach
 /MINION;name;cost;description;ID;attack;health;movementReach
 /SPELL;name;cost;description;ID;effect (don't create any spell cards yet until implemented)
-/EQUIPMENT;name;cost;description;ID;addAttack;addHealth;addSpeed;effect
+/EQUIPMENT;name;cost;description;ID;addAttack;addHealth;addSpeed;attribute
 
 /ID rules: until a better system is developed, generals will have ID from 0 to 100
 
@@ -19,7 +19,9 @@ MINION;Crystalcloaker;1;Weak, but fast;119;1;2;3
 MINION;Jademonk;1;Heavy fighter;123;1;4;1
 MINION;Kaidoassasin;1;Sneaky ninja;124;3;1;1
 MINION;Starfirescarab;1;Weaker than it looks;127;2;2;1
-EQUIPMENT;Hook;1;Yarr mate;200;2;0;0;none
+EQUIPMENT;Hook;1;Yarr mate;2;2;0;0;none
+EQUIPMENT;SnowPiercer;1;Pierces Snow;3;0;0;none
+
 
 /cost 2
 MINION;Bluetipscorpion;2;Underground walker.;108;2;4;1

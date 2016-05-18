@@ -16,7 +16,7 @@ public abstract class Card {
     private Image image;
     private Image smallImage;
     private boolean chosen=false;
-    List<Attributes> cardAttributes = new ArrayList<>();
+    private List<Attribute> attributes = new ArrayList<>();
     /**
      * Constructor
      *  @param name   Name of the card
@@ -73,8 +73,8 @@ public abstract class Card {
         return description;
     }
 
-    public List<Attributes> getCardAttributes() {
-        return cardAttributes;
+    public List<Attribute> getAttributes() {
+        return attributes;
     }
 
     @Override

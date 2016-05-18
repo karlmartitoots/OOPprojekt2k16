@@ -321,7 +321,7 @@ public class GameScene extends Scene {
             setCurrentActiveCardByCardSlot(cardSlotNumber);
             setSquareImagesToCardImagesOrDefaults();
             if (currentActiveCard instanceof MinionCard) {
-                if (currentActiveCard.getCardAttributes().contains(Attributes.AIRDROP)) {
+                if (currentActiveCard.getAttributes().contains(Attribute.AIRDROP)) {
                     highlightPossibleSummonSquaresWithAirdrop();
                 } else {
                     highlightPossibleSummonSquares();
@@ -462,7 +462,7 @@ public class GameScene extends Scene {
                 MinionCard cardToSummon = (MinionCard) currentActiveCard;
                 squareToSummonOn.setSquaresCard(cardToSummon);
                 squareToSummonOn.getCard().setCurrentPosition(squareToSummonOn);
-                if (!cardToSummon.getCardAttributes().contains(Attributes.CHARGE)) {
+                if (!cardToSummon.getAttributes().contains(Attribute.CHARGE)) {
                     squareToSummonOn.getCard().blockMovement();
                     squareToSummonOn.getCard().setHasAttacked(true);
                 }
@@ -533,12 +533,12 @@ public class GameScene extends Scene {
             if (firstMinion.hasAttacked()) return;
             MinionCard secondMinion = gameBoard.getCurrentlySelectedSquare().getCard();
             attackAndRetaliate(firstMinion, secondMinion);
-            if (firstMinion.getCardAttributes().contains(Attributes.FIRSTSTRIKE) || firstMinion.getCardAttributes().contains(Attributes.DOOUBLESTRIKE)) {
+            if (firstMinion.getAttributes().contains(Attribute.FIRSTSTRIKE) || firstMinion.getAttributes().contains(Attribute.DOOUBLESTRIKE)) {
                 processAttackWithFirstStrike(firstMinion, secondMinion);
             } else {
                 processAttackWithoutFirstStrike(firstMinion, secondMinion);
             }
-            if (firstMinion.getCardAttributes().contains(Attributes.DOOUBLESTRIKE)) {
+            if (firstMinion.getAttributes().contains(Attribute.DOOUBLESTRIKE)) {
                 attackAndRetaliate(firstMinion, secondMinion);
                 if (!firstMinion.isAlive()) {
                     parentGroup.getChildren().remove(gameBoard.getPreviouslySelectedSquare().getImageView());
@@ -589,7 +589,7 @@ public class GameScene extends Scene {
     }
 
     private void attackAndRetaliate(MinionCard firstMinion, MinionCard secondMinion) {
-        if (firstMinion.getCardAttributes().contains(Attributes.DEATHTOUCH) && !(secondMinion instanceof GeneralCard)) {
+        if (firstMinion.getAttributes().contains(Attribute.DEATHTOUCH) && !(secondMinion instanceof GeneralCard)) {
             secondMinion.setCurrentHp(0);
             secondMinion.getCurrentPosition().showHitSplatOnSquare(secondMinion.getCurrentHp(), parentGroup);
         } else {
