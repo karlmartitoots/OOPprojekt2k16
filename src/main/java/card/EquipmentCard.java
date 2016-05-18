@@ -22,6 +22,10 @@ public class EquipmentCard extends Card {
         return bonusHealth;
     }
 
+    public int getBonusSpeed() {
+        return bonusSpeed;
+    }
+
     @Override
     public String toString() {
         return "EquipmentCard{" +

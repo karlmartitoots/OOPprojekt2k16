@@ -204,6 +204,7 @@ public class MinionCard extends Card {
         attack += equipmentCard.getBonusAttack();
         currentHp += equipmentCard.getBonusHealth();
         maxHp += equipmentCard.getBonusHealth();
+        movementReach += equipmentCard.getBonusSpeed();
         equipments.add(equipmentCard);
     }
 

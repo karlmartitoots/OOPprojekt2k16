@@ -1,10 +1,14 @@
 package game;
 
 import attributes.Attribute;
-import card.*;
+import card.Card;
+import card.EquipmentCard;
+import card.GeneralCard;
+import card.MinionCard;
 import gamelogic.*;
 import gamelogic.player.Hand;
 import gamelogic.player.Player;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -20,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import settings.SetupSettings;
 
 import java.util.ArrayList;
@@ -45,7 +50,7 @@ public class GameScene extends Scene {
     //for the time being if currentActiveCard is used, needs to be checked with currentCardExists
     private Card currentActiveCard = null;
     private int turnCounter = 0;
-    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedCardNameLabel, selectedMinionManaCostLabel, selectedMinionSideLabel;
+    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedCardNameLabel, selectedMinionManaCostLabel, selectedMinionSideLabel, selectedMinionSpeedLabel;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
@@ -188,10 +193,11 @@ public class GameScene extends Scene {
         selectedMinionHealthLabel = createLabel("");
         selectedMinionManaCostLabel = createLabel("");
         selectedMinionSideLabel = createLabel("");
+        selectedMinionSpeedLabel = createLabel("");
     }
 
     private void createAndPlaceInfoboxNode() {
-        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedCardNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionManaCostLabel, selectedMinionSideLabel);
+        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedCardNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionSpeedLabel, selectedMinionManaCostLabel, selectedMinionSideLabel);
         infoBox.setLayoutX(770);
         infoBox.setLayoutY(30);
         parentGroup.getChildren().add(infoBox);
@@ -329,7 +335,7 @@ public class GameScene extends Scene {
                 }
             }
             if (currentActiveCard instanceof EquipmentCard) {
-                highlightPossibleMinnionsToGiveEquipment();
+                highlightPossibleMinionsToGiveEquipment();
             }
 
         } else if(coordinatesOnGameboard(squareCoordinates)){//click on gameboard
@@ -355,7 +361,7 @@ public class GameScene extends Scene {
         }
     }
 
-    private void highlightPossibleMinnionsToGiveEquipment() {
+    private void highlightPossibleMinionsToGiveEquipment() {
         List<Square> currentPlayerMinionSquares = new ArrayList<>();
         gameBoard.getBoardBySquares().forEach(square -> {
             if (square.hasMinionOnSquare()) {
@@ -447,29 +453,58 @@ public class GameScene extends Scene {
     private void equipEquipmentIfPossible(Point2D squareCoordinates) {
         if (currentActiveCardExists() && currentActiveCard instanceof EquipmentCard) {
             Square possibleMinionSquare = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
-            if (gameBoard.getSquarePossibleToInteractWith().contains(possibleMinionSquare) && currentPlayer.useMana(currentActiveCard.getCost())) {
-                possibleMinionSquare.getCard().addEquipment((EquipmentCard) currentActiveCard);
-                currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
-                updateManaLabel();
+            if (gameBoard.getSquarePossibleToInteractWith().contains(possibleMinionSquare)) {
+                if(currentPlayer.useMana(currentActiveCard.getCost())) {
+                    possibleMinionSquare.getCard().addEquipment((EquipmentCard) currentActiveCard);
+                    currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
+                    updateManaLabel();
+                }else{
+                    showInformativeText("You don't have enough mana for that!");
+                }
             }
         }
         updateCardSlots();
     }
 
+    private void showInformativeText(String message) {
+        Platform.runLater(() -> {
+            int positionInX = 760, positionInY = 300;
+            Text informativeText = new Text(message);
+            informativeText.setWrappingWidth(250);
+            informativeText.setFill(Color.RED);
+            informativeText.setFont(new Font(20));
+            informativeText.setX(positionInX);
+            informativeText.setY(positionInY);
+
+            parentGroup.getChildren().add(informativeText);
+            PauseTransition pt = new PauseTransition(Duration.millis(1000));
+
+            pt.play();
+            pt.setOnFinished(event -> {
+                informativeText.setText("");
+                parentGroup.getChildren().remove(informativeText);
+            });
+        });
+    }
+
     private void summonMinionIfPossible(Point2D squareCoordinates) {
         if (currentActiveCardExists() && currentActiveCard instanceof MinionCard) {
             Square squareToSummonOn = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
-            if (gameBoard.getSquarePossibleToInteractWith().contains(squareToSummonOn) && currentPlayer.useMana(currentActiveCard.getCost())) {
-                MinionCard cardToSummon = (MinionCard) currentActiveCard;
-                squareToSummonOn.setSquaresCard(cardToSummon);
-                squareToSummonOn.getCard().setCurrentPosition(squareToSummonOn);
-                if (!cardToSummon.getAttributes().contains(Attribute.CHARGE)) {
-                    squareToSummonOn.getCard().blockMovement();
-                    squareToSummonOn.getCard().setHasAttacked(true);
-                }
+            if (gameBoard.getSquarePossibleToInteractWith().contains(squareToSummonOn)) {
+                if(currentPlayer.useMana(currentActiveCard.getCost())) {
+                    MinionCard cardToSummon = (MinionCard) currentActiveCard;
+                    squareToSummonOn.setSquaresCard(cardToSummon);
+                    squareToSummonOn.getCard().setCurrentPosition(squareToSummonOn);
+                    if (!cardToSummon.getAttributes().contains(Attribute.CHARGE)) {
+                        squareToSummonOn.getCard().blockMovement();
+                        squareToSummonOn.getCard().setHasAttacked(true);
+                    }
 
-                currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
-                updateManaLabel();
+                    currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
+                    updateManaLabel();
+                }else{
+                    showInformativeText("You don't have enough mana for that!");
+                }
             }
         }
         updateCardSlots();
@@ -480,6 +515,7 @@ public class GameScene extends Scene {
             selectedCardNameLabel.setText("NAME: " + card.getName());
             selectedMinionAttackLabel.setText("ATTACK: " + card.getAttack());
             selectedMinionHealthLabel.setText("HP: " + card.getCurrentHp());
+            selectedMinionSpeedLabel.setText("SPEED: " + card.getMovementReach());
             selectedMinionManaCostLabel.setText("MANACOST: " + card.getCost());
             selectedMinionSideLabel.setText("SIDE: " + card.getSide());
         } else {
@@ -492,6 +528,7 @@ public class GameScene extends Scene {
             selectedCardNameLabel.setText("NAME: " + card.getName());
             selectedMinionAttackLabel.setText("ATTACK BUFF: " + card.getBonusAttack());
             selectedMinionHealthLabel.setText("HEALTH BUFF: " + card.getBonusHealth());
+            selectedMinionSpeedLabel.setText("SPEED BUFF: " + card.getBonusSpeed());
             selectedMinionManaCostLabel.setText("MANACOST: " + card.getCost());
         } else {
             clearInformationLabels();
@@ -504,6 +541,7 @@ public class GameScene extends Scene {
         selectedMinionHealthLabel.setText("");
         selectedMinionManaCostLabel.setText("");
         selectedMinionSideLabel.setText("");
+        selectedMinionSpeedLabel.setText("");
     }
 
     /**
@@ -772,7 +810,7 @@ public class GameScene extends Scene {
         switchCurrentPlayer();
         currentPlayer.addManaCrystal();
         currentPlayer.refilManaCrystals();
-        setAllCreaturesToHaventMoved();
+        setAllCreaturesToStartOfTurn();
         incrementTurnCounter();
         clearInformationLabels();
         currentPlayer.getPlayerHand().addCardIfPossible(currentPlayer.getPlayerDeck().draw());
@@ -798,13 +836,13 @@ public class GameScene extends Scene {
     /**
      * Finds all the creatures on the gameboard and sets their hasMoved state to false.
      */
-    private void setAllCreaturesToHaventMoved() {
+    private void setAllCreaturesToStartOfTurn() {
         setSquareImagesToCardImagesOrDefaults();
         gameBoard.clearSquaresPossibleToInteractWith();
-        allowMovementForAllCreatures();
+        allowMovementAndAttackForAllCreatures();
     }
 
-    private void allowMovementForAllCreatures() {
+    private void allowMovementAndAttackForAllCreatures() {
         gameBoard.getBoardBySquares().forEach(square -> {
             if (square.hasMinionOnSquare()) {
                 square.getCard().allowMovement();
