@@ -19,9 +19,9 @@ MINION;Crystalcloaker;1;Weak, but fast;119;1;2;3
 MINION;Jademonk;1;Heavy fighter;123;1;4;1
 MINION;Kaidoassasin;1;Sneaky ninja;124;3;1;1
 MINION;Starfirescarab;1;Weaker than it looks;127;2;2;1
-EQUIPMENT;Hook;1;Yarr mate;2;2;0;0;none
-EQUIPMENT;SnowPiercer;1;Pierces Snow;3;0;0;none
-
+EQUIPMENT;Hook;1;Yarr mate;2;2;0;0
+EQUIPMENT;Snowpiercer;1;Pierces Snow;3;0;0;0
+EQUIPMENT;Horn of the forsaken;1;Its a horn!;3;0;1;0
 
 /cost 2
 MINION;Bluetipscorpion;2;Underground walker.;108;2;4;1
