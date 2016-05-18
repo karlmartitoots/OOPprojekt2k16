@@ -103,8 +103,9 @@ public class Collection {
     public Map<String, GeneralCard> getAllGeneralCardsByName(){
         Map<String, GeneralCard> generalCards = new HashMap<>();
         for (Card card : allCards.values()) {
-            if(card instanceof GeneralCard)
+            if(card instanceof GeneralCard) {
                 generalCards.put(card.getName(),(GeneralCard) card);
+            }
         }
         return generalCards;
     }

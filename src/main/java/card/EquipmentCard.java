@@ -21,4 +21,13 @@ public class EquipmentCard extends Card {
     public int getBonusHealth() {
         return bonusHealth;
     }
+
+    @Override
+    public String toString() {
+        return "EquipmentCard{" +
+                "bonusAttack=" + bonusAttack +
+                ", bonusHealth=" + bonusHealth +
+                ", bonusSpeed=" + bonusSpeed +
+                "} " + super.toString();
+    }
 }
