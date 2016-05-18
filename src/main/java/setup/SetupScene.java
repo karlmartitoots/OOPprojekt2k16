@@ -40,8 +40,7 @@ public class SetupScene extends Scene {
 
         ChoiceBox<String> whiteGeneralNamesChoiceBox = createGeneralChoiceBox(100, 50);
         ChoiceBox<String> blackGeneralNamesChoiceBox = createGeneralChoiceBox(100, 100);
-        //might need to rethink some logic here, because when the names are changed in
-        //Settings, they wont change in here and the code will break
+
         ChoiceBox<String> positionNamesChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
                 "Corners",
                 "GoFace",
