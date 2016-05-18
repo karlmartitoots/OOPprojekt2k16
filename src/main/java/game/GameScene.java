@@ -1,5 +1,6 @@
 package game;
 
+import attributes.Attribute;
 import card.*;
 import gamelogic.*;
 import gamelogic.player.Hand;

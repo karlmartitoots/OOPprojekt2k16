@@ -1,4 +1,4 @@
-package card;
+package attributes;
 
 public enum Attribute {
     DRAW, //Draw cards

@@ -1,5 +1,6 @@
 package card;
 
+import attributes.Attribute;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
