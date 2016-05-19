@@ -18,7 +18,7 @@ public class ProcessReinforcmentAction {
                     possibleSquareToSummon.getCard().setCurrentPosition(possibleSquareToSummon);
                     possibleSquareToSummon.getCard().setSide(side);
                     possibleSquareToSummon.getCard().setHasAttacked(true);
-                    possibleSquareToSummon.getCard().blockMovement();
+                    break;
                 }
             }
         }

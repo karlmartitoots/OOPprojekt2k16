@@ -339,6 +339,9 @@ public class GameScene extends Scene {
             if (currentActiveCard instanceof EquipmentCard) {
                 highlightPossibleMinionsToGiveEquipment();
             }
+            if (currentActiveCard instanceof SpellCard && ((SpellCard) currentActiveCard).getAttributeListMap().keySet().contains(Attribute.DIRECTDAMAGE)) {
+                highlightEnemyMinions();
+            }
 
         } else if(coordinatesOnGameboard(squareCoordinates)){//click on gameboard
             checkStateAndprocessClickOnBoard(squareCoordinates);
@@ -373,6 +376,23 @@ public class GameScene extends Scene {
             }
         });
         gameBoard.setSquarePossibleToInteractWith(currentPlayerMinionSquares);
+        for (Square square : gameBoard.getSquarePossibleToInteractWith()) {
+            parentGroup.getChildren().remove(square.getImageView());
+            square.setImageAsMoveableSquare();
+            parentGroup.getChildren().addAll(square.getImageView());
+        }
+    }
+
+    private void highlightEnemyMinions() {
+        List<Square> enemyMinionSquares = new ArrayList<>();
+        gameBoard.getBoardBySquares().forEach(square -> {
+            if (square.hasMinionOnSquare()) {
+                if (!square.getCard().getSide().equals(currentPlayer.getSide())) {
+                    enemyMinionSquares.add(square);
+                }
+            }
+        });
+        gameBoard.setSquarePossibleToInteractWith(enemyMinionSquares);
         for (Square square : gameBoard.getSquarePossibleToInteractWith()) {
             parentGroup.getChildren().remove(square.getImageView());
             square.setImageAsMoveableSquare();
@@ -438,7 +458,7 @@ public class GameScene extends Scene {
     private void checkStateAndprocessClickOnBoard(Point2D squareCoordinates) {
         summonMinionIfPossible(squareCoordinates);
         equipEquipmentIfPossible(squareCoordinates);
-        useSpellIfPossible();
+        useSpellIfPossible(squareCoordinates);
         if (squareCoordinates.getX() >= 0) {
             gameBoard.setCurrentlySelectedSquare(squareCoordinates);
             setSquareImagesToCardImagesOrDefaults();
@@ -456,18 +476,45 @@ public class GameScene extends Scene {
         }
     }
 
-    private void useSpellIfPossible() {
+    private void useSpellIfPossible(Point2D squareCoordinates) {
         if (currentActiveCardExists() && currentActiveCard instanceof SpellCard) {
             SpellCard currentCard = (SpellCard) currentActiveCard;
             if (currentPlayer.useMana(currentActiveCard.getCost())) {
                 if (currentCard.getAttributeListMap().keySet().contains(Attribute.REINFORCMENT)) {
                     ProcessReinforcmentAction.summonSquires(currentCard.getAttributeListMap().get(Attribute.REINFORCMENT).get(0), gameBoard.getBoardBySquares(), currentPlayer.getSide());
-                    currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
-                    updateManaLabel();
+                    removeCardFromHandAndUpdateMana();
                 }
+                if (currentCard.getAttributeListMap().keySet().contains(Attribute.DRAW)) {
+                    for (int i = 0; i < currentCard.getAttributeListMap().get(Attribute.DRAW).get(0); i++) {
+                        currentPlayer.getPlayerHand().addCardIfPossible(currentPlayer.getPlayerDeck().draw());
+                    }
+                    removeCardFromHandAndUpdateMana();
+                }
+                if (currentCard.getAttributeListMap().keySet().contains(Attribute.DIRECTDAMAGE)) {
+                    Square possibleEnemyMinionSquare = gameBoard.getBoardBySquares().get(Square.pointToSquare1DPosition(squareCoordinates));
+                    if (gameBoard.getSquarePossibleToInteractWith().contains(possibleEnemyMinionSquare)) {
+                        MinionCard enemyMinon = possibleEnemyMinionSquare.getCard();
+                        enemyMinon.setCurrentHp(enemyMinon.getCurrentHp() - currentCard.getAttributeListMap().get(Attribute.DIRECTDAMAGE).get(0));
+                        enemyMinon.getCurrentPosition().showHitSplatOnSquare(currentCard.getAttributeListMap().get(Attribute.DIRECTDAMAGE).get(0), parentGroup);
+                        if (!enemyMinon.isAlive()) {
+                            parentGroup.getChildren().remove(gameBoard.getCurrentlySelectedSquare().getImageView());
+                            gameBoard.getCurrentlySelectedSquare().setSquaresCard(null);
+                            parentGroup.getChildren().add(gameBoard.getCurrentlySelectedSquare().getImageView());
+                        }
+                        removeCardFromHandAndUpdateMana();
+                    }
+                }
+
+            } else {
+                showInformativeText("You don't have enough mana for that!");
             }
         }
         updateCardSlots();
+    }
+
+    private void removeCardFromHandAndUpdateMana() {
+        currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
+        updateManaLabel();
     }
 
     private void equipEquipmentIfPossible(Point2D squareCoordinates) {
@@ -476,8 +523,7 @@ public class GameScene extends Scene {
             if (gameBoard.getSquarePossibleToInteractWith().contains(possibleMinionSquare)) {
                 if(currentPlayer.useMana(currentActiveCard.getCost())) {
                     possibleMinionSquare.getCard().addEquipment((EquipmentCard) currentActiveCard);
-                    currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
-                    updateManaLabel();
+                    removeCardFromHandAndUpdateMana();
                 }else{
                     showInformativeText("You don't have enough mana for that!");
                 }
@@ -520,8 +566,7 @@ public class GameScene extends Scene {
                         squareToSummonOn.getCard().setHasAttacked(true);
                     }
 
-                    currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
-                    updateManaLabel();
+                    removeCardFromHandAndUpdateMana();
                 }else{
                     showInformativeText("You don't have enough mana for that!");
                 }

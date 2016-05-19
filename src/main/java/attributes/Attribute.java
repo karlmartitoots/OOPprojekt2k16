@@ -14,5 +14,6 @@ public enum Attribute {
     INSPIRE, // Bonus if next to general
     FLYING, // Can fly over minions
     DEATHTOUCH, // If deals damage to minion, kills instantly
-    REINFORCMENT //Summons that many 1/1 units for you
+    REINFORCMENT, //Summons that many 1/1 units for you
+    DIRECTDAMAGE //Damage to target
 }

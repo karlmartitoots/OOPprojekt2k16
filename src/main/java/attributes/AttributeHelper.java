@@ -24,55 +24,7 @@ public class AttributeHelper {
         parameterMap.put(Attribute.AIRDROP, 0);
         parameterMap.put(Attribute.INSPIRE, 0);
         parameterMap.put(Attribute.FLYING, 0);
-
-    }
-
-    public static AttributeType processAttributeType(Attribute attribute) {
-        AttributeType attributeType;
-        switch (attribute) {
-            case DRAW:
-                attributeType = AttributeType.OTHER;
-                break;
-            case SHOUT:
-                attributeType = AttributeType.OTHER;
-                break;
-            case CHARGE:
-                attributeType = AttributeType.BUFF;
-                break;
-            case DOOUBLESTRIKE:
-                attributeType = AttributeType.BUFF;
-                break;
-            case SPIN:
-                attributeType = AttributeType.AFFECTENEMY;
-                break;
-            case BOUNCE:
-                attributeType = AttributeType.AFFECTENEMY;
-                break;
-            case FIRSTSTRIKE:
-                attributeType = AttributeType.BUFF;
-                break;
-            case BLOODTHIRSTY:
-                attributeType = AttributeType.BUFF;
-                break;
-            case AIRDROP:
-                attributeType = AttributeType.OTHER;
-                break;
-            case INSPIRE:
-                attributeType = AttributeType.BUFF;
-                break;
-            case FLYING:
-                attributeType = AttributeType.BUFF;
-                break;
-            case DEATHTOUCH:
-                attributeType = AttributeType.BUFF;
-                break;
-            case REINFORCMENT:
-                attributeType = AttributeType.OTHER;
-                break;
-            default:
-                attributeType = AttributeType.OTHER;
-        }
-        return attributeType;
+        parameterMap.put(Attribute.DIRECTDAMAGE, 1);
     }
 
     public static Attribute stringToAttribute(String attributeString) {
@@ -116,6 +68,9 @@ public class AttributeHelper {
                 break;
             case "REINFORCMENT":
                 attribute = Attribute.REINFORCMENT;
+                break;
+            case "DIRECTDAMAGE":
+                attribute = Attribute.DIRECTDAMAGE;
                 break;
             default:
                 attribute = Attribute.NONE;
