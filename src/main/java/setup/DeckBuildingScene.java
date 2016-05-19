@@ -1,6 +1,8 @@
 package setup;
 
 import card.Card;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,20 @@ class DeckBuildingScene extends Scene {
         primaryStage.setTitle(gameTitle);
         primaryStage.setResizable(false);
         primaryStage.show();
+        Platform.setImplicitExit(false);
+
+        Platform.setImplicitExit(false);
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                event.consume();
+                primaryStage.setScene(new SetupScene(new Group(), primaryStage));
+            }
+        });
+
+
+
 
 
 
