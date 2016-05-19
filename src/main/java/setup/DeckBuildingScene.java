@@ -42,6 +42,7 @@ class DeckBuildingScene extends Scene {
         primaryStage.show();
 
 
+
     }
 
     void drawPage(int kaardiLehekülg, List<Card> cardList) {
@@ -83,7 +84,7 @@ class DeckBuildingScene extends Scene {
                         drawChosenCards(cardList);
 
                     } else {
-                        //// TODO: 5/14/2016 go to gameScene 
+                        //// TODO: 5/14/2016 go to gameScene
                     }
                 });
                 parentGroup.getChildren().add(cardViewer);
