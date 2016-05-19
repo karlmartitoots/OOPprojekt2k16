@@ -34,33 +34,7 @@ public class Hand {
     /**
      * Discards all the cards in the players cardsInHand.
      */
-    public void discardHand() {
-        cardsInHand.clear();
-    }
 
-    /**
-     * Discards a random card from the cardsInHand of the player
-     */
-    public void discardRandomCard() {
-        cardsInHand.remove((int) (Math.random() * cardsInHand.size()));
-    }
-
-    /**
-     * Discards a specific card from the players cardsInHand
-     *
-     * @param i index of the card
-     */
-    public void discardSpecificCard(int i) {
-        cardsInHand.remove(i);
-    }
-
-    public void discardSpecificCard(Card card){
-        cardsInHand.remove(card);
-    }
-    /**
-     * Get cards in ur cardsInHand as list
-     * @return Cards in cardsInHand
-     */
     public List<Card> getCardsInHand(){return cardsInHand;}
 
     @Override

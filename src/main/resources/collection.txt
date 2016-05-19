@@ -7,11 +7,11 @@
 
 /ID rules: until a better system is developed, generals will have ID from 0 to 100
 
-GENERAL;General Taavi;0;A General named Taavi.;1;7;200;4
-GENERAL;General Mart;0;A General named Märt.;2;7;200;4
-GENERAL;General Aleksis;0;Spaghetti is life. Spaghetti is love.;3;9;200;3
-GENERAL;General Heiti;0;GeneralNotFoundException.;4;9;200;3
-GENERAL;General Karl;0;Choose your fate.;5;9;200;3
+GENERAL;General Taavi;0;A General named Taavi.;1;7;50;4
+GENERAL;General Mart;0;A General named Märt.;2;7;50;4
+GENERAL;General Aleksis;0;Spaghetti is life. Spaghetti is love.;3;9;50;3
+GENERAL;General Heiti;0;GeneralNotFoundException.;4;9;50;3
+GENERAL;General Karl;0;Choose your fate.;5;9;50;3
 GENERAL;General Joker;0;What's so funny?;6;999;999;999
 
 /cost 1
@@ -37,6 +37,7 @@ EQUIPMENT;IncreaseAttack;2;Increases attack by 2;129;2;0;0
 EQUIPMENT;IncreaseHealth;2;Increases health by 10;132;0;10;0
 EQUIPMENT;IncreaseSpeed;2;Increases speed by 2;135;0;0;2
 SPELL;Travelers;2;yes;301;REINFORCMENT;4
+SPELL;Lightning bolt;2;FRY;303;DIRECTDAMAGE;3
 
 /cost 3
 MINION;Spider;3;Spider LEVEL 3;113;3;15;3
@@ -48,6 +49,7 @@ MINION;Obstacle;3;Obstacle LEVEL 3;148;0;200;0
 EQUIPMENT;IncreaseAttack;3;Increases attack by 3;130;3;0;0
 EQUIPMENT;IncreaseHealth;3;Increases health by 15;133;0;15;0
 EQUIPMENT;IncreaseSpeed;3;Increases speed by 3;136;0;0;3
+SPELL;Alien Inteligence;3;Made a discovery;302;DRAW;2
 
 /cost 4
 MINION;Spider;4;Spider LEVEL 4;112;4;20;4
