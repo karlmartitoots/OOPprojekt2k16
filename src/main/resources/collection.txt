@@ -7,11 +7,11 @@
 
 /ID rules: until a better system is developed, generals will have ID from 0 to 100
 
-GENERAL;General Taavi;0;A General named Taavi.;1;7;50;4
-GENERAL;General Mart;0;A General named Märt.;2;7;50;4
-GENERAL;General Aleksis;0;Spaghetti is life. Spaghetti is love.;3;9;50;3
-GENERAL;General Heiti;0;GeneralNotFoundException.;4;9;50;3
-GENERAL;General Karl;0;Choose your fate.;5;9;50;3
+GENERAL;General Taavi;0;A General named Taavi.;1;7;100;4
+GENERAL;General Mart;0;A General named Märt.;2;7;100;4
+GENERAL;General Aleksis;0;Spaghetti is life. Spaghetti is love.;3;9;100;3
+GENERAL;General Heiti;0;GeneralNotFoundException.;4;9;100;3
+GENERAL;General Karl;0;My observers patterns will impale you.;5;9;100;3
 GENERAL;General Joker;0;What's so funny?;6;999;999;999
 
 /cost 1
@@ -36,8 +36,8 @@ MINION;Obstacle;2;Obstacle LEVEL 2;147;0;100;0
 EQUIPMENT;IncreaseAttack;2;Increases attack by 2;129;2;0;0
 EQUIPMENT;IncreaseHealth;2;Increases health by 10;132;0;10;0
 EQUIPMENT;IncreaseSpeed;2;Increases speed by 2;135;0;0;2
-SPELL;Travelers;2;yes;301;REINFORCMENT;4
-SPELL;Lightning bolt;2;FRY;303;DIRECTDAMAGE;3
+SPELL;Travelers;2;Reinforcements!;301;REINFORCMENT;4
+SPELL;Lightning bolt;2;FRY;303;DIRECTDAMAGE;6
 
 /cost 3
 MINION;Spider;3;Spider LEVEL 3;113;3;15;3

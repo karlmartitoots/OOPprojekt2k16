@@ -1,11 +1,7 @@
 package game;
 
 import attributes.Attribute;
-import card.Card;
-import card.EquipmentCard;
-import card.GeneralCard;
-import card.MinionCard;
-import attributes.ProcessReinforcmentAction;
+import attributes.ProcessReinforcementAction;
 import card.*;
 import gamelogic.*;
 import gamelogic.player.Hand;
@@ -481,7 +477,7 @@ public class GameScene extends Scene {
             SpellCard currentCard = (SpellCard) currentActiveCard;
             if (currentPlayer.useMana(currentActiveCard.getCost())) {
                 if (currentCard.getAttributeListMap().keySet().contains(Attribute.REINFORCMENT)) {
-                    ProcessReinforcmentAction.summonSquires(currentCard.getAttributeListMap().get(Attribute.REINFORCMENT).get(0), gameBoard.getBoardBySquares(), currentPlayer.getSide());
+                    ProcessReinforcementAction.summonSquires(currentCard.getAttributeListMap().get(Attribute.REINFORCMENT).get(0), gameBoard.getBoardBySquares(), currentPlayer.getSide());
                     removeCardFromHandAndUpdateMana();
                 }
                 if (currentCard.getAttributeListMap().keySet().contains(Attribute.DRAW)) {

@@ -7,7 +7,7 @@ import gamelogic.Square;
 
 import java.util.List;
 
-public class ProcessReinforcmentAction {
+public class ProcessReinforcementAction {
     public static void summonSquires(int count, List<Square> gameBoard, Side side) {
         for (int i = 0; i < count; i++) {
             while (true) {

@@ -4,7 +4,6 @@ import card.GeneralCard;
 import collection.Collection;
 import game.GameScene;
 import javafx.collections.FXCollections;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,7 +14,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import settings.SetupSettings;
 
 import java.util.Map;
@@ -34,11 +32,6 @@ public class SetupScene extends Scene {
      */
     public SetupScene(Group root, Stage primaryStage) {
         super(root);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-            }
-        });
         Label chooseGeneralLabel = createLabel("Choose your general", 20, 50, 0);
         Label whiteChoiceBoxLabel = createLabel("White", 16, 50, 50),
                 blackChoiceBoxLabel = createLabel("Black", 16, 50, 100);
@@ -87,8 +80,9 @@ public class SetupScene extends Scene {
         positionNamesChoiceBox.getSelectionModel().selectedItemProperty().addListener(event -> {
             positionIsChosen[0] = true;
         });
-        deckbutton.setOnAction(event -> primaryStage.setScene(new DeckBuildingScene((new Group()), primaryStage)));
-        deckbutton2.setOnAction(event -> primaryStage.setScene(new DeckBuildingScene((new Group()), primaryStage)));
+        Stage deckStage = new Stage();
+        deckbutton.setOnAction(event -> deckStage.setScene(new DeckBuildingScene((new Group()), primaryStage)));
+        deckbutton2.setOnAction(event -> deckStage.setScene(new DeckBuildingScene((new Group()), primaryStage)));
         enterButton.setOnAction(event -> {
             if(!(generalIsChosen[0] && generalIsChosen[1] && positionIsChosen[0])){
                 showPopupDialog(primaryStage);
