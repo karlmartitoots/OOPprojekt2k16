@@ -20,6 +20,8 @@ MINION;Spider;1;Spider LEVEL 1;101;1;5;1
 MINION;Knight;1;Knight LEVEL 1;109;2;10;1
 MINION;Rat;1;Rat LEVEL 1;107;1;5;2
 MINION;Piranha;1;Piranha LEVEL 1;115;2;5;2
+MINION;Ghost;1;Ghost LEVEL 1;142;1;20;3
+MINION;Obstacle;1;Obstacle LEVEL 1;146;0;50;0
 EQUIPMENT;IncreaseAttack;1;Increases attack by 1;138;1;0;0
 EQUIPMENT;IncreaseHealth;1;Increases health by 5;139;0;5;0
 EQUIPMENT;IncreaseSpeed;1;Increases speed by 1;140;0;0;1
@@ -29,6 +31,8 @@ MINION;Spider;2;Spider LEVEL 2;108;2;10;2
 MINION;Knight;2;Knight LEVEL 2;114;4;12;1
 MINION;Rat;2;Rat LEVEL 2;110;1;10;4
 MINION;Piranha;2;Piranha LEVEL 2;111;3;7;3
+MINION;Ghost;2;Ghost LEVEL 2;143;1;30;5
+MINION;Obstacle;2;Obstacle LEVEL 2;147;0;100;0
 EQUIPMENT;IncreaseAttack;2;Increases attack by 2;129;2;0;0
 EQUIPMENT;IncreaseHealth;2;Increases health by 10;132;0;10;0
 EQUIPMENT;IncreaseSpeed;2;Increases speed by 2;135;0;0;2
@@ -39,6 +43,8 @@ MINION;Spider;3;Spider LEVEL 3;113;3;15;3
 MINION;Knight;3;Knight LEVEL 3;116;6;14;2
 MINION;Rat;3;Rat LEVEL 3;106;2;15;6
 MINION;Piranha;3;Piranha LEVEL 3;107;4;9;4
+MINION;Ghost;3;Ghost LEVEL 3;144;1;40;6
+MINION;Obstacle;3;Obstacle LEVEL 3;148;0;200;0
 EQUIPMENT;IncreaseAttack;3;Increases attack by 3;130;3;0;0
 EQUIPMENT;IncreaseHealth;3;Increases health by 15;133;0;15;0
 EQUIPMENT;IncreaseSpeed;3;Increases speed by 3;136;0;0;3
@@ -48,11 +54,13 @@ MINION;Spider;4;Spider LEVEL 4;112;4;20;4
 MINION;Knight;4;Knight LEVEL 4;118;8;16;2
 MINION;Rat;4;Rat LEVEL 4;128;2;20;8
 MINION;Piranha;4;Piranha LEVEL 4;141;5;11;5
+MINION;Ghost;4;Ghost LEVEL 4;145;2;40;6
+MINION;Obstacle;4;Obstacle LEVEL 4;149;0;300;0
 EQUIPMENT;IncreaseAttack;4;Increases attack by 4;131;4;0;0
 EQUIPMENT;IncreaseHealth;4;Increases health by 20;134;0;20;0
 EQUIPMENT;IncreaseSpeed;4;Increases speed by 4;137;0;0;4
 
-
+/next id: 150
 
 
 
