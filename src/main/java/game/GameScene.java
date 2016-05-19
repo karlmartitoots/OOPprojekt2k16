@@ -5,7 +5,7 @@ import card.Card;
 import card.EquipmentCard;
 import card.GeneralCard;
 import card.MinionCard;
-import attributes.processReinforcmentAction;
+import attributes.ProcessReinforcmentAction;
 import card.*;
 import gamelogic.*;
 import gamelogic.player.Hand;
