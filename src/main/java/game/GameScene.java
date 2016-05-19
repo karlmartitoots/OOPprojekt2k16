@@ -52,7 +52,7 @@ public class GameScene extends Scene {
     //for the time being if currentActiveCard is used, needs to be checked with currentCardExists
     private Card currentActiveCard = null;
     private int turnCounter = 0;
-    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedCardNameLabel, selectedMinionManaCostLabel, selectedMinionSideLabel, selectedMinionSpeedLabel;
+    private Label currentStateLabel, generalHealthLabel, currentManaLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedCardNameLabel, selectedCardManaCostLabel, selectedMinionSideLabel, selectedMinionSpeedLabel;
 
     /**
      * The constructor of Game conducts all whats happening in gamelogic on gui.
@@ -193,13 +193,13 @@ public class GameScene extends Scene {
         selectedCardNameLabel = createLabel("");
         selectedMinionAttackLabel = createLabel("");
         selectedMinionHealthLabel = createLabel("");
-        selectedMinionManaCostLabel = createLabel("");
+        selectedCardManaCostLabel = createLabel("");
         selectedMinionSideLabel = createLabel("");
         selectedMinionSpeedLabel = createLabel("");
     }
 
     private void createAndPlaceInfoboxNode() {
-        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedCardNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionSpeedLabel, selectedMinionManaCostLabel, selectedMinionSideLabel);
+        VBox infoBox = new VBox(generalHealthLabel, currentManaLabel, selectedCardNameLabel, selectedMinionAttackLabel, selectedMinionHealthLabel, selectedMinionSpeedLabel, selectedCardManaCostLabel, selectedMinionSideLabel);
         infoBox.setLayoutX(770);
         infoBox.setLayoutY(30);
         parentGroup.getChildren().add(infoBox);
@@ -408,10 +408,13 @@ public class GameScene extends Scene {
             currentActiveCard = null;
         }
         if (currentActiveCard instanceof MinionCard) {
-            showMinionInformationOnScreen((MinionCard) currentActiveCard);
+            showEquipmentInformationOnScreen((MinionCard) currentActiveCard);
         }
         if (currentActiveCard instanceof EquipmentCard) {
-            showMinionInformationOnScreen((EquipmentCard) currentActiveCard);
+            showEquipmentInformationOnScreen((EquipmentCard) currentActiveCard);
+        }
+        if (currentActiveCard instanceof SpellCard) {
+            showSpellInformationOnScreen((SpellCard) currentActiveCard);
         }
     }
 
@@ -439,7 +442,7 @@ public class GameScene extends Scene {
         if (squareCoordinates.getX() >= 0) {
             gameBoard.setCurrentlySelectedSquare(squareCoordinates);
             setSquareImagesToCardImagesOrDefaults();
-            showMinionInformationOnScreen(gameBoard.getCurrentlySelectedSquare().getCard());
+            showEquipmentInformationOnScreen(gameBoard.getCurrentlySelectedSquare().getCard());
             switch (state) {
                 case MOVE:
                     moveCardAndUpdateAllSquares(squareCoordinates);
@@ -456,10 +459,15 @@ public class GameScene extends Scene {
     private void useSpellIfPossible() {
         if (currentActiveCardExists() && currentActiveCard instanceof SpellCard) {
             SpellCard currentCard = (SpellCard) currentActiveCard;
-            if (currentCard.getAttributeListMap().keySet().contains(Attribute.REINFORCMENT)) {
-                ProcessReinforcmentAction.summonSquires((currentCard.getAttributeListMap().get(Attribute.REINFORCMENT).get(0)), gameBoard.getBoardBySquares(), currentPlayer.getSide());
+            if (currentPlayer.useMana(currentActiveCard.getCost())) {
+                if (currentCard.getAttributeListMap().keySet().contains(Attribute.REINFORCMENT)) {
+                    ProcessReinforcmentAction.summonSquires(currentCard.getAttributeListMap().get(Attribute.REINFORCMENT).get(0), gameBoard.getBoardBySquares(), currentPlayer.getSide());
+                    currentPlayer.getPlayerHand().getCardsInHand().remove(currentActiveCard);
+                    updateManaLabel();
+                }
             }
         }
+        updateCardSlots();
     }
 
     private void equipEquipmentIfPossible(Point2D squareCoordinates) {
@@ -522,26 +530,35 @@ public class GameScene extends Scene {
         updateCardSlots();
     }
 
-    private void showMinionInformationOnScreen(MinionCard card) {
+    private void showEquipmentInformationOnScreen(MinionCard card) {
         if (card != null) {
             selectedCardNameLabel.setText("NAME: " + card.getName());
             selectedMinionAttackLabel.setText("ATTACK: " + card.getAttack());
             selectedMinionHealthLabel.setText("HP: " + card.getCurrentHp());
             selectedMinionSpeedLabel.setText("SPEED: " + card.getMovementReach());
-            selectedMinionManaCostLabel.setText("MANACOST: " + card.getCost());
+            selectedCardManaCostLabel.setText("MANACOST: " + card.getCost());
             selectedMinionSideLabel.setText("SIDE: " + card.getSide());
         } else {
             clearInformationLabels();
         }
     }
 
-    private void showMinionInformationOnScreen(EquipmentCard card) {
+    private void showEquipmentInformationOnScreen(EquipmentCard card) {
         if (card != null) {
             selectedCardNameLabel.setText("NAME: " + card.getName());
             selectedMinionAttackLabel.setText("ATTACK BUFF: " + card.getBonusAttack());
             selectedMinionHealthLabel.setText("HEALTH BUFF: " + card.getBonusHealth());
             selectedMinionSpeedLabel.setText("SPEED BUFF: " + card.getBonusSpeed());
-            selectedMinionManaCostLabel.setText("MANACOST: " + card.getCost());
+            selectedCardManaCostLabel.setText("MANACOST: " + card.getCost());
+        } else {
+            clearInformationLabels();
+        }
+    }
+
+    private void showSpellInformationOnScreen(SpellCard card) {
+        if (card != null) {
+            selectedCardNameLabel.setText("NAME: " + card.getName());
+            selectedCardManaCostLabel.setText("MANACOST: " + card.getCost());
         } else {
             clearInformationLabels();
         }
@@ -551,7 +568,7 @@ public class GameScene extends Scene {
         selectedCardNameLabel.setText("");
         selectedMinionAttackLabel.setText("");
         selectedMinionHealthLabel.setText("");
-        selectedMinionManaCostLabel.setText("");
+        selectedCardManaCostLabel.setText("");
         selectedMinionSideLabel.setText("");
         selectedMinionSpeedLabel.setText("");
     }

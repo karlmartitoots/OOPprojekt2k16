@@ -18,7 +18,7 @@ import java.util.Random;
 public class Player {
 
     private final int handSize = 3;
-    private final int deckSize = 7;
+    private final int deckSize = 15;
     private final int maximumManaCrystals = 10;
     /**
      * When mana is first initiated it's 0 and initial mana will be loaded by the Game itself, when
