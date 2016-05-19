@@ -9,7 +9,9 @@ Members:<br>
 </ul>
 Sources for images:
 <ul>
-<li><a href="http://www.jaestudio.com/">Jason Engle</a>
+<li><a href="http://www.jaestudio.com/">Jason Engle</a></li>
+<li><a href="http://www.deviantart.com/art/Alien-Inteligence-533883742">Alien Inteligence</a>
+<li><a href="http://www.deviantart.com/art/Hand-Element-Channel-Lightning-347664559">Lightning bolt</a></li>
 </ul>
 <table style="width:100%">
 <tr>
