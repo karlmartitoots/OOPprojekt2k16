@@ -51,7 +51,12 @@ public class SetupScene extends Scene {
         Button enterButton = new Button();
         enterButton.setText("ENTER");
         enterButton.relocate(100, 250);
-
+        Button deckbutton = new Button();
+        deckbutton .setText("Deck building");
+        deckbutton .relocate(220, 100);
+        Button deckbutton2 = new Button();
+        deckbutton2 .setText("Deck building");
+        deckbutton2 .relocate(220, 50);
         root.getChildren().addAll(chooseGeneralLabel,
                 whiteChoiceBoxLabel,
                 whiteGeneralNamesChoiceBox,
@@ -59,7 +64,9 @@ public class SetupScene extends Scene {
                 blackGeneralNamesChoiceBox,
                 beginningPositionsChoiceBoxLabel,
                 positionNamesChoiceBox,
-                enterButton);
+                enterButton,
+                deckbutton,
+                deckbutton2);
 
         boolean[] generalIsChosen = {false, false};
         whiteGeneralNamesChoiceBox.getSelectionModel().selectedItemProperty().addListener(event -> {
@@ -74,7 +81,8 @@ public class SetupScene extends Scene {
         positionNamesChoiceBox.getSelectionModel().selectedItemProperty().addListener(event -> {
             positionIsChosen[0] = true;
         });
-
+        deckbutton.setOnAction(event -> primaryStage.setScene(new DeckBuildingScene((new Group()), primaryStage)));
+        deckbutton2.setOnAction(event -> primaryStage.setScene(new DeckBuildingScene((new Group()), primaryStage)));
         enterButton.setOnAction(event -> {
             if(!(generalIsChosen[0] && generalIsChosen[1] && positionIsChosen[0])){
                 showPopupDialog(primaryStage);
