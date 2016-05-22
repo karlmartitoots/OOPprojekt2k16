@@ -15,5 +15,44 @@ public enum Attribute {
     FLYING, // Can fly over minions
     DEATHTOUCH, // If deals damage to minion, kills instantly
     REINFORCMENT, //Summons that many 1/1 units for you
-    DIRECTDAMAGE //Damage to target
+    DIRECTDAMAGE; //Damage to target
+
+    public String toString(){
+        switch(this){
+            case DRAW:
+                return "Draw";
+            case SHOUT:
+                return "Shout";
+            case CHARGE:
+                return "Charge";
+            case DOOUBLESTRIKE:
+                return "Doublestrike";
+            case SPIN:
+                return "Spin";
+            case BOUNCE:
+                return "Bounce";
+            case FIRSTSTRIKE:
+                return "First Strike";
+            case BLOODTHIRSTY:
+                return "Bloodthirsty";
+            case AIRDROP:
+                return "Airdrop";
+            case INSPIRE:
+                return "Inspire";
+            case FLYING:
+                return "Flying";
+            case DEATHTOUCH:
+                return "Deathtouch";
+            case REINFORCMENT:
+                return "Reinforcements";
+            case DIRECTDAMAGE:
+                return "Direct Damage";
+            default:
+                return "NONE";
+        }
+    }
+
+    public Attribute getType(){
+        return this;
+    }
 }
